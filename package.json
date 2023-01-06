@@ -1,0 +1,33 @@
+{
+  "name": "ru-tmdb-react",
+  "version": "2.0.0",
+  "main": "index.js",
+  "author": "Rus Sharafiev",
+  "license": "ISC",
+  "description": "",
+  "scripts": {
+    "dev": "concurrently --names 'esbuild,less' -c 'yellow,blue' \" esbuild src/index.tsx --outdir=build --bundle --watch \" \" less-watch-compiler styles build index.less \"",
+    "build": "lessc styles/index.less build/index.css && esbuild index=src/index.tsx build/index.css --outdir=build --allow-overwrite --bundle --minify",
+    "server": "esbuild server/server.tsx --outfile=server/index.js --allow-overwrite --bundle --minify --platform=node",
+    "start": "node server/index.js",
+    "test": "npm run build && npm run server && npm run start",
+    "serv": "npm run server && npm run start"
+  },
+  "dependencies": {
+    "@fastify/static": "^6.6.0",
+    "@types/express": "^4.17.15",
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.10",
+    "axios": "^1.2.2",
+    "concurrently": "^7.6.0",
+    "esbuild": "^0.16.10",
+    "express": "^4.18.2",
+    "fastify": "^4.11.0",
+    "less": "^4.1.3",
+    "less-watch-compiler": "^1.16.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.6.1",
+    "typescript": "^4.9.4"
+  }
+}
