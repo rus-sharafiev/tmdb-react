@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useTransition } from 'react';
 import { Routes, Route, NavLink, useNavigate, useLocation } from "react-router-dom";
-import { Movie, Tv } from './types';
+import { Movie, Tv, Person } from './types';
+import Rating from './components/rating';
 
 const imageLoader = async (url: string) => {
     return new Promise((res) => {
@@ -12,12 +13,29 @@ const imageLoader = async (url: string) => {
     });
 }
 
-const preloadImages = async (content: {[index: string]: any}, size: string) => {
+const preloadImages = async (content: {[index: string]: any}, size: string, person?: boolean) => {
     let array = await Promise.all( content.results.map( async (item: {[index: string]: any}) => {
-        item.poster_path = await imageLoader('https://image.tmdb.org/t/p/' + size + item.poster_path);
+        if (person) {
+            item.profile_path = await imageLoader('https://image.tmdb.org/t/p/' + size + item.profile_path);
+        } else {
+            item.poster_path = await imageLoader('https://image.tmdb.org/t/p/' + size + item.poster_path);
+        }
         return item;
     }));
     return array;
+}
+
+const Card: React.FC<{img: string, title: string, rating: number, votes: number, originalTitle: string}> = ({img, title, rating, votes, originalTitle}) => {
+    return (
+        <div className='card'>
+            <img src={img} />
+            <Rating radius={22.5} rating={parseFloat(rating.toFixed(1))} votes={votes}/>
+            <div className='title'>
+                <span>{title}</span>
+                <span>{originalTitle}</span>
+            </div>
+        </div>
+    )
 }
 
 const FirstCard: React.FC = () => {
@@ -26,17 +44,19 @@ const FirstCard: React.FC = () => {
     useEffect(() => {
         fetch('/api/movie/popular')
         .then(response => response.json())
-        .then(data => preloadImages(data, 'w300'))
+        .then(array => preloadImages(array, 'w300'))
         .then(preloadedArray => setContent(preloadedArray))
     }, []);
 
     return (
-        <main className='movies'>
+        <main className='cards'>
             {content.length !== 0 && content.map((movie: Movie) => 
-                <div className='card' key={movie.id}>
-                    <img src={movie.poster_path} />
-                    <span className='title'>{movie.title}</span>
-                </div>
+                <Card key={movie.id} 
+                    img={movie.poster_path} 
+                    title={movie.title} 
+                    originalTitle={movie.original_title} 
+                    rating={movie.vote_average}
+                    votes={movie.vote_count}/>
             )}
         </main>
     )
@@ -52,21 +72,36 @@ const SecondCard: React.FC = () => {
     }, []);
 
     return (
-        <main className='movies'>
-            {content.length !== 0 && content.map((movie: Tv) => 
-                <div className='card' key={movie.id}>
-                    <img src={movie.poster_path} />
-                    <span className='title'>{movie.name}</span>
-                </div>
+        <main className='cards'>
+            {content.length !== 0 && content.map((tv: Tv) => 
+                <Card key={tv.id} 
+                    img={tv.poster_path} 
+                    title={tv.name} 
+                    originalTitle={tv.original_name} 
+                    rating={tv.vote_average}
+                    votes={tv.vote_count}/>
             )}
         </main>
     )
 };
 const ThirdCard: React.FC = () => {
+    const [content, setContent] = useState<{ [index: string]: any }>([]);
+
+    useEffect(() => {
+        fetch('/api/person/popular')
+        .then(response => response.json())
+        .then(data => preloadImages(data, 'w300', true))
+        .then(preloadedArray => setContent(preloadedArray))
+    }, []);
+
     return (
-        <main>
-            <div className='card'>
-            </div>
+        <main className='cards'>
+            {content.length !== 0 && content.map((person: Person) =>
+                <div className='card' key={person.id}>
+                    <img src={person.profile_path} />
+                    <div className='name'>{person.name}</div>
+                </div>
+            )}
         </main>
     )
 };
@@ -76,7 +111,7 @@ const App: React.FC = () => {
     let location = useLocation();
     
     useEffect(() => {
-        if (location.pathname === '/') { navigate("/1") };
+        if (location.pathname === '/') { navigate("/movie") };
     }, []);
 
     const NavBtn: React.FC<{to: string, icon: string, name:string}> = ({to, icon, name}) => {
@@ -94,14 +129,14 @@ const App: React.FC = () => {
     return ( 
         <>
             <Routes>              
-                <Route path="/1" element={<FirstCard/>} />
-                <Route path="/2" element={<SecondCard/>} />
-                <Route path="/3" element={<ThirdCard/>} />
+                <Route path="/movie" element={<FirstCard/>} />
+                <Route path="/tv" element={<SecondCard/>} />
+                <Route path="/person" element={<ThirdCard/>} />
             </Routes>
             <nav>
-                <NavBtn to='1' icon='movie' name='Movies'/>
-                <NavBtn to='2' icon='tv_gen' name='TVs'/>
-                <NavBtn to='3' icon='person' name='Persons'/>
+                <NavBtn to='movie' icon='movie' name='Movies'/>
+                <NavBtn to='tv' icon='tv_gen' name='TVs'/>
+                <NavBtn to='person' icon='person' name='Persons'/>
             </nav>
         </>
     );

@@ -32,3 +32,14 @@ export interface Tv {
     vote_average: number,
     vote_count: number
 }
+
+export interface Person {
+    adult: boolean,
+    gender: number,
+    id: number,
+    known_for: [Movie | Tv],
+    known_for_department: string,
+    name: string,
+    popularity: number,
+    profile_path: string
+}
