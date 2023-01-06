@@ -1,4 +1,4 @@
-# React-приложение для библиотеки The Movie Database
+# React-приложение для библиотеки TMDB
 
 ### В разработке
 
@@ -26,7 +26,6 @@
 - ES6 / TypeScript
     - React (FC)
     - React-router
-- TypeScript
 
 ### Backend
 Стек технологий:  
