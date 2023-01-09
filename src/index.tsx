@@ -3,6 +3,9 @@ import { hydrateRoot, createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './app';
 
+import { store } from './store'
+import { Provider } from 'react-redux'
+
 if (document.fonts.status !== 'loaded') document.querySelector('body')?.classList.add('icons-hidden');
 const iconsLoaded = (event: any) => {
     event.fontfaces.map( (font: any) => {
@@ -36,4 +39,13 @@ document.fonts.addEventListener("loadingdone", iconsLoaded);
 // }
 // hydrateRoot(document, <Root />);
 
-createRoot(document.querySelector('body') as HTMLElement).render(<BrowserRouter><App /></BrowserRouter>);
+createRoot(document.getElementById('root') as HTMLElement)
+.render(
+    <React.StrictMode>  
+        <Provider store={store}>
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
+        </Provider>
+    </React.StrictMode>
+)

@@ -1,35 +1,16 @@
-import React, { useState, useEffect, useTransition } from 'react';
-import { Routes, Route, NavLink, useNavigate, useLocation } from "react-router-dom";
-import { Movie, Tv, Person } from './types';
-import Rating from './components/rating';
+import React, { useState, useEffect, useTransition } from 'react'
+import { Routes, Route, NavLink, useNavigate, useLocation } from "react-router-dom"
+import { useAppSelector, useAppDispatch } from './redux-hooks'
+import { Movie, Tv, Person } from './types'
+import Rating from './components/rating'
+import CircularProgressIndicator from './components/cpi'
+import { fetchMoviesContent, fetchTvsContent, fetchPeopleContent } from './contentSlice'
 
-const imageLoader = async (url: string) => {
-    return new Promise((res) => {
-        let img = new Image();
-        img.src = 'https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=' + encodeURIComponent(url);
-        img.onload = () => {
-            res(img.src)
-        }
-    });
-}
-
-const preloadImages = async (content: {[index: string]: any}, size: string, person?: boolean) => {
-    let array = await Promise.all( content.results.map( async (item: {[index: string]: any}) => {
-        if (person) {
-            item.profile_path = await imageLoader('https://image.tmdb.org/t/p/' + size + item.profile_path);
-        } else {
-            item.poster_path = await imageLoader('https://image.tmdb.org/t/p/' + size + item.poster_path);
-        }
-        return item;
-    }));
-    return array;
-}
-
-const Card: React.FC<{img: string, title: string, rating: number, votes: number, originalTitle: string}> = ({img, title, rating, votes, originalTitle}) => {
+const Card: React.FC<{img: string, title: string, rating?: number, votes?: number, originalTitle?: string}> = ({img, title, rating, votes, originalTitle}) => {
     return (
         <div className='card'>
             <img src={img} />
-            <Rating radius={22.5} rating={parseFloat(rating.toFixed(1))} votes={votes}/>
+            {rating && votes && <Rating radius={22.5} rating={parseFloat(rating.toFixed(1))} votes={votes}/>}
             <div className='title'>
                 <span>{title}</span>
                 <span>{originalTitle}</span>
@@ -38,81 +19,85 @@ const Card: React.FC<{img: string, title: string, rating: number, votes: number,
     )
 }
 
-const FirstCard: React.FC = () => {
-    const [content, setContent] = useState<{ [index: string]: any }>([]);
+const Start: React.FC = () => {
+    return (
+        <div></div>
+    )
+}
+
+const Movies: React.FC = () => {
+    const dispatch = useAppDispatch()
+    const content = useAppSelector((state) => state.movies)
 
     useEffect(() => {
-        fetch('/api/movie/popular')
-        .then(response => response.json())
-        .then(array => preloadImages(array, 'w300'))
-        .then(preloadedArray => setContent(preloadedArray))
-    }, []);
+          dispatch(fetchMoviesContent('popular'))
+    }, [dispatch])
 
     return (
-        <main className='cards'>
-            {content.length !== 0 && content.map((movie: Movie) => 
-                <Card key={movie.id} 
-                    img={movie.poster_path} 
-                    title={movie.title} 
-                    originalTitle={movie.original_title} 
-                    rating={movie.vote_average}
-                    votes={movie.vote_count}/>
-            )}
-        </main>
+        <>
+            <main className={'cards '}>
+                {content.length !== 0 && content.map((movie: Movie) =>
+                        <Card key={movie.id}
+                            img={movie.poster_path} 
+                            title={movie.title} 
+                            originalTitle={movie.original_title} 
+                            rating={movie.vote_average}
+                            votes={movie.vote_count}/>  
+                )}     
+            </main>
+            {content.length === 0 && <CircularProgressIndicator className='cpi' />}
+        </>
     )
 };
-const SecondCard: React.FC = () => {
-    const [content, setContent] = useState<{ [index: string]: any }>([]);
+
+const Tvs: React.FC = () => {
+    const dispatch = useAppDispatch()
+    const content = useAppSelector((state) => state.tvs)
 
     useEffect(() => {
-        fetch('/api/tv/popular')
-        .then(response => response.json())
-        .then(data => preloadImages(data, 'w300'))
-        .then(preloadedArray => setContent(preloadedArray))
-    }, []);
+          dispatch(fetchTvsContent('popular'))
+    }, [dispatch])
 
     return (
-        <main className='cards'>
-            {content.length !== 0 && content.map((tv: Tv) => 
-                <Card key={tv.id} 
-                    img={tv.poster_path} 
-                    title={tv.name} 
-                    originalTitle={tv.original_name} 
-                    rating={tv.vote_average}
-                    votes={tv.vote_count}/>
-            )}
-        </main>
+        <>
+            <main className={'cards '}>
+                {content.length !== 0 && content.map((tv: Tv) => 
+                    <Card key={tv.id} 
+                        img={tv.poster_path} 
+                        title={tv.name} 
+                        originalTitle={tv.original_name} 
+                        rating={tv.vote_average}
+                        votes={tv.vote_count}/>
+                )}
+            </main>
+            {content.length === 0 && <CircularProgressIndicator className='cpi' />}
+        </>
     )
 };
-const ThirdCard: React.FC = () => {
-    const [content, setContent] = useState<{ [index: string]: any }>([]);
+
+const People: React.FC = () => {
+    const dispatch = useAppDispatch()
+    const content = useAppSelector((state) => state.people)
 
     useEffect(() => {
-        fetch('/api/person/popular')
-        .then(response => response.json())
-        .then(data => preloadImages(data, 'w300', true))
-        .then(preloadedArray => setContent(preloadedArray))
-    }, []);
+          dispatch(fetchPeopleContent('popular'))
+    }, [dispatch])
 
     return (
-        <main className='cards'>
-            {content.length !== 0 && content.map((person: Person) =>
-                <div className='card' key={person.id}>
-                    <img src={person.profile_path} />
-                    <div className='name'>{person.name}</div>
-                </div>
-            )}
-        </main>
+        <>
+            <main className={'cards '}>
+                {content.length !== 0 && content.map((person: Person) =>
+                    <Card key={person.id}
+                        img={person.profile_path} 
+                        title={person.name}/>
+                )}
+            </main>
+            {content.length === 0 && <CircularProgressIndicator className='cpi' />}
+        </>
     )
 };
 
 const App: React.FC = () => {
-    const navigate = useNavigate();
-    let location = useLocation();
-    
-    useEffect(() => {
-        if (location.pathname === '/') { navigate("/movie") };
-    }, []);
 
     const NavBtn: React.FC<{to: string, icon: string, name:string}> = ({to, icon, name}) => {
         return (
@@ -128,15 +113,17 @@ const App: React.FC = () => {
 
     return ( 
         <>
-            <Routes>              
-                <Route path="/movie" element={<FirstCard/>} />
-                <Route path="/tv" element={<SecondCard/>} />
-                <Route path="/person" element={<ThirdCard/>} />
+            <Routes>
+                <Route path="/" element={<Start/>} />
+                <Route path="/movie" element={<Movies/>} />
+                <Route path="/tv" element={<Tvs/>} />
+                <Route path="/person" element={<People/>} />
             </Routes>
             <nav>
-                <NavBtn to='movie' icon='movie' name='Movies'/>
-                <NavBtn to='tv' icon='tv_gen' name='TVs'/>
-                <NavBtn to='person' icon='person' name='Persons'/>
+                <NavBtn to='' icon='home' name='Главная'/>
+                <NavBtn to='movie' icon='movie' name='Фильмы'/>
+                <NavBtn to='tv' icon='tv_gen' name='Сериалы'/>
+                <NavBtn to='person' icon='person' name='Люди'/>
             </nav>
         </>
     );
