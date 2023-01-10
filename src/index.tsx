@@ -1,21 +1,14 @@
-import React from 'react';
-import { hydrateRoot, createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import App from './app';
+import React from 'react'
+import { hydrateRoot, createRoot } from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import App from './app'
 
 import { store } from './store'
 import { Provider } from 'react-redux'
 
-if (document.fonts.status !== 'loaded') document.querySelector('body')?.classList.add('icons-hidden');
-const iconsLoaded = (event: any) => {
-    event.fontfaces.map( (font: any) => {
-        if (font.family == 'Material Symbols Rounded') {
-            document.querySelector('body')?.classList.remove('icons-hidden');
-            document.fonts.removeEventListener("loadingdone", iconsLoaded);
-        }
-    })
-}
-document.fonts.addEventListener("loadingdone", iconsLoaded);
+document.querySelector('body')?.classList.add('icons-hidden')
+document.fonts.load("24px Material Symbols Rounded")
+    .then(() => { document.querySelector('body')?.classList.remove('icons-hidden') });
 
 // const Root: React.FC = () => {
 //     return (
@@ -28,11 +21,12 @@ document.fonts.addEventListener("loadingdone", iconsLoaded);
 //                 <link href="/index.css" rel="stylesheet" />
 //                 <title>RU TMDB</title>
 //             </head>
-
 //             <body>
-//                 <BrowserRouter>
-//                     <App />
-//                 </BrowserRouter>
+//                 <Provider store={store}>
+//                     <BrowserRouter>
+//                         <App />
+//                     </BrowserRouter>
+//                 </Provider>
 //             </body>
 //         </html>
 //     )

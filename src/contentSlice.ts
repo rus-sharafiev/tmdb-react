@@ -32,12 +32,17 @@ export const fetchMoviesContent = createAsyncThunk('movies/content', async (list
 
 export const moviesContentSlice = createSlice({
   name: 'content',
-  initialState: [],
+  initialState: {status: 'idle', content: []},
   reducers: {},
   extraReducers(builder) {
-    builder.addCase(fetchMoviesContent.fulfilled, (state, action: PayloadAction<any>) => {
-      return action.payload
-    })
+    builder
+      .addCase(fetchMoviesContent.pending, (state) => {
+        state.status = 'loading'
+      })
+      .addCase(fetchMoviesContent.fulfilled, (state, action: PayloadAction<any>) => {
+        state.status = 'complete'
+        state.content = action.payload
+      })      
   },
 })
 
@@ -51,12 +56,17 @@ export const fetchTvsContent = createAsyncThunk('tvs/content', async (list: stri
 
 export const tvsContentSlice = createSlice({
 name: 'content',
-initialState: [],
+initialState: {status: 'idle', content: []},
 reducers: {},
 extraReducers(builder) {
-  builder.addCase(fetchTvsContent.fulfilled, (state, action: PayloadAction<any>) => {
-    return action.payload
-  })
+  builder
+    .addCase(fetchTvsContent.pending, (state) => {
+      state.status = 'loading'
+    })
+    .addCase(fetchTvsContent.fulfilled, (state, action: PayloadAction<any>) => {
+      state.status = 'complete'
+      state.content = action.payload
+    })
 },
 })
 
@@ -70,11 +80,16 @@ export const fetchPeopleContent = createAsyncThunk('people/content', async (list
 
 export const peopleContentSlice = createSlice({
 name: 'content',
-initialState: [],
+initialState: {status: 'idle', content: []},
 reducers: {},
 extraReducers(builder) {
-  builder.addCase(fetchPeopleContent.fulfilled, (state, action: PayloadAction<any>) => {
-    return action.payload
-  })
+  builder
+    .addCase(fetchPeopleContent.pending, (state) => {
+      state.status = 'loading'
+    })
+    .addCase(fetchPeopleContent.fulfilled, (state, action: PayloadAction<any>) => {
+      state.status = 'complete'
+      state.content = action.payload
+    })
 },
 })
