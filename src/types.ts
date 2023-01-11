@@ -1,4 +1,3 @@
-
 // Movie card
 export interface Movie {
     adult: boolean,
@@ -17,6 +16,7 @@ export interface Movie {
     vote_count: number
 }
 
+// TV card
 export interface Tv {
     backdrop_path: string,
     first_air_date: string,
@@ -33,6 +33,7 @@ export interface Tv {
     vote_count: number
 }
 
+// Person card
 export interface Person {
     adult: boolean,
     gender: number,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useAppSelector, useAppDispatch } from '../redux-hooks'
-import { fetchPeopleContent } from '../contentSlice'
+import { useAppSelector, useAppDispatch } from '../store/redux-hooks'
+import { fetchPeopleContent } from '../store/contentSlice'
 import { Person } from '../types'
 import Card from '../ui/card'
 import CircularProgressIndicator from '../ui/cpi'
@@ -21,9 +21,10 @@ const People: React.FC = () => {
         <>
             <main className={status !== 'complete' ? 'cards hidden' : 'cards'}>
                 {status === 'complete' && content.map((person: Person) =>
-                    <Card key={person.id}
-                        img={person.profile_path} 
-                        title={person.name}/>
+                    <div className='card' key={person.id}>
+                        <img src={person.profile_path} alt='image' />
+                        <span className='name'>{person.name}</span>
+                    </div>
                 )}
             </main>
             {status === 'loading' && <CircularProgressIndicator className='cpi' />}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useAppSelector, useAppDispatch } from '../redux-hooks'
-import { fetchTvsContent } from '../contentSlice'
+import { useAppSelector, useAppDispatch } from '../store/redux-hooks'
+import { fetchTvsContent } from '../store/contentSlice'
 import { Tv } from '../types'
 import Card from '../ui/card'
 import CircularProgressIndicator from '../ui/cpi'

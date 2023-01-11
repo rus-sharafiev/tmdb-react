@@ -32,7 +32,7 @@ const CircularProgressIndicator = (props: CircularProgressIndicator) => {
         } else {
             setTimeout(() => {
                 setOpacity(1)
-            }, 400);
+            }, 200);
         }
     }, []);
 

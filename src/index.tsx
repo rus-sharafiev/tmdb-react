@@ -3,7 +3,7 @@ import { hydrateRoot, createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App from './app'
 
-import { store } from './store'
+import { store } from './store/store'
 import { Provider } from 'react-redux'
 
 document.querySelector('body')?.classList.add('icons-hidden')

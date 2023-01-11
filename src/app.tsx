@@ -23,7 +23,10 @@ const App: React.FC = () => {
         <>
             <Routes>
                 <Route path="/" element={<Start/>} />
-                <Route path="/movie" element={<Movies/>} />
+                <Route path="/movie" >
+                    <Route index element={<Movies/>} />
+                    <Route path=":list" element={<Movies/>} />
+                </Route>
                 <Route path="/tv" element={<Tvs/>} />
                 <Route path="/person" element={<People/>} />
             </Routes>

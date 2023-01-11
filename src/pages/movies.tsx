@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { useAppSelector, useAppDispatch } from '../redux-hooks'
-import { fetchMoviesContent } from '../contentSlice'
+import { useParams, useNavigate } from 'react-router-dom'
+import { useAppSelector, useAppDispatch } from '../store/redux-hooks'
+import { fetchMoviesContent } from '../store/contentSlice'
 import { Movie } from '../types'
 import Card from '../ui/card'
 import CircularProgressIndicator from '../ui/cpi'
@@ -9,11 +10,13 @@ const Movies: React.FC = () => {
     const dispatch = useAppDispatch()
     const content = useAppSelector((state) => state.movies.content)
     const status = useAppSelector((state) => state.movies.status)
-    const [list, setList] = useState('popular');
+    const navigate = useNavigate();
+    let { list } = useParams()
 
     useEffect(() => {
-        if (status === 'idle') {
-            dispatch(fetchMoviesContent(list))
+        if (!list) navigate("popular")
+        if (status === 'idle') {    
+            list && dispatch(fetchMoviesContent(list))
         }
     }, [list])
 
