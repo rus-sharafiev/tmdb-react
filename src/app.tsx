@@ -7,11 +7,11 @@ import People from './pages/people'
 
 const App: React.FC = () => {
 
-    const NavBtn: React.FC<{to: string, icon: string, name:string}> = ({to, icon, name}) => {
+    const NavBtn: React.FC<{ to: string, icon: string, name: string }> = ({ to, icon, name }) => {
         return (
-            <NavLink 
-                to={to} 
-                className={({ isActive }) => isActive ? 'nav-active' : undefined }
+            <NavLink
+                to={to}
+                className={({ isActive }) => isActive ? 'nav-active' : undefined}
             >
                 <span className='material-symbols-rounded'>{icon}</span>
                 {name}
@@ -19,22 +19,31 @@ const App: React.FC = () => {
         )
     }
 
-    return ( 
+    return (
         <>
             <Routes>
-                <Route path="/" element={<Start/>} />
-                <Route path="/movie" >
-                    <Route index element={<Movies/>} />
-                    <Route path=":list" element={<Movies/>} />
+                <Route path="/" element={<Start />} />
+                <Route path="/movie">
+                    <Route index element={<Movies />} />
+                    <Route path=":list" element={<Movies />} />
                 </Route>
-                <Route path="/tv" element={<Tvs/>} />
-                <Route path="/person" element={<People/>} />
+                <Route path="/tv">
+                    <Route index element={<Tvs />} />
+                    <Route path=":list" element={<Tvs />} />
+                </Route>
+                <Route path="/person">
+                    <Route index element={<People />} />
+                    <Route path=":list" element={<People />} />
+                </Route>
             </Routes>
+            <header>
+                
+            </header>
             <nav>
-                <NavBtn to='' icon='home' name='Главная'/>
-                <NavBtn to='movie' icon='movie' name='Фильмы'/>
-                <NavBtn to='tv' icon='tv_gen' name='Сериалы'/>
-                <NavBtn to='person' icon='person' name='Люди'/>
+                <NavBtn to='' icon='home' name='Главная' />
+                <NavBtn to='movie' icon='movie' name='Фильмы' />
+                <NavBtn to='tv' icon='tv_gen' name='Сериалы' />
+                <NavBtn to='person' icon='person' name='Люди' />
             </nav>
         </>
     );
