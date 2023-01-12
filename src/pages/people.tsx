@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../store/redux-hooks'
 import { fetchPeopleContent } from '../store/contentSlice'
 import { Person } from '../types'
-import Card from '../ui/card'
 import CircularProgressIndicator from '../ui/cpi'
 
 const People: React.FC = () => {
     const dispatch = useAppDispatch()
     const content = useAppSelector((state) => state.people.content)
     const status = useAppSelector((state) => state.people.status)
-    const [list, setList] = useState('popular');
+    const navigate = useNavigate();
+    let { list } = useParams()
 
     useEffect(() => {
+        if (!list) navigate("popular")
         if (status === 'idle') {
-            dispatch(fetchPeopleContent(list))
+            list && dispatch(fetchPeopleContent(list))
         }
     }, [list])
 

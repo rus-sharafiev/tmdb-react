@@ -15,7 +15,7 @@ const Movies: React.FC = () => {
 
     useEffect(() => {
         if (!list) navigate("popular")
-        if (status === 'idle') {    
+        if (status === 'idle') {
             list && dispatch(fetchMoviesContent(list))
         }
     }, [list])
@@ -25,12 +25,12 @@ const Movies: React.FC = () => {
             <main className={status !== 'complete' ? 'cards hidden' : 'cards'}>
                 {status === 'complete' && content.map((movie: Movie) =>
                     <Card key={movie.id}
-                        img={movie.poster_path} 
-                        title={movie.title} 
-                        originalTitle={movie.original_title} 
+                        img={movie.poster_path}
+                        title={movie.title}
+                        originalTitle={movie.original_title}
                         rating={movie.vote_average}
-                        votes={movie.vote_count}/>  
-                )}     
+                        votes={movie.vote_count} />
+                )}
             </main>
             {status === 'loading' && <CircularProgressIndicator className='cpi' />}
         </>
