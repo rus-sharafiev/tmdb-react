@@ -1,10 +1,10 @@
 import React from 'react'
 import { hydrateRoot, createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
-import App from './app'
 
 import { store } from './store/store'
 import { Provider } from 'react-redux'
+import { BrowserRouter } from 'react-router-dom'
+import App from './app'
 
 document.querySelector('body')?.classList.add('icons-hidden')
 document.fonts.load("24px Material Symbols Rounded")
@@ -34,12 +34,10 @@ document.fonts.load("24px Material Symbols Rounded")
 // hydrateRoot(document, <Root />);
 
 createRoot(document.getElementById('root') as HTMLElement)
-.render(
-    <React.StrictMode>  
+    .render(
         <Provider store={store}>
             <BrowserRouter>
                 <App />
             </BrowserRouter>
         </Provider>
-    </React.StrictMode>
-)
+    )

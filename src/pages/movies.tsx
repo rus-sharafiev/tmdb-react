@@ -1,29 +1,37 @@
-import React, { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { useAppSelector, useAppDispatch } from '../store/redux-hooks'
-import { fetchMoviesContent } from '../store/contentSlice'
+import React, { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+import { useAppSelector, useAppDispatch } from '../store/hooks'
+import { fetchPopularMovies, fetchTopRatedMovies, fetchUpcomingMovies } from '../store/moviesSlice'
+import { RootState } from '../store/store'
 import { Movie } from '../types'
 import Card from '../ui/card'
 import CircularProgressIndicator from '../ui/cpi'
 
-const Movies: React.FC = () => {
+const Movies: React.FC<{}> = () => {
+    const movies = useAppSelector((state: RootState) => state.movies)
     const dispatch = useAppDispatch()
-    const content = useAppSelector((state) => state.movies.content)
-    const status = useAppSelector((state) => state.movies.status)
-    const navigate = useNavigate();
     let { list } = useParams()
 
     useEffect(() => {
-        if (!list) navigate("popular")
-        if (status === 'idle') {
-            list && dispatch(fetchMoviesContent(list))
+        switch (list) {
+            case 'popular':
+                if (movies.popular.status === 'idle') dispatch(fetchPopularMovies());
+                break;
+            case 'top_rated':
+                if (movies.top_rated.status === 'idle') dispatch(fetchTopRatedMovies());
+                break;
+            case 'upcoming':
+                if (movies.upcoming.status === 'idle') dispatch(fetchUpcomingMovies());
+                break;
         }
     }, [list])
 
+    if (!list) return null
+
     return (
         <>
-            <main className={status !== 'complete' ? 'cards hidden' : 'cards'}>
-                {status === 'complete' && content.map((movie: Movie) =>
+            <div className={movies[list].status !== 'complete' ? 'cards hidden' : 'cards'}>
+                {movies[list].status === 'complete' && movies[list].content?.map((movie: Movie) =>
                     <Card key={movie.id}
                         img={movie.poster_path}
                         title={movie.title}
@@ -31,8 +39,8 @@ const Movies: React.FC = () => {
                         rating={movie.vote_average}
                         votes={movie.vote_count} />
                 )}
-            </main>
-            {status === 'loading' && <CircularProgressIndicator className='cpi' />}
+            </div>
+            {movies[list].status === 'loading' && <CircularProgressIndicator className='cpi' />}
         </>
     )
 };

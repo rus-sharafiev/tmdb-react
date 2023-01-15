@@ -1,5 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { moviesContentSlice, tvsContentSlice, peopleContentSlice } from './contentSlice'
+import { peopleContentSlice } from './peopleSlice'
+import { moviesContentSlice } from './moviesSlice'
+import { tvsContentSlice } from './tvsSlice'
 
 export const store = configureStore({
   reducer: {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useAppSelector, useAppDispatch } from '../store/redux-hooks'
+import { useAppSelector, useAppDispatch } from '../store/hooks'
 import Card from '../ui/card'
 import CircularProgressIndicator from '../ui/cpi'
 import Select from 'react-select'
