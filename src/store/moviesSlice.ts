@@ -10,23 +10,23 @@ const preloadImages = async (content: { [index: string]: any }, size: string, pe
 }
 
 // -------------- Movies ------------------------------------------------------------------------------------------------------------------
-export const fetchPopularMovies = createAsyncThunk('movies/popular', async () => {
-  const response = await fetch(`/api/movie/popular`);
+export const fetchPopularMovies = createAsyncThunk('movies/popular', async (page: number) => {
+  const response = await fetch(`/api/movie/popular/${page}`);
   let array = await response.json();
   let content = await preloadImages(array, 'w300');
   return content;
 })
 
-export const fetchTopRatedMovies = createAsyncThunk('movies/top_rated', async () => {
-  const response = await fetch(`/api/movie/top_rated`);
+export const fetchTopRatedMovies = createAsyncThunk('movies/top_rated', async (page: number) => {
+  const response = await fetch(`/api/movie/top_rated/${page}`);
   let array = await response.json();
   let content = await preloadImages(array, 'w300');
   return content;
 })
 
-export const fetchUpcomingMovies = createAsyncThunk('movies/upcoming', async () => {
+export const fetchUpcomingMovies = createAsyncThunk('movies/upcoming', async (page: number) => {
   try {
-    const response = await fetch(`/api/movie/upcoming`);
+    const response = await fetch(`/api/movie/upcoming/${page}`);
     let array = await response.json();
     let content = await preloadImages(array, 'w300');
     return content;
@@ -38,11 +38,15 @@ export const fetchUpcomingMovies = createAsyncThunk('movies/upcoming', async () 
 export const moviesContentSlice = createSlice({
   name: 'movies',
   initialState: {
-    popular: { status: 'idle', content: [] },
-    top_rated: { status: 'idle', content: [] },
-    upcoming: { status: 'idle', content: [] }
+    popular: { status: 'idle', content: [], page: 1 },
+    top_rated: { status: 'idle', content: [], page: 1 },
+    upcoming: { status: 'idle', content: [], page: 1 }
   },
-  reducers: {},
+  reducers: {
+    pmNext: state => { state.popular.page++ },
+    trmNext: state => { state.top_rated.page++ },
+    umNext: state => { state.upcoming.page++ }
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchPopularMovies.pending, (state) => {
@@ -68,3 +72,5 @@ export const moviesContentSlice = createSlice({
       })
   },
 })
+
+export const { pmNext, trmNext, umNext } = moviesContentSlice.actions

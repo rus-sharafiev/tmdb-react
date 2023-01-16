@@ -10,23 +10,23 @@ const preloadImages = async (content: { [index: string]: any }, size: string) =>
 }
 
 // -------------- Tvs ------------------------------------------------------------------------------------------------------------------
-export const fetchPopularTvs = createAsyncThunk('tvs/popular', async () => {
-  const response = await fetch(`/api/tv/popular`);
+export const fetchPopularTvs = createAsyncThunk('tvs/popular', async (page: number) => {
+  const response = await fetch(`/api/tv/popular/${page}`);
   let array = await response.json();
   let content = await preloadImages(array, 'w300');
   return content;
 })
 
-export const fetchTopRatedTvs = createAsyncThunk('tvs/top_rated', async () => {
-  const response = await fetch(`/api/tv/top_rated`);
+export const fetchTopRatedTvs = createAsyncThunk('tvs/top_rated', async (page: number) => {
+  const response = await fetch(`/api/tv/top_rated/${page}`);
   let array = await response.json();
   let content = await preloadImages(array, 'w300');
   return content;
 })
 
-export const fetchAiringTodayTvs = createAsyncThunk('tvs/airing_today', async () => {
+export const fetchAiringTodayTvs = createAsyncThunk('tvs/airing_today', async (page: number) => {
   try {
-    const response = await fetch(`/api/tv/airing_today`);
+    const response = await fetch(`/api/tv/airing_today/${page}`);
     let array = await response.json();
     let content = await preloadImages(array, 'w300');
     return content;
@@ -38,11 +38,15 @@ export const fetchAiringTodayTvs = createAsyncThunk('tvs/airing_today', async ()
 export const tvsContentSlice = createSlice({
   name: 'tvs',
   initialState: {
-    popular: { status: 'idle', content: [] },
-    top_rated: { status: 'idle', content: [] },
-    airing_today: { status: 'idle', content: [] }
+    popular: { status: 'idle', content: [], page: 1 },
+    top_rated: { status: 'idle', content: [], page: 1 },
+    airing_today: { status: 'idle', content: [], page: 1 }
   },
-  reducers: {},
+  reducers: {
+    ptNext: state => { state.popular.page++ },
+    trtNext: state => { state.top_rated.page++ },
+    attNext: state => { state.airing_today.page++ }
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchPopularTvs.pending, (state) => {
@@ -68,3 +72,5 @@ export const tvsContentSlice = createSlice({
       })
   },
 })
+
+export const { ptNext, trtNext, attNext } = tvsContentSlice.actions

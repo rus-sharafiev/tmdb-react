@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../store/hooks'
-import { fetchPopularTvs, fetchTopRatedTvs, fetchAiringTodayTvs } from '../store/tvsSlice'
+import { fetchPopularTvs, fetchTopRatedTvs, fetchAiringTodayTvs, ptNext, trtNext, attNext } from '../store/tvsSlice'
 import { RootState } from '../store/store'
-import { Tv } from '../types'
+import { Tv } from '../types/cards'
 import Card from '../ui/card'
 import CircularProgressIndicator from '../ui/cpi'
 
@@ -15,16 +15,16 @@ const Tvs: React.FC = () => {
     useEffect(() => {
         switch (list) {
             case 'popular':
-                if (tvs.popular.status === 'idle') dispatch(fetchPopularTvs());
+                if (tvs.popular.status === 'idle') dispatch(fetchPopularTvs(tvs.popular.page));
                 break;
             case 'top_rated':
-                if (tvs.top_rated.status === 'idle') dispatch(fetchTopRatedTvs());
+                if (tvs.top_rated.status === 'idle') dispatch(fetchTopRatedTvs(tvs.top_rated.page));
                 break;
             case 'airing_today':
-                if (tvs.airing_today.status === 'idle') dispatch(fetchAiringTodayTvs());
+                if (tvs.airing_today.status === 'idle') dispatch(fetchAiringTodayTvs(tvs.airing_today.page));
                 break;
         }
-    }, [list])
+    }, [list, tvs.popular.page])
 
     if (!list) return null
 
@@ -39,6 +39,7 @@ const Tvs: React.FC = () => {
                         rating={tv.vote_average}
                         votes={tv.vote_count} />
                 )}
+                <button type='button' onClick={() => dispatch(ptNext())} >Next</button>
             </main>
             {tvs[list].status === 'loading' && <CircularProgressIndicator className='cpi' />}
         </>

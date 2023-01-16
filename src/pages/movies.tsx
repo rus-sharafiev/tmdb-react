@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../store/hooks'
-import { fetchPopularMovies, fetchTopRatedMovies, fetchUpcomingMovies } from '../store/moviesSlice'
+import { fetchPopularMovies, fetchTopRatedMovies, fetchUpcomingMovies, pmNext, trmNext, umNext } from '../store/moviesSlice'
 import { RootState } from '../store/store'
-import { Movie } from '../types'
+import { Movie } from '../types/cards'
 import Card from '../ui/card'
 import CircularProgressIndicator from '../ui/cpi'
 
@@ -15,13 +15,13 @@ const Movies: React.FC<{}> = () => {
     useEffect(() => {
         switch (list) {
             case 'popular':
-                if (movies.popular.status === 'idle') dispatch(fetchPopularMovies());
+                if (movies.popular.status === 'idle') dispatch(fetchPopularMovies(movies.popular.page));
                 break;
             case 'top_rated':
-                if (movies.top_rated.status === 'idle') dispatch(fetchTopRatedMovies());
+                if (movies.top_rated.status === 'idle') dispatch(fetchTopRatedMovies(movies.top_rated.page));
                 break;
             case 'upcoming':
-                if (movies.upcoming.status === 'idle') dispatch(fetchUpcomingMovies());
+                if (movies.upcoming.status === 'idle') dispatch(fetchUpcomingMovies(movies.upcoming.page));
                 break;
         }
     }, [list])
