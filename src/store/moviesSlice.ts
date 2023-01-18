@@ -3,7 +3,7 @@ import imageLoader from './imageLoader';
 
 const preloadImages = async (content: { [index: string]: any }, size: string, person?: boolean) => {
   let array = await Promise.all(content.results.map(async (item: { [index: string]: any }) => {
-    item.poster_path = await imageLoader('https://image.tmdb.org/t/p/' + size + item.poster_path);
+    item.poster_path = item.poster_path ? await imageLoader('https://image.tmdb.org/t/p/' + size + item.poster_path) : '/img/no_image.png' 
     return item;
   }));
   return array;
@@ -54,21 +54,21 @@ export const moviesContentSlice = createSlice({
       })
       .addCase(fetchPopularMovies.fulfilled, (state, action: PayloadAction<any>) => {
         state.popular.status = 'complete'
-        state.popular.content = action.payload
+        state.popular.content = state.popular.content.concat(action.payload)
       })
       .addCase(fetchTopRatedMovies.pending, (state) => {
         state.top_rated.status = 'loading'
       })
       .addCase(fetchTopRatedMovies.fulfilled, (state, action: PayloadAction<any>) => {
         state.top_rated.status = 'complete'
-        state.top_rated.content = action.payload
+        state.top_rated.content = state.top_rated.content.concat(action.payload)
       })
       .addCase(fetchUpcomingMovies.pending, (state) => {
         state.upcoming.status = 'loading'
       })
       .addCase(fetchUpcomingMovies.fulfilled, (state, action: PayloadAction<any>) => {
         state.upcoming.status = 'complete'
-        state.upcoming.content = action.payload
+        state.upcoming.content = state.upcoming.content.concat(action.payload)
       })
   },
 })

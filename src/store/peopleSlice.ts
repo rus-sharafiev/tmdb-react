@@ -4,7 +4,7 @@ import { Person } from '../types/cards'
 
 const preloadImages = async (content: { [index: string]: any }, size: string) => {
   let array = await Promise.all(content.results.map(async (item: { [index: string]: any }) => {
-    item.profile_path = await imageLoader('https://image.tmdb.org/t/p/' + size + item.profile_path);
+    item.profile_path = item.profile_path ? await imageLoader('https://image.tmdb.org/t/p/' + size + item.profile_path) : '/img/no_image.png' 
     return item;
   }));
   return array;
@@ -68,11 +68,11 @@ export const peopleContentSlice = createSlice({
       })
       .addCase(fetchPopularPeople.fulfilled, (state, action: PayloadAction<any>) => {
         state.popular.status = 'complete'
-        state.popular.content = action.payload
+        state.popular.content = state.popular.content.concat(action.payload)
       })
       .addCase(fetchRussianNames.fulfilled, (state, action: PayloadAction<any>) => {
         state.russianNames.status = 'complete'
-        state.russianNames.content = action.payload
+        state.russianNames.content = state.russianNames.content.concat(action.payload)
       })
   },
 })
