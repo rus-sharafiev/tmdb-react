@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import { Routes, Route, NavLink, Outlet } from "react-router-dom"
 import Logo from './ui/logo'
 
@@ -49,9 +49,10 @@ const App: React.FC = () => {
                     <input type={'text'} placeholder='Поиск по фильмам, сериалам и людям' />
                 </label>
             </header>
+            <footer></footer>
             <Logo />
             <nav>
-                <NavBtn to='' icon='home' name='Главная' />
+                {/* <NavBtn to='' icon='home' name='Главная' /> */}
                 <NavBtn to='movies' icon='movie' name='Фильмы' />
                 <NavBtn to='tvs' icon='tv_gen' name='Сериалы' />
                 <NavBtn to='people' icon='person' name='Люди' />
