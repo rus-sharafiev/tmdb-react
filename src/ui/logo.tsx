@@ -9,7 +9,7 @@ import { Link } from "react-router-dom"
 
 const Logo: React.FC = () => {
     return (
-        <Link to='/' className="logo">
+        <Link to='/' className="logo" aria-label="Logo">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 145 126">
                 <defs>
                     <linearGradient id="linear-gradient" x1="0" y1="63" x2="145" y2="63" gradientUnits="userSpaceOnUse">
