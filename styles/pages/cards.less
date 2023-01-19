@@ -7,7 +7,7 @@
     gap: 8px;
     opacity: 1;
     transition: opacity 0.3s ease-in;
-    padding-top: 48px;
+    padding-top: 40px;
     position: relative;
 
     .cards-loader {
@@ -23,25 +23,6 @@
 
 .cards.hidden {
     opacity: 0;
-}
-
-.page-is-loading {
-    position: fixed;
-    right: -250px;
-    top: 50px;
-    height: 40px;
-    color: var(--md-sys-color-on-primary);
-    background-color: var(--md-sys-color-primary);
-    border-radius: 20px;
-    padding: 8px 16px;
-    z-index: 1;
-    transition: right 0.2s linear;
-    .elevation-level2();
-    .body-large();
-
-    &.show {
-        right: 20px;
-    }
 }
 
 // Card
