@@ -1,8 +1,6 @@
-import React, { useEffect } from "react"
-import { NavLink, useNavigate, useParams } from "react-router-dom"
-import Movies from '../pages/movies'
-import Tvs from '../pages/tvs'
-import People from '../pages/people'
+import React from "react"
+import { NavLink, Outlet } from "react-router-dom"
+import useScrollDir from "../hooks/useScrollDir";
 
 const Tab: React.FC<{ to: string, name: string }> = ({ to, name }) => {
     return (
@@ -15,68 +13,22 @@ const Tab: React.FC<{ to: string, name: string }> = ({ to, name }) => {
     )
 }
 
-const MovieLists: React.FC = () => {
-    const navigate = useNavigate();
-    let { list } = useParams()
-
-    useEffect(() => {
-        if (!list) navigate("popular")
-    }, [])
+const Lists: React.FC<{ type: 'movie' | 'tv' | 'person' }> = ({ type }) => {
+    const scrollDir = useScrollDir('up')
 
     return (
         <>
             <main className='lists'>
-                <div className='tabs'>
+                <div className={'tabs ' + scrollDir}>
                     <Tab to='popular' name='Популярные' />
-                    <Tab to='top_rated' name='Лучшие' />
-                    <Tab to='upcoming' name='Ожидаемые' />
+                    {(type === 'movie' || type === 'tv') && <Tab to='top_rated' name='Лучшие' />}
+                    {type === 'movie' && <Tab to='upcoming' name='Ожидаемые' />}
+                    {type === 'tv' && <Tab to='airing_today' name='В эфире сегодня' />}
                 </div>
-                <Movies />
+                <Outlet />
             </main>
         </>
     )
-};
+}
 
-const TvLists: React.FC = () => {
-    const navigate = useNavigate();
-    let { list } = useParams()
-
-    useEffect(() => {
-        if (!list) navigate("popular")
-    }, [])
-
-    return (
-        <>
-            <main className='lists'>
-                <div className='tabs'>
-                    <Tab to='popular' name='Популярные' />
-                    <Tab to='top_rated' name='Лучшие' />
-                    <Tab to='airing_today' name='В эфире сегодня' />
-                </div>
-                <Tvs />
-            </main>
-        </>
-    )
-};
-
-const PersonLists: React.FC = () => {
-    const navigate = useNavigate();
-    let { list } = useParams()
-
-    useEffect(() => {
-        if (!list) navigate("popular")
-    }, [])
-
-    return (
-        <>
-            <main className='lists'>
-                <div className='tabs'>
-                    <Tab to='popular' name='Популярные' />
-                </div>
-                <People />
-            </main>
-        </>
-    )
-};
-
-export { MovieLists, TvLists, PersonLists }
+export default Lists
