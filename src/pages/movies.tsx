@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../store/hooks'
 import { fetchPopularMovies, fetchTopRatedMovies, fetchUpcomingMovies, pmNext, trmNext, umNext } from '../store/moviesSlice'
 import { RootState } from '../store/store'
@@ -7,12 +7,15 @@ import { Movie } from '../types/cards'
 import Card from '../ui/card'
 import CircularProgressIndicator from '../ui/cpi'
 
-const Movies: React.FC<{}> = () => {
+const Movies: React.FC = () => {
     const movies = useAppSelector((state: RootState) => state.movies)
     const dispatch = useAppDispatch()
-    let { list } = useParams()
+    const navigate = useNavigate()
+    const { list } = useParams()
 
     useEffect(() => {
+        if (!list) navigate('popular', { replace: true })
+
         switch (list) {
             case 'popular':
                 if (movies.popular.status === 'idle') dispatch(fetchPopularMovies(movies.popular.page));

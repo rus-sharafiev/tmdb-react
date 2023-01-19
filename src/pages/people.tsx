@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../store/hooks'
 import { fetchPopularPeople, fetchRussianNames, ppNext } from '../store/peopleSlice'
 import { RootState } from '../store/store'
@@ -8,11 +8,13 @@ import CircularProgressIndicator from '../ui/cpi'
 
 const People: React.FC = () => {
     const people = useAppSelector((state: RootState) => state.people)
-    const [ppPage, setPPPage] = useState(1)
     const dispatch = useAppDispatch()
-    let { list } = useParams()
+    const navigate = useNavigate()
+    const { list } = useParams()
 
     useEffect(() => {
+        if (!list) navigate('popular', { replace: true })
+
         switch (list) {
             case 'popular':
                 if (people.popular.status === 'idle') dispatch(fetchPopularPeople(people.popular.page))
@@ -25,7 +27,7 @@ const People: React.FC = () => {
 
     return (
         <>
-            <main className={people[list].status !== 'complete' ? 'cards hidden' : 'cards'}>
+            <div className={people[list].status !== 'complete' ? 'cards hidden' : 'cards'}>
                 {people[list].status === 'complete' && people[list].content.map((person: Person) => {
                     let name = person.name
                     people.russianNames.content.length !== 0
@@ -42,7 +44,7 @@ const People: React.FC = () => {
                             </div>
                         </div>)
                 })}
-            </main>
+            </div>
             {people[list].status === 'loading' && <CircularProgressIndicator className='cpi' />}
         </>
     )

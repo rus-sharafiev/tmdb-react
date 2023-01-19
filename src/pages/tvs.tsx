@@ -5,19 +5,23 @@ import { fetchPopularTvs, fetchTopRatedTvs, fetchAiringTodayTvs, ptNext, trtNext
 import { RootState } from '../store/store'
 import { Tv } from '../types/cards'
 import Card from '../ui/card'
-import CircularProgressIndicator from '../ui/cpi'
+import CPI from '../ui/cpi'
 
 const Tvs: React.FC = () => {
     const tvs = useAppSelector((state: RootState) => state.tvs)
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
+    const { list } = useParams()
     const endOfPage = useRef(null)
-    let { list } = useParams()
+
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' })
     }, [tvs.popular.firstLoadDone, tvs.top_rated.firstLoadDone, tvs.airing_today.firstLoadDone])
 
     useEffect(() => {
+        if (!list) navigate('popular', { replace: true })
+
         switch (list) {
             case 'popular':
                 if (tvs.popular.status === 'idle') dispatch(fetchPopularTvs(tvs.popular.page))
@@ -69,7 +73,7 @@ const Tvs: React.FC = () => {
 
     return (
         <>
-            <main className={tvs[list].firstLoadDone ? 'cards' : 'cards hidden'}>
+            <div className={tvs[list].firstLoadDone ? 'cards' : 'cards hidden'}>
                 {tvs[list].content.map((tv: Tv) =>
                     <Card key={tv.id}
                         img={tv.poster_path}
@@ -79,9 +83,14 @@ const Tvs: React.FC = () => {
                         votes={tv.vote_count} />
                 )}
                 <div className='cards-loader' ref={endOfPage}></div>
-            </main>
-            <div className={tvs[list].status === 'loading' ? 'page-is-loading show' : 'page-is-loading'}>Стр {tvs[list].page}</div>
-            {!tvs[list].firstLoadDone && tvs[list].status === 'loading' && <CircularProgressIndicator className='cpi' />}
+            </div>
+
+            {tvs[list].status === 'loading'
+                ? tvs[list].firstLoadDone
+                    ? null
+                    : <CPI className='cpi' />
+                : null
+            }
         </>
     )
 };
