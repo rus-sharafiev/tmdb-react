@@ -4,7 +4,7 @@ import { useAppSelector, useAppDispatch } from '../store/hooks'
 import { fetchPopularTvs, fetchTopRatedTvs, fetchAiringTodayTvs, ptNext, trtNext, attNext } from '../store/tvsSlice'
 import { RootState } from '../store/store'
 import { Tv } from '../types/cards'
-import Card from '../ui/card'
+import Card, { CardSkeleton } from '../ui/card'
 import CPI from '../ui/cpi'
 
 const Tvs: React.FC = () => {
@@ -73,7 +73,7 @@ const Tvs: React.FC = () => {
 
     return (
         <>
-            <div className={tvs[list].firstLoadDone ? 'cards' : 'cards hidden'}>
+            <div className={'cards'}>
                 {tvs[list].content.map((tv: Tv) =>
                     <Card key={tv.id}
                         img={tv.poster_path}
@@ -83,14 +83,8 @@ const Tvs: React.FC = () => {
                         votes={tv.vote_count} />
                 )}
                 <div className='cards-loader' ref={endOfPage}></div>
+                {tvs[list].status === 'loading' && [...Array(20)].map((e, i) => <CardSkeleton key={`skeleton-${i}`} />)}
             </div>
-
-            {tvs[list].status === 'loading'
-                ? tvs[list].firstLoadDone
-                    ? null
-                    : <CPI className='cpi' />
-                : null
-            }
         </>
     )
 };
