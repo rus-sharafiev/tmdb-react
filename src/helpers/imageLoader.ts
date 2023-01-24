@@ -5,6 +5,9 @@ const imageLoader = async (url: string) => {
         img.onload = () => {
             res(img.src)
         }
+        img.onerror = () => {
+            res('/img/no_image.png')
+        }
 
     });
 }
