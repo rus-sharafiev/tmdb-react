@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../store/hooks'
 import { fetchPopularPeople, fetchRussianNames, ppNext } from '../store/peopleSlice'
 import { RootState } from '../store/store'
-import { Person } from '../types/cards'
+import { PersonCard } from '../types/cards'
 import CircularProgressIndicator from '../ui/cpi'
 
 const People: React.FC = () => {
@@ -28,7 +28,7 @@ const People: React.FC = () => {
     return (
         <>
             <div className={people[list].status !== 'complete' ? 'cards hidden' : 'cards'}>
-                {people[list].status === 'complete' && people[list].content.map((person: Person) => {
+                {people[list].status === 'complete' && people[list].content.map((person: PersonCard) => {
                     let name = person.name
                     people.russianNames.content.length !== 0
                         && people.russianNames.content.map((rusName: { id: number, name: string }) =>

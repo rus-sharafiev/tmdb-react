@@ -1,5 +1,5 @@
 // Movie card
-export interface Movie {
+export interface MovieCard {
     adult: boolean,
     backdrop_path: string,
     genre_ids: number[],
@@ -17,7 +17,7 @@ export interface Movie {
 }
 
 // TV card
-export interface Tv {
+export interface TvCard {
     backdrop_path: string,
     first_air_date: string,
     genre_ids: number[],
@@ -34,11 +34,11 @@ export interface Tv {
 }
 
 // Person card
-export interface Person {
+export interface PersonCard {
     adult: boolean,
     gender: number,
     id: number,
-    known_for: [Movie | Tv],
+    known_for: [MovieCard | TvCard],
     known_for_department: string,
     name: string,
     popularity: number,
