@@ -9,9 +9,7 @@
     "dev": "concurrently --names 'esbuild,less' -c 'yellow,blue' \" esbuild src/index.tsx --outdir=build --bundle --watch \" \" less-watch-compiler styles build index.less \"",
     "build": "lessc styles/index.less build/index.css && esbuild index=src/index.tsx build/index.css --outdir=build --allow-overwrite --bundle --minify",
     "server": "esbuild server/server.tsx --outfile=server/index.js --allow-overwrite --bundle --minify --platform=node",
-    "start": "node server/index.js",
-    "test": "npm run build && npm run server && npm run start",
-    "serv": "npm run server && npm run start"
+    "start": "node server/index.js"
   },
   "dependencies": {
     "@fastify/static": "^6.6.0",
