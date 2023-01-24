@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-import imageLoader from './imageLoader'
-import { Person } from '../types/cards'
+import imageLoader from '../helpers/imageLoader'
+import { PersonCard } from '../types/cards'
 
 const preloadImages = async (content: { [index: string]: any }, size: string) => {
   let array = await Promise.all(content.results.map(async (item: { [index: string]: any }) => {
-    item.profile_path = item.profile_path ? await imageLoader('https://image.tmdb.org/t/p/' + size + item.profile_path) : '/img/no_image.png' 
+    item.profile_path = item.profile_path ? await imageLoader('https://image.tmdb.org/t/p/' + size + item.profile_path) : '/img/no_image.png'
     return item;
   }));
   return array;
@@ -29,8 +29,8 @@ const getRussianName = async (id: number) => {
 
 interface RusNames { id: number, name: string }
 
-const getRussianNamesArray = async (people: Person[]) => {
-  let arr: RusNames[] = await Promise.all(people.map(async (person: Person) => {
+const getRussianNamesArray = async (people: PersonCard[]) => {
+  let arr: RusNames[] = await Promise.all(people.map(async (person: PersonCard) => {
     let russianName = await getRussianName(person.id)
     return { id: person.id, name: russianName }
   }))

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-import imageLoader from './imageLoader';
+import imageLoader from '../helpers/imageLoader';
 
 const preloadImages = async (content: { [index: string]: any }, size: string) => {
   let array = await Promise.all(content.results.map(async (item: { [index: string]: any }) => {
