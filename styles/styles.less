@@ -4,6 +4,10 @@
     overscroll-behavior: none;
 }
 
+a {
+    text-decoration: none;
+}
+
 .icons-hidden .material-symbols-rounded {
     opacity: 0;
     width: 0;
@@ -11,7 +15,7 @@
 }
 
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -19,12 +23,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--md-sys-color-primary-container);
+    background: var(--md-sys-color-primary);
     background-clip: content-box;
-    border: 4px;
+    border: 3px;
     border-style: solid;
     border-color: transparent;
-    border-radius: 8px;
+    border-radius: 4px;
     transition: all 0.2s ease-in-out;
 }
 
@@ -56,7 +60,9 @@ body {
 
 /* Layout -------------------------------------------------------------------------------------------------------------------------- */
 nav {
-    .m3-navigation-rail()
+    .m3-navigation-rail();
+    align-content: start;
+    padding-top: 92px;
 }
 
 .logo {
@@ -67,10 +73,10 @@ nav {
     align-items: center;
     justify-content: center;
     z-index: 1;
+    transition: opacity 0.2s ease-in-out;
 
     svg {
         width: 65px;
-        filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.5));
     }
 }
 
@@ -78,7 +84,7 @@ header {
     position: fixed;
     top: 0px;
     right: 0;
-    left: 80px;
+    left: 56px;
     height: 64px;
     display: grid;
     grid: 64px / 1fr;
@@ -99,7 +105,7 @@ header {
         position: absolute;
         inset: 0;
         background: var(--md-sys-color-surface);
-        opacity: 0.95;
+        opacity: 0.9;
     }
 
     label {
@@ -187,14 +193,13 @@ code {
 .tabs {
     position: fixed;
     top: 56px;
-    left: 84px;
-    right: 4px;
+    left: 88px;
+    right: 8px;
     height: 48px;
     display: grid;
     grid-template-rows: 1fr;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     justify-items: center;
-    padding-left: 28px;
     border-bottom: 1px solid var(--md-sys-color-surface-variant);
     z-index: 1;
     transition: top 0.2s linear;
@@ -233,3 +238,6 @@ code {
 
 // Cards
 @import './pages/cards.less';
+
+// Movie Page
+@import './pages/movie.less';
