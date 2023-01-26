@@ -40,6 +40,16 @@ body {
     // display: grid;
     // grid-template-columns: 80px 1fr;
     // grid-auto-rows: min-content;
+
+    &::before {
+        content: '';
+        position: fixed;
+        height: 100vh;
+        inset: 0;
+        background-color: var(--md-sys-color-primary);
+        opacity: 0.05;
+        z-index: -1;
+    }
 }
 
 #root {
@@ -98,10 +108,14 @@ header {
     }
 
     &.down {
-        top: -56px;
+        top: -64px;
     }
 
     &>.overlay {
+        @state-color: var(--md-sys-color-primary);
+        .state-layer();
+        .surface-tint();
+
         position: absolute;
         inset: 0;
         background: var(--md-sys-color-surface);
@@ -109,9 +123,12 @@ header {
     }
 
     label {
-        .state-layer();
         @state-color: var(--md-sys-color-primary);
-        .surface-tint();
+        .state-layer();
+
+        &::before {
+            opacity: 0.08;
+        }
 
         font-family: 'Material Symbols Rounded';
         font-size: 24px;
@@ -179,7 +196,7 @@ main {
 }
 
 main.lists+header {
-    height: 104px;
+    height: 112px;
 }
 
 code {
@@ -192,7 +209,7 @@ code {
 /* Content ------------------------------------------------------------------------------------------------------------------------- */
 .tabs {
     position: fixed;
-    top: 56px;
+    top: 64px;
     left: 88px;
     right: 8px;
     height: 48px;
@@ -205,7 +222,7 @@ code {
     transition: top 0.2s linear;
 
     &.up {
-        top: 56px;
+        top: 64px;
     }
 
     &.down {
