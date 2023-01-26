@@ -35,7 +35,7 @@ const Movies: React.FC = () => {
     }, [list])
 
     useEffect(() => {
-        const observer = new IntersectionObserver((entries) => {
+        const moviesObserver = new IntersectionObserver((entries) => {
             if (entries[0].intersectionRatio <= 0) return
 
             if (list && movies[list].status === 'complete') {
@@ -59,10 +59,10 @@ const Movies: React.FC = () => {
             }
         });
 
-        if (endOfPage.current) observer.observe(endOfPage.current);
+        if (endOfPage.current) moviesObserver.observe(endOfPage.current);
 
         return () => {
-            if (endOfPage.current) observer.unobserve(endOfPage.current);
+            if (endOfPage.current) moviesObserver.unobserve(endOfPage.current);
         }
 
     }, [endOfPage, movies.popular.status, movies.top_rated.status, movies.upcoming.status])

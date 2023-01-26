@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../store/hooks'
 import { fetchPopularTvs, fetchTopRatedTvs, fetchAiringTodayTvs, ptNext, trtNext, attNext } from '../store/tvsSlice'
 import { RootState } from '../store/store'
 import { TvCard } from '../types/cards'
-import Card, { MediaCardSkeleton } from '../ui/skeletons'
+import { MediaCardSkeleton } from '../ui/skeletons'
+import Rating from '../ui/rating'
 
 const Tvs: React.FC = () => {
     const tvs = useAppSelector((state: RootState) => state.tvs)
@@ -35,7 +36,7 @@ const Tvs: React.FC = () => {
     }, [list])
 
     useEffect(() => {
-        const intersectionObserver = new IntersectionObserver((entries) => {
+        const tvObserver = new IntersectionObserver((entries) => {
             if (entries[0].intersectionRatio <= 0) return
 
             if (list && tvs[list].status === 'complete') {
@@ -59,10 +60,10 @@ const Tvs: React.FC = () => {
             }
         });
 
-        if (endOfPage.current) intersectionObserver.observe(endOfPage.current);
+        if (endOfPage.current) tvObserver.observe(endOfPage.current);
 
         return () => {
-            if (endOfPage.current) intersectionObserver.unobserve(endOfPage.current);
+            if (endOfPage.current) tvObserver.unobserve(endOfPage.current);
         }
 
     }, [endOfPage, tvs.popular.status, tvs.top_rated.status, tvs.airing_today.status])
@@ -73,13 +74,14 @@ const Tvs: React.FC = () => {
         <>
             <div className={'cards'}>
                 {tvs[list].content.map((tv: TvCard) =>
-                    <Card key={tv.id}
-                        id={tv.id}
-                        img={tv.poster_path}
-                        title={tv.name}
-                        originalTitle={tv.original_name}
-                        rating={tv.vote_average}
-                        votes={tv.vote_count} />
+                    <Link to={`/tv/${tv.id}`} className='card' key={tv.id}>
+                        <img src={tv.poster_path} />
+                        <Rating radius={22.5} rating={parseFloat(tv.vote_average ? tv.vote_average.toFixed(1) : '0')} votes={tv.vote_count} />
+                        <div className='title'>
+                            <span>{tv.name}</span>
+                            <span>{tv.original_name}</span>
+                        </div>
+                    </Link>
                 )}
                 <div className='cards-loader' ref={endOfPage}></div>
                 {tvs[list].status === 'loading' && [...Array(20)].map((e, i) => <MediaCardSkeleton key={`skeleton-${i}`} />)}
