@@ -6,8 +6,8 @@
     justify-items: center;
     gap: 8px;
     opacity: 1;
+    padding-top: 48px;
     transition: opacity 0.3s ease-in;
-    padding-top: 40px;
     position: relative;
 
     .cards-loader {
@@ -95,6 +95,62 @@
         span:nth-child(1) {
             .body-large()
         }
+    }
+}
+
+.media-skeleton {
+    background: linear-gradient(130deg,
+            var(--md-sys-color-surface-variant),
+            transparent,
+            var(--md-sys-color-surface-variant));
+    background-size: 200% 200%;
+    opacity: 0.6;
+
+    -webkit-animation: Animation 5s ease infinite;
+    -moz-animation: Animation 5s ease infinite;
+    animation: Animation 5s ease infinite;
+
+}
+
+@-webkit-keyframes Animation {
+    0% {
+        background-position: 10% 0%
+    }
+
+    50% {
+        background-position: 91% 100%
+    }
+
+    100% {
+        background-position: 10% 0%
+    }
+}
+
+@-moz-keyframes Animation {
+    0% {
+        background-position: 10% 0%
+    }
+
+    50% {
+        background-position: 91% 100%
+    }
+
+    100% {
+        background-position: 10% 0%
+    }
+}
+
+@keyframes Animation {
+    0% {
+        background-position: 10% 0%
+    }
+
+    50% {
+        background-position: 91% 100%
+    }
+
+    100% {
+        background-position: 10% 0%
     }
 }
 
