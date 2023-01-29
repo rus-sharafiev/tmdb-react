@@ -4,6 +4,7 @@ import proxyImageLoader from "../helpers/proxyImageLoader"
 import { Movie } from "../types/movie"
 import useVibrant from "../hooks/useVibrant"
 import { argbFromHex, themeFromSourceColor, applyTheme } from "@material/material-color-utilities"
+import Rating from "../ui/rating"
 
 const preloadMovie = async (content: Movie) => {
     content.backdrop_path = await proxyImageLoader(content.backdrop_path, 'w1280')
@@ -48,6 +49,16 @@ const Movie: React.FC = () => {
             <div className="color-overlay" />
             <img src={movie.poster_path} alt='poster' className="poster" />
             <div className="info">
+                <div className="title">{movie.title}</div>
+                <div className="original_title">{movie.original_title}</div>
+                <div className="overview">{movie.overview}</div>
+                <div className="release_date">{movie.release_date}</div>
+                <div className="release_date">{movie.release_date}</div>
+                <Rating
+                    radius={22.5}
+                    rating={parseFloat(movie.vote_average ? movie.vote_average.toFixed(1) : '0')}
+                    votes={movie.vote_count}
+                />
             </div>
         </main>
     )
