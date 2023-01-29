@@ -16,6 +16,7 @@ a {
 
 ::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -73,6 +74,7 @@ nav {
     .m3-navigation-rail();
     align-content: start;
     padding-top: 92px;
+    z-index: 2;
 }
 
 .logo {
@@ -84,6 +86,7 @@ nav {
     justify-content: center;
     z-index: 1;
     transition: opacity 0.2s ease-in-out;
+    z-index: 3;
 
     svg {
         width: 65px;
@@ -102,6 +105,7 @@ header {
     padding-left: 32px;
     backdrop-filter: blur(5px);
     transition: top 0.2s linear;
+    z-index: 1;
 
     &.up {
         top: 0px;
@@ -218,7 +222,7 @@ code {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     justify-items: center;
     border-bottom: 1px solid var(--md-sys-color-surface-variant);
-    z-index: 1;
+    z-index: 2;
     transition: top 0.2s linear;
 
     &.up {
