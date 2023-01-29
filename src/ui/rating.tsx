@@ -29,7 +29,7 @@ const Rating: React.FC<{ rating: number | undefined, radius: number, votes: numb
         <svg xmlns="http://www.w3.org/2000/svg"
             width={width}
             height={height}
-            className={votes === undefined || votes < 100 ? 'low-votes' : undefined}
+            className={votes === undefined || votes < 100 ? 'rating low-votes' : 'rating'}
         >
             <circle
                 fill='#081c22'
