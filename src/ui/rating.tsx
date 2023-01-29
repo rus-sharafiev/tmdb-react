@@ -57,7 +57,7 @@ const Rating: React.FC<{ rating: number | undefined, radius: number, votes: numb
                 strokeDasharray={`${(2 * Math.PI * r)} ${(2 * Math.PI * r)}`}
                 strokeDashoffset={(2 * Math.PI * r) - (2 * Math.PI * r * k)}
             />
-            <text x={x} y={y} dominantBaseline="central" textAnchor="middle" className='rating-text'>{rating ? rating : 'NR'}</text>
+            <text x={x} y={y} dominantBaseline="central" textAnchor="middle" className='rating-text'>{rating ? rating.toFixed(1) : 'NR'}</text>
         </svg>
     )
 }

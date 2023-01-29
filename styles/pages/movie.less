@@ -1,14 +1,18 @@
 // Movie Page
 .movie {
     display: grid;
-    grid-template-rows: 10px 30px 600px 120px 1fr;
-    grid-template-columns: 1fr minmax(50px, 1fr) 500px minmax(500px, 20fr) minmax(8px, 1fr);
+    grid-template-rows: 10px 30px 600px 50px 70px 25px 110px 172px 1fr;
+    grid-template-columns: 1fr minmax(50px, 1fr) 500px minmax(300px, 20fr) 170px 50px minmax(8px, 1fr);
     grid-template-areas:
-        "... .... .... .... ...."
-        "... .... post .... ...."
-        "... .... post info ...."
-        "... .... post .... ...."
-        "... .... .... .... ...."
+        "... .... ..... .... .... .... ...."
+        "... .... postr .... .... .... ...."
+        "... .... postr info info info ...."
+        "... .... postr rate coll .... ...."
+        "... .... postr .... coll .... ...."
+        "... .... ..... .... coll .... ...."
+        "... .... video .... coll .... ...."
+        "... .... video .... .... .... ...."
+        "... .... ..... .... .... .... ...."
     ;
 
     .color-overlay {
@@ -21,14 +25,15 @@
                 transparent 100%);
         @state-color: var(--md-sys-color-primary);
         .state-layer();
+        z-index: -1;
 
         &::before {
-            opacity: 0.85;
+            opacity: 0.9;
         }
     }
 
     .poster {
-        grid-area: post;
+        grid-area: postr;
 
         height: 100%;
         width: 100%;
@@ -44,6 +49,7 @@
         width: 100%;
         border-radius: 0 24px 24px 0;
         object-fit: none;
+        z-index: -1;
     }
 
     .info {
@@ -56,13 +62,88 @@
         flex-direction: column;
         gap: 10px;
         padding: 20px;
+        color: var(--md-sys-color-on-primary);
+
+        .title {
+            .display-medium();
+        }
+
+        .original_title {
+            .label-large();
+        }
+
+        .tagline {
+            .label-medium();
+        }
+
+        .overview {
+            .body-large();
+        }
+
+        .release_date {
+            .body-large();
+        }
+
+    }
+
+    .rating-container {
+        grid-area: rate;
+        margin: 0 0 0 16px;
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+
+        span {
+            .label-large();
+            margin-bottom: 24px;
+            color: var(--md-sys-color-on-surface-variant);
+            opacity: 0.5;
+        }
+
+        .rating {
+            filter: drop-shadow(0px 1px 2px rgb(0 0 0 / 60%))
+        }
+
+        .rating-text {
+            font-family: 'Oxygen', sans-serif;
+            font-size: 34px;
+            font-weight: 700;
+            fill: white;
+        }
+    }
+
+    .collection {
+        grid-area: coll;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        margin-top: -20px;
+
+        img {
+            width: 170px;
+            height: 255px;
+            border-radius: 8px;
+            .elevation-level1();
+        }
 
         div {
             .label-large();
-            .elevation-level2();
-            border-radius: 4px;
-            padding: 20px;
+            text-align: center;
+            line-height: 0.9;
         }
+    }
 
+    .video {
+        grid-area: video;
+
+        iframe {
+            border: 0;
+            border-radius: 24px;
+            width: 100%;
+            height: 100%;
+            .elevation-level2();
+        }
     }
 }
