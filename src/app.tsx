@@ -54,8 +54,8 @@ const App: React.FC = () => {
                     <input type={'text'} placeholder='Поиск по фильмам, сериалам и людям' />
                 </label>
             </header>
-            <footer></footer>
             <Logo />
+            <footer></footer>
             <nav>
                 <NavBtn to='movies' icon='movie' name='Фильмы' />
                 <NavBtn to='tvs' icon='tv_gen' name='Сериалы' />
