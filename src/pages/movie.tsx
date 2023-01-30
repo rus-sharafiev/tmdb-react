@@ -5,6 +5,7 @@ import { Movie } from "../types/movie"
 import useVibrant from "../hooks/useVibrant"
 import { argbFromHex, themeFromSourceColor, applyTheme } from "@material/material-color-utilities"
 import Rating from "../ui/rating"
+import CircularProgress from '../ui/cpi'
 
 const preloadMovie = async (content: Movie) => {
     content.backdrop_path = await proxyImageLoader(content.backdrop_path, 'w1280')
@@ -20,21 +21,22 @@ const Movie: React.FC = () => {
     let { id } = useParams()
     const [movie, setMovie] = useState<Movie>()
     const [vibrantPalette, setImgForVibrant] = useVibrant()
-    const [isLoaded, setIsLoaded] = useState(false)
 
+    // Fetch movie JSON
     useEffect(() => {
         fetch(`/api/movie/${id}`)
             .then(res => res.json())
             .then(obj => preloadMovie(obj))
             .then(movie => setMovie(movie))
-            .finally(() => setIsLoaded(true))
     }, [id])
 
+    // Get Vibrant palette
     useEffect(() => {
         movie && console.log(movie)
         movie && setImgForVibrant(movie.poster_path)
     }, [movie])
 
+    // Set Material Theme
     useEffect(() => {
         if (vibrantPalette && vibrantPalette.Vibrant && vibrantPalette.Muted) {
             const theme = themeFromSourceColor(argbFromHex(vibrantPalette.Vibrant));
@@ -45,7 +47,13 @@ const Movie: React.FC = () => {
 
     }, [vibrantPalette])
 
-    if (!movie) return null
+    // Long russian date converter
+    const localDate = (d: string) => {
+        let date = new Date(d)
+        return date.toLocaleString('ru', { dateStyle: "long" })
+    }
+
+    if (!movie) return <CircularProgress />
 
     return (
         <main className="movie">
@@ -53,11 +61,15 @@ const Movie: React.FC = () => {
             <div className="color-overlay" />
             <img src={movie.poster_path} alt='poster' className="poster" />
             <div className="info">
-                <div className="title">{movie.title}</div>
-                <div className="original_title">{movie.original_title}</div>
+                <div className="title">
+                    {movie.title}
+                    <span>{movie.original_title}</span>
+                </div>
                 <div className="tagline">{movie.tagline}</div>
-                <div className="overview">{movie.overview}</div>
-                <div className="release_date">{movie.release_date}</div>
+                <div className="overview"><span>Обзор</span>{movie.overview}</div>
+                <div className="release_date"><span>Дата премьеры</span>{localDate(movie.release_date)}</div>
+                <div className="budget"><span>Бюджет</span>$ {movie.budget.toLocaleString('ru')}</div>
+                <div className="revenue"><span>Сборы</span>$ {movie.revenue.toLocaleString('ru')}</div>
             </div>
             <div className="rating-container">
                 <Rating
