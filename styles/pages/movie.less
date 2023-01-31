@@ -1,17 +1,18 @@
 // Movie Page
 .movie {
     display: grid;
-    grid-template-rows: 10px 30px 600px 50px min-content 20px 281px 1fr;
+    grid-template-rows: 10px 30px 600px 50px min-content 20px 281px min-content 1fr;
     grid-template-columns: 1fr minmax(30px, 1fr) minmax(450px, 500px) minmax(320px, 10fr) 170px minmax(30px, 2fr) minmax(8px, 2fr);
     grid-template-areas:
-        "... .... ..... .... .... .... ...."
-        "... .... postr .... .... .... ...."
-        "... .... postr info info .... ...."
-        "... .... postr rate coll .... ...."
-        "... .... postr .... coll .... ...."
-        "... .... ..... .... coll .... ...."
-        "... .... video .... coll .... ...."
-        "... .... ..... .... .... .... ...."
+        "... .... ..... ..... ..... .... ...."
+        "... .... postr ..... ..... .... ...."
+        "... .... postr infrm infrm .... ...."
+        "... .... postr ratng ..... .... ...."
+        "... .... postr ..... ..... .... ...."
+        "... .... ..... ..... ..... .... ...."
+        "... .... video ..... ..... .... ...."
+        "... .... collc collc collc .... ...."
+        "... .... ..... ..... ..... .... ...."
     ;
 
     .backdrop {
@@ -54,7 +55,7 @@
 
 
     .info {
-        grid-area: info;
+        grid-area: infrm;
 
         height: 100%;
         width: 100%;
@@ -103,7 +104,7 @@
     }
 
     .rating-container {
-        grid-area: rate;
+        grid-area: ratng;
         margin: 0 0 0 16px;
         display: flex;
         align-items: flex-end;
@@ -128,28 +129,58 @@
         }
     }
 
-    .collection {
-        grid-area: coll;
+    .collection-backdrop,
+    .collection-overlay {
+        grid-row: 8 / 9;
+        grid-column: 2 / -2;
+
+        width: 100%;
+        height: 200px;
+        margin: 40px 0;
+        border-radius: 24px;
+    }
+
+    .collection-backdrop {
+        width: 500px;
+        object-fit: cover;
+        z-index: -1;
+    }
+
+    .collection-overlay {
+        background: linear-gradient(to right,
+                transparent 0%,
+                var(--md-sys-color-primary) 500px);
+        @state-color: var(--md-sys-color-primary);
+        .state-layer();
 
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 5px;
-        margin-top: -50px;
+        align-items: flex-end;
+        padding: 20px 30px;
 
-        img {
-            width: 170px;
-            height: 255px;
-            border-radius: 8px;
-            .elevation-level1();
+        &::before {
+            opacity: 0.5;
         }
 
         div {
-            .label-large();
-            text-align: center;
-            line-height: 0.9;
-            color: var(--md-sys-color-on-surface-variant);
+            .display-small();
+            color: var(--md-sys-color-on-primary);
+            opacity: 0.5;
         }
+    }
+
+    .collection {
+        grid-area: collc;
+
+        width: 100%;
+        margin: 20px 0;
+        z-index: 1;
+
+        display: grid;
+        grid-template-rows: 0px;
+        grid-auto-rows: min-content;
+        align-items: center;
+        gap: 5px;
+
     }
 
     .video {
