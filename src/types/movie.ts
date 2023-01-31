@@ -51,7 +51,7 @@ interface Image {
     width: number
 }
 
-export interface Movie {
+export default interface Movie {
     adult: boolean,
     backdrop_path: string,
     belongs_to_collection: Collection | null,
