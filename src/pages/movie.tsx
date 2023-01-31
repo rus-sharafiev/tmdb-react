@@ -1,17 +1,28 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import proxyImageLoader from "../helpers/proxyImageLoader"
-import { Movie } from "../types/movie"
-import useVibrant from "../hooks/useVibrant"
-import { argbFromHex, themeFromSourceColor, applyTheme } from "@material/material-color-utilities"
+import Movie from "../types/movie"
+import { Collection, Part } from "../types/collection"
 import Rating from "../ui/rating"
 import CircularProgress from '../ui/cpi'
+import useMaterialTheme from "../hooks/useMaterialTheme"
+
+const preloadCollection = async (content: Collection) => {
+    content.backdrop_path = await proxyImageLoader(content.backdrop_path, 'w1280')
+    content.poster_path = await proxyImageLoader(content.poster_path, 'w780')
+    content.parts = await Promise.all(
+        content.parts.map(async (part: Part) => {
+            if (!part.poster_path) return part
+            part.poster_path = await proxyImageLoader(part.poster_path, 'w300')
+            return part
+        })
+    )
+    return content;
+}
 
 const preloadMovie = async (content: Movie) => {
     content.backdrop_path = await proxyImageLoader(content.backdrop_path, 'w1280')
     content.poster_path = await proxyImageLoader(content.poster_path, 'w780')
-    if (content.belongs_to_collection)
-        content.belongs_to_collection.poster_path = await proxyImageLoader(content.belongs_to_collection.poster_path, 'w342')
     // content.images.logos.length > 0 &&
     //     content.images.logos.map(async (logo) => logo.file_path = await proxyImageLoader(logo.file_path, 'w500'))
     return content;
@@ -20,32 +31,35 @@ const preloadMovie = async (content: Movie) => {
 const Movie: React.FC = () => {
     let { id } = useParams()
     const [movie, setMovie] = useState<Movie>()
-    const [vibrantPalette, setImgForVibrant] = useVibrant()
+    const [collection, setCollection] = useState<Collection>()
+    const [themeIsSet, setImagePath] = useMaterialTheme()
 
     // Fetch movie JSON
     useEffect(() => {
-        fetch(`/api/movie/${id}`)
-            .then(res => res.json())
-            .then(obj => preloadMovie(obj))
-            .then(movie => setMovie(movie))
+        id &&
+            fetch(`/api/movie/${id}`)
+                .then(res => res.json())
+                .then(obj => preloadMovie(obj))
+                .then(movie => setMovie(movie))
     }, [id])
 
-    // Get Vibrant palette
+    // Set Material theme & fetch collection
     useEffect(() => {
-        movie && console.log(movie)
-        movie && setImgForVibrant(movie.poster_path)
+        if (!movie) return
+
+        // console.log(movie)
+        setImagePath(movie.poster_path)
+
+        if (movie.belongs_to_collection)
+            fetch(`/api/collection/${movie.belongs_to_collection.id}`)
+                .then(res => res.json())
+                .then(obj => preloadCollection(obj))
+                .then(collection => setCollection(collection))
     }, [movie])
 
-    // Set Material Theme
     useEffect(() => {
-        if (vibrantPalette && vibrantPalette.Vibrant && vibrantPalette.Muted) {
-            const theme = themeFromSourceColor(argbFromHex(vibrantPalette.Vibrant));
-            const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-            applyTheme(theme, { target: document.body, dark: false });
-        }
-        return () => document.body.removeAttribute('style')
-
-    }, [vibrantPalette])
+        // collection && console.log(collection)
+    }, [collection])
 
     // Long russian date converter
     const localDate = (d: string) => {
@@ -53,7 +67,7 @@ const Movie: React.FC = () => {
         return date.toLocaleString('ru', { dateStyle: "long" })
     }
 
-    if (!movie) return <CircularProgress />
+    if (!(movie && themeIsSet)) return <CircularProgress />
 
     return (
         <main className="movie">
@@ -79,11 +93,6 @@ const Movie: React.FC = () => {
                 />
                 <span>Голосов {movie.vote_count}</span>
             </div>
-            {movie.belongs_to_collection &&
-                <div className="collection">
-                    <img src={movie.belongs_to_collection.poster_path} alt="collection poster" />
-                    <div>{movie.belongs_to_collection.name}</div>
-                </div>}
             {movie.videos.results.length > 0 &&
                 <div className="video">
                     <iframe
@@ -93,6 +102,19 @@ const Movie: React.FC = () => {
                         allowFullScreen
                     />
                 </div>}
+            {collection &&
+                <>
+                    <img
+                        className="collection-backdrop"
+                        src={collection.backdrop_path}
+                        alt="collection backdrop"
+                    />
+                    <div className="collection-overlay">
+                        <div>{collection.name}</div>
+                    </div>
+                    <div className="collection">
+                    </div>
+                </>}
 
 
         </main>
