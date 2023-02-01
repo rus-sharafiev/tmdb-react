@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import proxyImageLoader from "../helpers/proxyImageLoader"
 import Movie from "../types/movie"
 import { Collection, Part } from "../types/collection"
@@ -7,35 +7,47 @@ import Rating from "../ui/rating"
 import CircularProgress from '../ui/cpi'
 import useMaterialTheme from "../hooks/useMaterialTheme"
 
-const preloadCollection = async (content: Collection) => {
+// Proxy and preload images
+const preloadMovie = async (content: Movie) => {
     content.backdrop_path = await proxyImageLoader(content.backdrop_path, 'w1280')
     content.poster_path = await proxyImageLoader(content.poster_path, 'w780')
+    return content;
+}
+const preloadCollection = async (content: Collection) => {
+    content.backdrop_path = await proxyImageLoader(content.backdrop_path, 'w1280')
+    content.poster_path = await proxyImageLoader(content.poster_path, 'w300')
     content.parts = await Promise.all(
         content.parts.map(async (part: Part) => {
-            if (!part.poster_path) return part
-            part.poster_path = await proxyImageLoader(part.poster_path, 'w300')
+            part.poster_path = await proxyImageLoader(part.poster_path, 'w300', content.poster_path)
             return part
         })
     )
     return content;
 }
 
-const preloadMovie = async (content: Movie) => {
-    content.backdrop_path = await proxyImageLoader(content.backdrop_path, 'w1280')
-    content.poster_path = await proxyImageLoader(content.poster_path, 'w780')
-    // content.images.logos.length > 0 &&
-    //     content.images.logos.map(async (logo) => logo.file_path = await proxyImageLoader(logo.file_path, 'w500'))
-    return content;
+// Sort collection movies by release date
+const releaseDateAsc = (a: Part, b: Part) => {
+    const strA = a.release_date
+    const strB = b.release_date
+    if (strA < strB) {
+        return -1;
+    }
+    if (strA > strB) {
+        return 1;
+    }
+    return 0;
 }
 
 const Movie: React.FC = () => {
     let { id } = useParams()
     const [movie, setMovie] = useState<Movie>()
     const [collection, setCollection] = useState<Collection>()
-    const [themeIsSet, setImagePath] = useMaterialTheme()
+    const [themeLoaded, setImagePath, setThemeLoaded] = useMaterialTheme()
 
     // Fetch movie JSON
     useEffect(() => {
+        setMovie(undefined) // reset movie
+        setThemeLoaded(false) // reset themeLoaded
         id &&
             fetch(`/api/movie/${id}`)
                 .then(res => res.json())
@@ -48,7 +60,7 @@ const Movie: React.FC = () => {
         if (!movie) return
 
         // console.log(movie)
-        setImagePath(movie.poster_path)
+        setImagePath(movie.poster_path) // to generate theme
 
         if (movie.belongs_to_collection)
             fetch(`/api/collection/${movie.belongs_to_collection.id}`)
@@ -57,17 +69,13 @@ const Movie: React.FC = () => {
                 .then(collection => setCollection(collection))
     }, [movie])
 
-    useEffect(() => {
-        // collection && console.log(collection)
-    }, [collection])
-
     // Long russian date converter
     const localDate = (d: string) => {
         let date = new Date(d)
         return date.toLocaleString('ru', { dateStyle: "long" })
     }
 
-    if (!(movie && themeIsSet)) return <CircularProgress />
+    if (!(movie && themeLoaded)) return <CircularProgress />
 
     return (
         <main className="movie">
@@ -113,6 +121,17 @@ const Movie: React.FC = () => {
                         <div>{collection.name}</div>
                     </div>
                     <div className="collection">
+                        {collection.parts
+                            .sort(releaseDateAsc)
+                            .map((part: Part) =>
+                                <Link to={`/movie/${part.id}`} className='card' key={'part-' + part.id}>
+                                    <img src={part.poster_path} />
+                                    <Rating radius={18} rating={parseFloat(part.vote_average ? part.vote_average.toFixed(1) : '0')} votes={part.vote_count} />
+                                    <div className='title'>
+                                        <span>{part.title}</span>
+                                    </div>
+                                </Link>
+                            )}
                     </div>
                 </>}
 
