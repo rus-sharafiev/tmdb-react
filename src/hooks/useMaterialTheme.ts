@@ -3,7 +3,7 @@ import { themeFromSourceColor, applyTheme, QuantizerCelebi, Score, argbFromRgb }
 
 const useMaterialTheme = () => {
     const [imgPath, setImgPath] = useState<string>('')
-    const [loaded, setLoaded] = useState<boolean>(false)
+    const [themeLoaded, setThemeLoaded] = useState<boolean>(false)
 
     const setImagePath: ((imgPath: string) => void) = (imgPath: string) => {
         imgPath && setImgPath(imgPath)
@@ -55,16 +55,15 @@ const useMaterialTheme = () => {
             const theme = themeFromSourceColor(sourceColor)
             const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches
             applyTheme(theme, { target: document.body, dark: false })
-            setLoaded(true)
         }
 
-        materialTheme()
+        materialTheme().then(() => setThemeLoaded(true))
 
         return () => document.body.removeAttribute('style')
 
     }, [imgPath])
 
-    return [loaded, setImagePath] as const
+    return [themeLoaded, setImagePath, setThemeLoaded] as const
 }
 
 
