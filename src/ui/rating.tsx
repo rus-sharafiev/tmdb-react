@@ -36,6 +36,7 @@ const Rating: React.FC<{ rating: number | undefined, radius: number, votes: numb
                 cx={x}
                 cy={y}
                 r={r + strokeWidth}
+                shapeRendering="geometricPrecision"
             />
             <circle
                 stroke={strokeColorBack}
@@ -44,6 +45,7 @@ const Rating: React.FC<{ rating: number | undefined, radius: number, votes: numb
                 cx={x}
                 cy={y}
                 r={r}
+                shapeRendering="geometricPrecision"
             />
             <circle
                 stroke={strokeColor}
@@ -56,6 +58,7 @@ const Rating: React.FC<{ rating: number | undefined, radius: number, votes: numb
                 transform={`rotate(-90 ${x} ${y})`}
                 strokeDasharray={`${(2 * Math.PI * r)} ${(2 * Math.PI * r)}`}
                 strokeDashoffset={(2 * Math.PI * r) - (2 * Math.PI * r * k)}
+                shapeRendering="geometricPrecision"
             />
             <text x={x} y={y} dominantBaseline="central" textAnchor="middle" className='rating-text'>{rating ? rating.toFixed(1) : 'NR'}</text>
         </svg>
