@@ -1,15 +1,14 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-import imageLoader from '../helpers/imageLoader'
+import proxyImageLoader from '../helpers/proxyImageLoader'
 import { PersonCard } from '../types/cards'
 
-const preloadImages = async (content: { [index: string]: any }, size: string) => {
+const preloadImages = async (content: { [index: string]: any }) => {
   let array = await Promise.all(content.results.map(async (item: { [index: string]: any }) => {
-    item.profile_path = item.profile_path ? await imageLoader('https://image.tmdb.org/t/p/' + size + item.profile_path) : '/img/no_image.png'
+    item.profile_path = await proxyImageLoader(item.profile_path, 'w300')
     return item;
   }));
   return array;
 }
-
 
 const getRussianName = async (id: number) => {
   const cyrillicPattern = /^[\u0410-\u044F\s]+$/;
@@ -41,7 +40,7 @@ const getRussianNamesArray = async (people: PersonCard[]) => {
 export const fetchPopularPeople = createAsyncThunk('people/popular', async (page: number) => {
   const response = await fetch(`/api/person/popular/${page}`);
   let array = await response.json();
-  let content = await preloadImages(array, 'w300');
+  let content = await preloadImages(array);
   return content;
 })
 

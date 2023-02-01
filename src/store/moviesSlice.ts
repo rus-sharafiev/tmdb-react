@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-import imageLoader from '../helpers/imageLoader';
+import proxyImageLoader from '../helpers/proxyImageLoader';
 
-const preloadImages = async (content: { [index: string]: any }, size: string, person?: boolean) => {
+const preloadImages = async (content: { [index: string]: any }) => {
   let array = await Promise.all(content.results.map(async (item: { [index: string]: any }) => {
-    item.poster_path = item.poster_path ? await imageLoader('https://image.tmdb.org/t/p/' + size + item.poster_path) : '/img/no_image.png'
+    item.poster_path = await proxyImageLoader(item.poster_path, 'w300')
     return item;
   }));
   return array;
@@ -13,14 +13,14 @@ const preloadImages = async (content: { [index: string]: any }, size: string, pe
 export const fetchPopularMovies = createAsyncThunk('movies/popular', async (page: number) => {
   const response = await fetch(`/api/movie/popular/${page}`);
   let array = await response.json();
-  let content = await preloadImages(array, 'w300');
+  let content = await preloadImages(array);
   return content;
 })
 
 export const fetchTopRatedMovies = createAsyncThunk('movies/top_rated', async (page: number) => {
   const response = await fetch(`/api/movie/top_rated/${page}`);
   let array = await response.json();
-  let content = await preloadImages(array, 'w300');
+  let content = await preloadImages(array);
   return content;
 })
 
@@ -28,7 +28,7 @@ export const fetchUpcomingMovies = createAsyncThunk('movies/upcoming', async (pa
   try {
     const response = await fetch(`/api/movie/upcoming/${page}`);
     let array = await response.json();
-    let content = await preloadImages(array, 'w300');
+    let content = await preloadImages(array);
     return content;
   } catch (e) {
     console.log(e)
