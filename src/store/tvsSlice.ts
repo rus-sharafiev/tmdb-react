@@ -3,7 +3,7 @@ import proxyImageLoader from '../helpers/proxyImageLoader';
 
 const preloadImages = async (content: { [index: string]: any }) => {
   let array = await Promise.all(content.results.map(async (item: { [index: string]: any }) => {
-    item.poster_path = await proxyImageLoader(item.poster_path, 'w300')
+    item.poster_path = await proxyImageLoader(item.poster_path, 'w300', '/img/no_image.png')
     return item;
   }));
   return array;
