@@ -60,7 +60,7 @@ const Rating: React.FC<{ rating: number | undefined, radius: number, votes: numb
                 strokeDashoffset={(2 * Math.PI * r) - (2 * Math.PI * r * k)}
                 shapeRendering="geometricPrecision"
             />
-            <text x={x} y={y} dominantBaseline="central" textAnchor="middle" className='rating-text'>{rating ? rating.toFixed(1) : 'NR'}</text>
+            <text x={x} y={y} dominantBaseline="central" textAnchor="middle" className='rating-text'>{rating ? rating.toFixed(1) : '-'}</text>
         </svg>
     )
 }
