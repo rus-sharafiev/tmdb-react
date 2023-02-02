@@ -38,6 +38,18 @@ const releaseDateAsc = (a: Part, b: Part) => {
     return 0;
 }
 
+// Movie status
+const status = (status: string) => {
+    switch (status) {
+        case 'Rumored': return 'Слухи'
+        case 'Planned': return 'Планируется'
+        case 'In Production': return 'В производстве'
+        case 'Post Production': return 'Пост-продакшн'
+        case 'Released': return 'Выпущен'
+        case 'Canceled': return 'Отменен'
+    }
+}
+
 const Movie: React.FC = () => {
     let { id } = useParams()
     const [movie, setMovie] = useState<Movie>()
@@ -59,7 +71,7 @@ const Movie: React.FC = () => {
     useEffect(() => {
         if (!movie) return
 
-        // console.log(movie)
+        console.log(movie)
         setImagePath(movie.poster_path) // to generate theme
 
         if (movie.belongs_to_collection)
@@ -83,17 +95,21 @@ const Movie: React.FC = () => {
             <div className="color-overlay" />
             <img src={movie.poster_path} alt='poster' className="poster" />
             <div className="info">
-                <div className="title">
-                    {movie.title}
-                    <span>{movie.original_title}</span>
+                <div className="top">
+                    <div className="title">{movie.title}</div>
+                    <div className="original_title">{movie.original_title}</div>
+                    <div className="tagline">{movie.tagline}</div>
+                    <div className="overview"><span>Обзор</span>{movie.overview ?? 'Нет обзора'}</div>
                 </div>
-                <div className="tagline">{movie.tagline}</div>
-                <div className="overview"><span>Обзор</span>{movie.overview}</div>
-                <div className="release_date"><span>Дата премьеры</span>{localDate(movie.release_date)}</div>
-                <div className="budget"><span>Бюджет</span>$ {movie.budget.toLocaleString('ru')}</div>
-                <div className="revenue"><span>Сборы</span>$ {movie.revenue.toLocaleString('ru')}</div>
+                <div className="bottom">
+                    <div className="status"><span>Статус</span>{status(movie.status)}</div>
+                    <div className="release_date"><span>Дата премьеры</span>{localDate(movie.release_date)}</div>
+                    <div className="budget"><span>Бюджет</span>$ {movie.budget.toLocaleString('ru')}</div>
+                    <div className="revenue"><span>Сборы</span>$ {movie.revenue.toLocaleString('ru')}</div>
+                </div>
             </div>
             <div className="rating-container">
+                <span>Пользовательский рейтинг</span>
                 <Rating
                     radius={40.5}
                     rating={parseFloat(movie.vote_average ? movie.vote_average.toFixed(1) : '0')}
@@ -104,14 +120,14 @@ const Movie: React.FC = () => {
             {movie.videos.results.length > 0 &&
                 <div className="video">
                     <iframe
-                        src={`https://www.youtube-nocookie.com/embed/${movie.videos.results[0].key}`}
+                        src={`https://www.youtube-nocookie.com/embed/${movie.videos.results.find(r => r.type === "Trailer" && r.official)?.key}`}
                         title="YouTube video player"
                         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture;"
                         allowFullScreen
                     />
                 </div>}
             {collection &&
-                <>
+                <div className="collection">
                     <img
                         className="collection-backdrop"
                         src={collection.backdrop_path}
@@ -120,20 +136,18 @@ const Movie: React.FC = () => {
                     <div className="collection-overlay">
                         <div>{collection.name}</div>
                     </div>
-                    <div className="collection">
-                        {collection.parts
-                            .sort(releaseDateAsc)
-                            .map((part: Part) =>
-                                <Link to={`/movie/${part.id}`} className='card' key={'part-' + part.id}>
-                                    <img src={part.poster_path} />
-                                    <Rating radius={18} rating={parseFloat(part.vote_average ? part.vote_average.toFixed(1) : '0')} votes={part.vote_count} />
-                                    <div className='title'>
-                                        <span>{part.title}</span>
-                                    </div>
-                                </Link>
-                            )}
-                    </div>
-                </>}
+                    {collection.parts
+                        .sort(releaseDateAsc)
+                        .map((part: Part) =>
+                            <Link to={`/movie/${part.id}`} className='card' key={'part-' + part.id}>
+                                <img src={part.poster_path} />
+                                <Rating radius={18} rating={parseFloat(part.vote_average ? part.vote_average.toFixed(1) : '0')} votes={part.vote_count} />
+                                <div className='title'>
+                                    <span>{part.title}</span>
+                                </div>
+                            </Link>
+                        )}
+                </div>}
 
 
         </main>
