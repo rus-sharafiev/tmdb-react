@@ -1,15 +1,13 @@
 // Movie Page
 .movie {
     display: grid;
-    grid-template-rows: 10px 30px 550px 50px 50px min-content 20px min-content min-content 1fr;
-    grid-template-columns: 1fr minmax(16px, 2fr) minmax(440px, 500px) minmax(330px, 20fr) minmax(16px, 4fr) minmax(10px, 2fr);
+    grid-template-rows: 24px 550px 50px 50px 20px min-content min-content 1fr;
+    grid-template-columns: 1fr minmax(16px, 2fr) minmax(400px, 450px) minmax(370px, 20fr) minmax(16px, 4fr) minmax(10px, 2fr);
     grid-template-areas:
-        ". ..... ..... ..... ..... .."
         ". ..... postr ..... ..... .."
         ". ..... postr infrm ..... .."
         ". ..... postr ratng ..... .."
         ". ..... postr ratng ..... .."
-        ". ..... postr ..... ..... .."
         ". ..... ..... ..... ..... .."
         ". ..... video ..... ..... .."
         ". collc collc collc collc .."
@@ -18,7 +16,7 @@
 
     .backdrop {
         grid-column: 4 / -2;
-        grid-row: 3 / 5;
+        grid-row: 2 / 4;
 
         height: 100%;
         width: 100%;
@@ -29,7 +27,7 @@
 
     .color-overlay {
         grid-column: 2 / -2;
-        grid-row: 3 / 5;
+        grid-row: 2 / 4;
 
         border-radius: 24px;
         background: linear-gradient(to right,
@@ -68,6 +66,7 @@
         color: var(--md-sys-color-on-primary);
 
         .top {
+            max-height: 430px;
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -98,16 +97,17 @@
             }
 
             .overview {
-                .body-large();
-                line-height: 1;
-                margin-left: 12px;
+                .label-medium();
                 display: flex;
                 flex-direction: column;
                 gap: 3px;
+                overflow: overlay;
 
                 span {
-                    .label-medium();
-                    margin-left: -12px;
+                    .body-large();
+                    line-height: 1;
+                    padding: 0 0 4px 12px;
+                    overflow: overlay;
                 }
             }
 
@@ -120,16 +120,15 @@
             gap: 8px;
 
             div {
-                .body-large();
-                line-height: 1;
-                margin-left: 12px;
+                .label-medium();
                 display: flex;
                 flex-direction: column;
                 gap: 3px;
 
                 span {
-                    .label-medium();
-                    margin-left: -12px;
+                    .body-large();
+                    line-height: 1;
+                    padding-left: 12px;
                 }
             }
 
@@ -138,7 +137,7 @@
 
     .companies {
         grid-column: -4 / -2;
-        grid-row: 5 / 6;
+        grid-row: 4 / 5;
         display: flex;
         margin: 24px 8px 0 8px;
         justify-content: end;
@@ -170,13 +169,14 @@
             margin-bottom: 4px;
             color: var(--md-sys-color-on-primary);
             opacity: 0.3;
+            line-height: 0.9;
         }
 
         span:last-child {
             grid-column: 2 / 3;
             grid-row: 2 / 3;
             .label-large();
-            margin-bottom: 26px;
+            margin-bottom: 28px;
             color: var(--md-sys-color-on-surface-variant);
             opacity: 0.5;
         }
@@ -203,10 +203,14 @@
 
         width: 100%;
         margin: 30px 0;
+        padding-right: calc(10% - 60px);
         z-index: 1;
 
+        display: flex;
+        justify-content: flex-end;
+
         .swiper {
-            margin-right: calc(10% - 20px);
+            margin: unset;
             width: 316px;
 
             @media (min-width: (1136px)) {
@@ -226,6 +230,47 @@
             })
     }
 
+    .collection-prev-btn,
+    .collection-next-btn {
+        width: 50px;
+        height: 50px;
+        margin: 90px 0;
+        background: none;
+        border: none;
+        cursor: pointer;
+        overflow: hidden;
+        transition: opacity 0.1s ease-in-out;
+
+        color: var(--md-sys-color-on-primary);
+        filter: drop-shadow(0px 1px 2px rgb(0 0 0 / 50%));
+        font-size: 80px;
+        opacity: 0.8;
+        z-index: 1;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:hover {
+            opacity: 1;
+            filter: drop-shadow(0px 1px 3px rgb(0 0 0 / 60%));
+        }
+
+        &.swiper-button-disabled {
+            opacity: 0.2;
+            filter: none;
+            cursor: auto;
+            pointer-events: none;
+        }
+
+        &.swiper-button-lock,
+        &.swiper-button-hidden {
+            opacity: 0;
+            cursor: auto;
+            pointer-events: none;
+        }
+    }
+
     .collection-overlay,
     .collection-backdrop {
         inset: 14px 0 auto;
@@ -235,7 +280,7 @@
 
     .collection-backdrop {
         position: absolute;
-        width: 40%;
+        width: 50%;
         min-width: 500px;
         object-fit: cover;
         z-index: -1;
@@ -248,7 +293,7 @@
         position: absolute;
         background: linear-gradient(to right,
                 transparent 0%,
-                var(--md-sys-color-primary) 40%);
+                var(--md-sys-color-primary) 50%);
 
         display: flex;
         align-items: flex-end;

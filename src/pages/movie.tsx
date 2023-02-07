@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import proxyImageLoader from "../helpers/proxyImageLoader"
 import Movie from "../types/movie"
@@ -12,7 +12,7 @@ import { Navigation } from "swiper"
 
 // Proxy and preload images
 const preloadMovie = async (content: Movie) => {
-    content.backdrop_path = await proxyImageLoader(content.backdrop_path, 'w1280')
+    content.backdrop_path = await proxyImageLoader(content.backdrop_path, 'w780')
     content.poster_path = await proxyImageLoader(content.poster_path, 'w780')
     content.production_companies = await Promise.all(
         content.production_companies.map(async (company) => {
@@ -23,7 +23,7 @@ const preloadMovie = async (content: Movie) => {
     return content;
 }
 const preloadCollection = async (content: Collection) => {
-    content.backdrop_path = await proxyImageLoader(content.backdrop_path, 'w1280')
+    content.backdrop_path = await proxyImageLoader(content.backdrop_path, 'w780')
     content.poster_path = await proxyImageLoader(content.poster_path, 'w300')
     content.parts = await Promise.all(
         content.parts.map(async (part: Part) => {
@@ -115,7 +115,7 @@ const Movie: React.FC = () => {
         return date.toLocaleString('ru', { dateStyle: "long" })
     }
 
-    if (!(movie)) return <CircularProgress />
+    if (!(movie)) return <CircularProgress className="cpi" />
     // console.log(watchProviders)
 
     return (
@@ -128,13 +128,13 @@ const Movie: React.FC = () => {
                     <div className="title">{movie.title}</div>
                     <div className="original_title">{movie.original_title}</div>
                     <div className="tagline">{movie.tagline}</div>
-                    <div className="overview"><span>Обзор</span>{movie.overview ?? 'Нет обзора'}</div>
+                    <div className="overview">Обзор<span>{movie.overview ?? 'Нет обзора'}</span></div>
                 </div>
                 <div className="bottom">
-                    <div className="status"><span>Статус</span>{status(movie.status)}</div>
-                    <div className="release_date"><span>Дата премьеры</span>{localDate(movie.release_date)}</div>
-                    <div className="budget"><span>Бюджет</span>$ {movie.budget.toLocaleString('ru')}</div>
-                    <div className="revenue"><span>Сборы</span>$ {movie.revenue.toLocaleString('ru')}</div>
+                    <div className="status">Статус<span>{status(movie.status)}</span></div>
+                    <div className="release_date">Дата премьеры<span>{localDate(movie.release_date)}</span></div>
+                    <div className="budget">Бюджет<span>$ {movie.budget.toLocaleString('ru')}</span></div>
+                    <div className="revenue">Сборы<span>$ {movie.revenue.toLocaleString('ru')}</span></div>
 
                 </div>
             </div>
@@ -185,7 +185,16 @@ const Movie: React.FC = () => {
                     <div className="collection-overlay">
                         <div>{collection.name}</div>
                     </div>
-                    <Swiper breakpoints={collectionSwiperBreakpoints} modules={[Navigation]} navigation>
+                    <button type="button" className='collection-prev-btn material-symbols-rounded'>navigate_before</button>
+                    <Swiper
+                        breakpoints={collectionSwiperBreakpoints}
+
+                        modules={[Navigation]}
+                        navigation={{
+                            prevEl: '.collection-prev-btn',
+                            nextEl: '.collection-next-btn',
+                        }}
+                    >
                         {collection.parts
                             .sort(releaseDateAsc)
                             .map((part: Part) =>
@@ -200,6 +209,7 @@ const Movie: React.FC = () => {
                                 </SwiperSlide>
                             )}
                     </Swiper>
+                    <button type="button" className='collection-next-btn material-symbols-rounded'>navigate_next</button>
                 </div>}
 
 
