@@ -6,11 +6,20 @@ import { Collection, Part } from "../types/collection"
 import Rating from "../ui/rating"
 import CircularProgress from '../ui/cpi'
 import useMaterialTheme from "../hooks/useMaterialTheme"
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { collectionSwiperBreakpoints } from "../helpers/swiperBreakpoints"
+import { Navigation } from "swiper"
 
 // Proxy and preload images
 const preloadMovie = async (content: Movie) => {
     content.backdrop_path = await proxyImageLoader(content.backdrop_path, 'w1280')
     content.poster_path = await proxyImageLoader(content.poster_path, 'w780')
+    content.production_companies = await Promise.all(
+        content.production_companies.map(async (company) => {
+            company.logo_path = await proxyImageLoader(company.logo_path, 'w300')
+            return company
+        })
+    )
     return content;
 }
 const preloadCollection = async (content: Collection) => {
@@ -27,8 +36,8 @@ const preloadCollection = async (content: Collection) => {
 
 // Sort collection movies by release date
 const releaseDateAsc = (a: Part, b: Part) => {
-    const strA = a.release_date
-    const strB = b.release_date
+    const strA = a.release_date === '' ? '3000-01-01' : a.release_date
+    const strB = b.release_date === '' ? '3000-01-01' : b.release_date
     if (strA < strB) {
         return -1;
     }
@@ -50,11 +59,18 @@ const status = (status: string) => {
     }
 }
 
+
 const Movie: React.FC = () => {
     let { id } = useParams()
-    const [movie, setMovie] = useState<Movie>()
-    const [collection, setCollection] = useState<Collection>()
     const [themeLoaded, setImagePath, setThemeLoaded] = useMaterialTheme()
+    const [movie, setMovie] = useState<Movie>()
+    const [activeVideo, setActiveVideo] = useState<string>('official')
+    const [collection, setCollection] = useState<Collection>()
+    const [videos, setVideos] = useState<{
+        official: string | undefined,
+        ru: string | undefined
+    }>()
+    const [watchProviders, setWatchProviders] = useState()
 
     // Fetch movie JSON
     useEffect(() => {
@@ -74,11 +90,23 @@ const Movie: React.FC = () => {
         console.log(movie)
         setImagePath(movie.poster_path) // to generate theme
 
+        if (movie.videos.results.length > 0) {
+            setVideos({
+                official: movie.videos.results.reverse().find(r => r.type === "Trailer" && r.official && r.iso_639_1 === 'en')?.key,
+                ru: movie.videos.results.reverse().find(r => r.type === "Trailer" && r.iso_639_1 === 'ru')?.key
+            })
+        }
+
         if (movie.belongs_to_collection)
             fetch(`/api/collection/${movie.belongs_to_collection.id}`)
                 .then(res => res.json())
                 .then(obj => preloadCollection(obj))
                 .then(collection => setCollection(collection))
+
+        fetch(`/api/movie/${id}/watch`)
+            .then(res => res.json())
+            .then(watchProviders => setWatchProviders(watchProviders?.results?.RU))
+
     }, [movie])
 
     // Long russian date converter
@@ -87,11 +115,12 @@ const Movie: React.FC = () => {
         return date.toLocaleString('ru', { dateStyle: "long" })
     }
 
-    if (!(movie && themeLoaded)) return <CircularProgress />
+    if (!(movie)) return <CircularProgress />
+    // console.log(watchProviders)
 
     return (
         <main className="movie">
-            <img src={movie.backdrop_path} alt='backdrop' className="backdrop" />
+            {movie.backdrop_path && <img src={movie.backdrop_path} alt='backdrop' className="backdrop" />}
             <div className="color-overlay" />
             <img src={movie.poster_path} alt='poster' className="poster" />
             <div className="info">
@@ -106,8 +135,15 @@ const Movie: React.FC = () => {
                     <div className="release_date"><span>Дата премьеры</span>{localDate(movie.release_date)}</div>
                     <div className="budget"><span>Бюджет</span>$ {movie.budget.toLocaleString('ru')}</div>
                     <div className="revenue"><span>Сборы</span>$ {movie.revenue.toLocaleString('ru')}</div>
+
                 </div>
             </div>
+            {movie.production_companies.length > 0 &&
+                <div className="companies">
+                    {movie.production_companies.map((company) =>
+                        company.logo_path &&
+                        <img src={company.logo_path} alt='logo' key={'conpany-' + company.id} />)}
+                </div>}
             <div className="rating-container">
                 <span>Пользовательский рейтинг</span>
                 <Rating
@@ -117,12 +153,25 @@ const Movie: React.FC = () => {
                 />
                 <span>Голосов {movie.vote_count}</span>
             </div>
-            {movie.videos.results.length > 0 &&
+            {movie.videos.results.length > 0 && videos &&
                 <div className="video">
+                    {videos.ru &&
+                        <div>
+                            <span
+                                className={activeVideo === 'official' ? 'active' : ''}
+                                onClick={() => setActiveVideo('official')}
+                            >Оффициальный трейлер</span>
+                            <span
+                                className={activeVideo === 'ru' ? 'active' : ''}
+                                onClick={() => setActiveVideo('ru')}
+                            >Русский трейлер</span>
+                        </div>}
                     <iframe
-                        src={`https://www.youtube-nocookie.com/embed/${movie.videos.results.find(r => r.type === "Trailer" && r.official)?.key}`}
-                        title="YouTube video player"
-                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture;"
+                        src={`https://www.youtube-nocookie.com/embed/${activeVideo === 'official'
+                            ? videos.official
+                            : videos.ru
+                            }`}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowFullScreen
                     />
                 </div>}
@@ -136,17 +185,21 @@ const Movie: React.FC = () => {
                     <div className="collection-overlay">
                         <div>{collection.name}</div>
                     </div>
-                    {collection.parts
-                        .sort(releaseDateAsc)
-                        .map((part: Part) =>
-                            <Link to={`/movie/${part.id}`} className='card' key={'part-' + part.id}>
-                                <img src={part.poster_path} />
-                                <Rating radius={18} rating={parseFloat(part.vote_average ? part.vote_average.toFixed(1) : '0')} votes={part.vote_count} />
-                                <div className='title'>
-                                    <span>{part.title}</span>
-                                </div>
-                            </Link>
-                        )}
+                    <Swiper breakpoints={collectionSwiperBreakpoints} modules={[Navigation]} navigation>
+                        {collection.parts
+                            .sort(releaseDateAsc)
+                            .map((part: Part) =>
+                                <SwiperSlide key={'part-' + part.id}>
+                                    <Link to={`/movie/${part.id}`} className='card' >
+                                        <img src={part.poster_path} />
+                                        <Rating radius={18} rating={parseFloat(part.vote_average ? part.vote_average.toFixed(1) : '0')} votes={part.vote_count} />
+                                        <div className='title'>
+                                            <span>{part.title}</span>
+                                        </div>
+                                    </Link>
+                                </SwiperSlide>
+                            )}
+                    </Swiper>
                 </div>}
 
 
