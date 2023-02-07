@@ -60,13 +60,13 @@ const Tvs: React.FC = () => {
             }
         });
 
-        if (endOfPage.current) tvObserver.observe(endOfPage.current);
+        if (endOfPage.current && list && tvs[list].status === 'complete') tvObserver.observe(endOfPage.current);
 
         return () => {
             if (endOfPage.current) tvObserver.unobserve(endOfPage.current);
         }
 
-    }, [endOfPage, tvs.popular.status, tvs.top_rated.status, tvs.airing_today.status])
+    }, [tvs.popular.status, tvs.top_rated.status, tvs.airing_today.status])
 
     if (!list) return null
 

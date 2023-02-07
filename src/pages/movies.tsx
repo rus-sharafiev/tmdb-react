@@ -43,7 +43,7 @@ const Movies: React.FC = () => {
                     case 'popular':
                         dispatch(pmNext())
                         dispatch(fetchPopularMovies(movies.popular.page + 1))
-                            .then(() => console.log(`Has been loaded page ${movies.popular.page}`))
+                            .then(() => console.log(`Has been loaded page ${movies.popular.page + 1}`))
                         break
                     case 'top_rated':
                         dispatch(trmNext())
@@ -59,13 +59,13 @@ const Movies: React.FC = () => {
             }
         });
 
-        if (endOfPage.current) moviesObserver.observe(endOfPage.current);
+        if (endOfPage.current && list && movies[list].status === 'complete') moviesObserver.observe(endOfPage.current)
 
         return () => {
-            if (endOfPage.current) moviesObserver.unobserve(endOfPage.current);
+            if (endOfPage.current) moviesObserver.unobserve(endOfPage.current)
         }
 
-    }, [endOfPage, movies.popular.status, movies.top_rated.status, movies.upcoming.status])
+    }, [movies.popular.status, movies.top_rated.status, movies.upcoming.status])
 
     if (!list) return null
 
