@@ -1,3 +1,4 @@
+import { MovieCard, MovieCards } from "../types/cards"
 import { Collection, Part } from "../types/collection"
 import Movie, { Actor } from "../types/movie"
 import imageLoader, { imageSize } from "./imageLoader"
@@ -34,4 +35,13 @@ export const preloadCast = async (castArr: Actor[]) => {
         })
     )
     return castArr
+}
+
+export const preloadMovieCards = async (content: MovieCards, w342?: boolean): Promise<MovieCard[]> => {
+    let contentResults = await Promise.all(
+        content.results.map(async (item: MovieCard) => {
+            item.poster_path = await imageLoader(item.poster_path, w342 ? imageSize.poster.w342 : imageSize.poster.w185, '/img/no_image.png')
+            return item
+        }));
+    return contentResults
 }

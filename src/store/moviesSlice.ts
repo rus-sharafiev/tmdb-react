@@ -1,26 +1,18 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-import imageLoader from '../services/imageLoader'
-
-const preloadImages = async (content: { [index: string]: any }) => {
-  let array = await Promise.all(content.results.map(async (item: { [index: string]: any }) => {
-    item.poster_path = await imageLoader(item.poster_path, 'w300', '/img/no_image.png')
-    return item
-  }));
-  return array
-}
+import { preloadMovieCards } from '../services/preloaders';
 
 // -------------- Movies ------------------------------------------------------------------------------------------------------------------
 export const fetchPopularMovies = createAsyncThunk('movies/popular', async (page: number) => {
   const response = await fetch(`/api/movie/popular/${page}`)
   let array = await response.json()
-  let content = await preloadImages(array)
+  let content = await preloadMovieCards(array, true)
   return content;
 })
 
 export const fetchTopRatedMovies = createAsyncThunk('movies/top_rated', async (page: number) => {
   const response = await fetch(`/api/movie/top_rated/${page}`)
   let array = await response.json()
-  let content = await preloadImages(array)
+  let content = await preloadMovieCards(array, true)
   return content
 })
 
@@ -28,7 +20,7 @@ export const fetchUpcomingMovies = createAsyncThunk('movies/upcoming', async (pa
   try {
     const response = await fetch(`/api/movie/upcoming/${page}`)
     let array = await response.json()
-    let content = await preloadImages(array)
+    let content = await preloadMovieCards(array, true)
     return content
   } catch (e) {
     console.log(e)
