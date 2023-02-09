@@ -1,17 +1,17 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-import proxyImageLoader from '../helpers/proxyImageLoader'
+import imageLoader from '../services/imageLoader'
 import { PersonCard } from '../types/cards'
 
 const preloadImages = async (content: { [index: string]: any }) => {
   let array = await Promise.all(content.results.map(async (item: { [index: string]: any }) => {
-    item.profile_path = await proxyImageLoader(item.profile_path, 'w300', '/img/no_image.png')
-    return item;
+    item.profile_path = await imageLoader(item.profile_path, 'w300', '/img/no_image.png')
+    return item
   }));
-  return array;
+  return array
 }
 
 const getRussianName = async (id: number) => {
-  const cyrillicPattern = /^[\u0410-\u044F\s]+$/;
+  const cyrillicPattern = /^[\u0410-\u044F\s]+$/
 
   let response = await fetch(`/api/person/${id}`)
   let person = await response.json()
@@ -38,17 +38,17 @@ const getRussianNamesArray = async (people: PersonCard[]) => {
 
 // -------------- People ------------------------------------------------------------------------------------------------------------------
 export const fetchPopularPeople = createAsyncThunk('people/popular', async (page: number) => {
-  const response = await fetch(`/api/person/popular/${page}`);
-  let array = await response.json();
-  let content = await preloadImages(array);
+  const response = await fetch(`/api/person/popular/${page}`)
+  let array = await response.json()
+  let content = await preloadImages(array)
   return content;
 })
 
 export const fetchRussianNames = createAsyncThunk('people/russianNames', async (page: number) => {
-  const response = await fetch(`/api/person/popular/${page}`);
-  let array = await response.json();
-  let content = await getRussianNamesArray(array.results);
-  return content;
+  const response = await fetch(`/api/person/popular/${page}`)
+  let array = await response.json()
+  let content = await getRussianNamesArray(array.results)
+  return content
 })
 
 export const peopleContentSlice = createSlice({
@@ -60,7 +60,7 @@ export const peopleContentSlice = createSlice({
   reducers: {
     ppNext: state => { state.popular.page++ }
   },
-  extraReducers(builder) {
+  extraReducers: (builder) => {
     builder
       .addCase(fetchPopularPeople.pending, (state) => {
         state.popular.status = 'loading'
