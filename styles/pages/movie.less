@@ -1,17 +1,18 @@
 // Movie Page
 .movie {
     display: grid;
-    grid-template-rows: 24px 550px 50px 50px 36px min-content min-content min-content 1fr;
+    grid-template-rows: 24px 550px 50px 50px 36px min-content min-content min-content min-content 1fr;
     grid-template-columns: 1fr minmax(16px, 2fr) minmax(400px, 450px) minmax(370px, 20fr) minmax(16px, 4fr) minmax(10px, 2fr);
     grid-template-areas:
         ". ...... poster ...... ...... .."
         ". ...... poster inform ...... .."
         ". ...... poster rating ...... .."
         ". ...... poster rating ...... .."
-        ". ...... ...... ...... ...... .."
-        ". ...... videos autors ...... .."
+        ". ...... ...... autors autors .."
+        ". ...... videos autors autors .."
         ". ...... videos actors ...... .."
         ". collct collct collct collct .."
+        ". recomm recomm recomm recomm .."
         ". ...... ...... ...... ...... .."
     ;
 
@@ -215,6 +216,7 @@
                 border: 1px solid var(--md-sys-color-outline-variant);
                 color: var(--md-sys-color-on-surface);
                 .label-large();
+                white-space: nowrap;
 
                 @state-color: var(--md-sys-color-on-surface);
                 .state-layer();
@@ -257,6 +259,3 @@
         }
     }
 }
-
-@import '../components/collection.less';
-@import '../components/credits.less';

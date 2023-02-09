@@ -1,3 +1,5 @@
+import { MovieCards } from "./cards"
+
 interface Collection {
     id: number,
     name: string,
@@ -51,7 +53,7 @@ interface Image {
     width: number
 }
 
-interface Credits {
+export interface Credits {
     cast: Actor[],
     crew: Crew[]
 }
@@ -102,9 +104,11 @@ export default interface Movie {
     poster_path: string,
     production_companies: ProductionCompanie[],
     production_countries: ProductionCountrie[],
+    recommendations: MovieCards,
     release_date: string,
     revenue: number,
     runtime: number,
+    similar: MovieCards,
     spoken_languages: SpokenLanguage[],
     status: string,
     tagline: string,
