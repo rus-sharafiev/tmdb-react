@@ -1,27 +1,14 @@
-import React, { useEffect, useRef, useState } from "react"
-import { Link, useParams } from "react-router-dom"
-import Movie, { Actor } from "../types/movie"
-import { Collection, Part } from "../types/collection"
+import React, { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
+import Movie from "../types/movie"
 import Rating from "../ui/rating"
 import CircularProgress from '../ui/cpi'
 import useMaterialTheme from "../hooks/useMaterialTheme"
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { ActorsSwiperBreakpoints, collectionSwiperBreakpoints } from "../services/swiperBreakpoints"
-import { Navigation } from "swiper"
-import { preloadCast, preloadCollection, preloadMovie } from "../services/preloaders"
+import { preloadCollection, preloadMovie } from "../services/preloaders"
+import Recommendations from "../components/recommendations"
+import Collection from "../components/collection"
+import Credits from "../components/credits"
 
-// Sort collection movies by release date
-const releaseDateAsc = (a: Part, b: Part) => {
-    const strA = a.release_date === '' ? '3000-01-01' : a.release_date
-    const strB = b.release_date === '' ? '3000-01-01' : b.release_date
-    if (strA < strB) {
-        return -1;
-    }
-    if (strA > strB) {
-        return 1;
-    }
-    return 0;
-}
 
 // Movie status
 const status = (status: string) => {
@@ -45,7 +32,6 @@ const Movie: React.FC = () => {
         official: string | undefined,
         ru: string | undefined
     }>()
-    const [actors, setActors] = useState<Actor[]>([])
     const [watchProviders, setWatchProviders] = useState()
 
     // Fetch movie JSON
@@ -72,11 +58,6 @@ const Movie: React.FC = () => {
                 ru: movie.videos.results.reverse().find(r => r.type === "Trailer" && r.iso_639_1 === 'ru')?.key
             })
         }
-
-        // Preload actors
-        if (movie.credits.cast)
-            preloadCast(movie.credits.cast)
-                .then(actors => setActors(actors))
 
         // Fetch and preload collections
         if (movie.belongs_to_collection)
@@ -157,70 +138,9 @@ const Movie: React.FC = () => {
                         allowFullScreen
                     />
                 </div>}
-            <div className="crew"></div>
-            {actors?.length > 0 &&
-                <div className="cast">
-                    <button type="button" className='cast-prev-btn material-symbols-rounded unselectable'>navigate_before</button>
-                    <Swiper
-                        breakpoints={ActorsSwiperBreakpoints}
-                        modules={[Navigation]}
-                        navigation={{
-                            prevEl: '.cast-prev-btn',
-                            nextEl: '.cast-next-btn',
-                        }}
-                    >
-                        {actors.map((actor: Actor) =>
-                            <SwiperSlide key={'part-' + actor.id}>
-                                <Link to={`/person/${actor.id}`} className='card' >
-                                    <img src={actor.profile_path} alt='photo' />
-                                    <div className='name'>
-                                        <span>{actor.name}</span>
-                                        <span>{actor.character}</span>
-                                    </div>
-                                </Link>
-                            </SwiperSlide>
-                        )}
-                    </Swiper>
-                    <button type="button" className='cast-next-btn material-symbols-rounded unselectable'>navigate_next</button>
-                </div>
-            }
-            {collection &&
-                <div className="collection">
-                    <img
-                        className="collection-backdrop"
-                        src={collection.backdrop_path}
-                        alt="collection backdrop"
-                    />
-                    <div className="collection-overlay">
-                        <div>{collection.name}</div>
-                    </div>
-                    <button type="button" className='collection-prev-btn material-symbols-rounded unselectable'>navigate_before</button>
-                    <Swiper
-                        breakpoints={collectionSwiperBreakpoints}
-
-                        modules={[Navigation]}
-                        navigation={{
-                            prevEl: '.collection-prev-btn',
-                            nextEl: '.collection-next-btn',
-                        }}
-                    >
-                        {collection.parts
-                            .sort(releaseDateAsc)
-                            .map((part: Part) =>
-                                <SwiperSlide key={'part-' + part.id}>
-                                    <Link to={`/movie/${part.id}`} className='card' >
-                                        <img src={part.poster_path} />
-                                        <Rating radius={18} rating={parseFloat(part.vote_average ? part.vote_average.toFixed(1) : '0')} votes={part.vote_count} />
-                                        <div className='title'>
-                                            <span>{part.title}</span>
-                                        </div>
-                                    </Link>
-                                </SwiperSlide>
-                            )}
-                    </Swiper>
-                    <button type="button" className='collection-next-btn material-symbols-rounded unselectable'>navigate_next</button>
-                </div>}
-
+            {movie.credits && <Credits data={movie.credits} />}
+            {collection && <Collection data={collection} />}
+            {movie.recommendations?.results?.length > 0 && <Recommendations data={movie.recommendations} />}
 
         </main>
     )
