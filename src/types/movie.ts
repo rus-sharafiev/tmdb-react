@@ -51,11 +51,46 @@ interface Image {
     width: number
 }
 
+interface Credits {
+    cast: Actor[],
+    crew: Crew[]
+}
+
+export interface Actor {
+    adult: boolean,
+    gender: number,
+    id: number,
+    known_for_department: string,
+    name: string,
+    original_name: string,
+    popularity: number,
+    profile_path: string,
+    cast_id: number,
+    character: string,
+    credit_id: string,
+    order: number
+}
+
+interface Crew {
+    adult: boolean,
+    gender: number | null,
+    id: number,
+    known_for_department: string,
+    name: string,
+    original_name: string,
+    popularity: number,
+    profile_path: string | null,
+    credit_id: string,
+    department: string,
+    job: string
+}
+
 export default interface Movie {
     adult: boolean,
     backdrop_path: string,
     belongs_to_collection: Collection | null,
     budget: number,
+    credits: Credits,
     genres: Genre[],
     homepage: string,
     id: number,
