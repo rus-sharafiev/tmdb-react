@@ -1,3 +1,23 @@
+// Cards containers
+export interface MovieCards {
+    page: number,
+    results: MovieCard[],
+    total_pages: number,
+    total_results: number
+}
+export interface TvCards {
+    page: number,
+    results: TvCard[],
+    total_pages: number,
+    total_results: number
+}
+export interface PersonCards {
+    page: number,
+    results: PersonCard[],
+    total_pages: number,
+    total_results: number
+}
+
 // Movie card
 export interface MovieCard {
     adult: boolean,
