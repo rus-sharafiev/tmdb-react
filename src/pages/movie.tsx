@@ -1,38 +1,14 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Link, useParams } from "react-router-dom"
-import proxyImageLoader from "../helpers/proxyImageLoader"
-import Movie from "../types/movie"
+import Movie, { Actor } from "../types/movie"
 import { Collection, Part } from "../types/collection"
 import Rating from "../ui/rating"
 import CircularProgress from '../ui/cpi'
 import useMaterialTheme from "../hooks/useMaterialTheme"
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { collectionSwiperBreakpoints } from "../helpers/swiperBreakpoints"
+import { ActorsSwiperBreakpoints, collectionSwiperBreakpoints } from "../services/swiperBreakpoints"
 import { Navigation } from "swiper"
-
-// Proxy and preload images
-const preloadMovie = async (content: Movie) => {
-    content.backdrop_path = await proxyImageLoader(content.backdrop_path, 'w780')
-    content.poster_path = await proxyImageLoader(content.poster_path, 'w780')
-    content.production_companies = await Promise.all(
-        content.production_companies.map(async (company) => {
-            company.logo_path = await proxyImageLoader(company.logo_path, 'w300')
-            return company
-        })
-    )
-    return content;
-}
-const preloadCollection = async (content: Collection) => {
-    content.backdrop_path = await proxyImageLoader(content.backdrop_path, 'w780')
-    content.poster_path = await proxyImageLoader(content.poster_path, 'w300')
-    content.parts = await Promise.all(
-        content.parts.map(async (part: Part) => {
-            part.poster_path = await proxyImageLoader(part.poster_path, 'w300', content.poster_path)
-            return part
-        })
-    )
-    return content;
-}
+import { preloadCast, preloadCollection, preloadMovie } from "../services/preloaders"
 
 // Sort collection movies by release date
 const releaseDateAsc = (a: Part, b: Part) => {
@@ -59,7 +35,6 @@ const status = (status: string) => {
     }
 }
 
-
 const Movie: React.FC = () => {
     let { id } = useParams()
     const [themeLoaded, setImagePath, setThemeLoaded] = useMaterialTheme()
@@ -70,12 +45,13 @@ const Movie: React.FC = () => {
         official: string | undefined,
         ru: string | undefined
     }>()
+    const [actors, setActors] = useState<Actor[]>([])
     const [watchProviders, setWatchProviders] = useState()
 
     // Fetch movie JSON
     useEffect(() => {
-        setMovie(undefined) // reset movie
-        setThemeLoaded(false) // reset themeLoaded
+        // setMovie(undefined) // reset movie
+        // setThemeLoaded(false) // reset themeLoaded
         id &&
             fetch(`/api/movie/${id}`)
                 .then(res => res.json())
@@ -97,15 +73,21 @@ const Movie: React.FC = () => {
             })
         }
 
+        // Preload actors
+        if (movie.credits.cast)
+            preloadCast(movie.credits.cast)
+                .then(actors => setActors(actors))
+
+        // Fetch and preload collections
         if (movie.belongs_to_collection)
             fetch(`/api/collection/${movie.belongs_to_collection.id}`)
                 .then(res => res.json())
                 .then(obj => preloadCollection(obj))
                 .then(collection => setCollection(collection))
 
-        fetch(`/api/movie/${id}/watch`)
-            .then(res => res.json())
-            .then(watchProviders => setWatchProviders(watchProviders?.results?.RU))
+        // fetch(`/api/movie/${id}/watch`)
+        //     .then(res => res.json())
+        //     .then(watchProviders => setWatchProviders(watchProviders?.results?.RU))
 
     }, [movie])
 
@@ -175,6 +157,33 @@ const Movie: React.FC = () => {
                         allowFullScreen
                     />
                 </div>}
+            <div className="crew"></div>
+            {actors?.length > 0 &&
+                <div className="cast">
+                    <button type="button" className='cast-prev-btn material-symbols-rounded unselectable'>navigate_before</button>
+                    <Swiper
+                        breakpoints={ActorsSwiperBreakpoints}
+                        modules={[Navigation]}
+                        navigation={{
+                            prevEl: '.cast-prev-btn',
+                            nextEl: '.cast-next-btn',
+                        }}
+                    >
+                        {actors.map((actor: Actor) =>
+                            <SwiperSlide key={'part-' + actor.id}>
+                                <Link to={`/person/${actor.id}`} className='card' >
+                                    <img src={actor.profile_path} alt='photo' />
+                                    <div className='name'>
+                                        <span>{actor.name}</span>
+                                        <span>{actor.character}</span>
+                                    </div>
+                                </Link>
+                            </SwiperSlide>
+                        )}
+                    </Swiper>
+                    <button type="button" className='cast-next-btn material-symbols-rounded unselectable'>navigate_next</button>
+                </div>
+            }
             {collection &&
                 <div className="collection">
                     <img
@@ -185,7 +194,7 @@ const Movie: React.FC = () => {
                     <div className="collection-overlay">
                         <div>{collection.name}</div>
                     </div>
-                    <button type="button" className='collection-prev-btn material-symbols-rounded'>navigate_before</button>
+                    <button type="button" className='collection-prev-btn material-symbols-rounded unselectable'>navigate_before</button>
                     <Swiper
                         breakpoints={collectionSwiperBreakpoints}
 
@@ -209,7 +218,7 @@ const Movie: React.FC = () => {
                                 </SwiperSlide>
                             )}
                     </Swiper>
-                    <button type="button" className='collection-next-btn material-symbols-rounded'>navigate_next</button>
+                    <button type="button" className='collection-next-btn material-symbols-rounded unselectable'>navigate_next</button>
                 </div>}
 
 
