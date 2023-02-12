@@ -3,17 +3,19 @@ import { Link } from "react-router-dom"
 import { Navigation } from "swiper"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { preloadMovieCards } from "../services/preloaders"
-import { collectionSwiperBreakpoints } from "../services/swiperBreakpoints"
+import { recommendationsSwiperBreakpoints } from "../services/swiperBreakpoints"
 import { MovieCard, MovieCards } from "../types/cards"
 import Rating from "../ui/rating"
 
-const Recommendations: React.FC<{ data: MovieCards }> = ({ data }) => {
+const Recommendations: React.FC<{ cards: MovieCards }> = ({ cards }) => {
     const [recommendations, setRecommendations] = useState<MovieCard[]>([])
 
     useEffect(() => {
-        preloadMovieCards(data)
+        preloadMovieCards(cards)
             .then(movies => setRecommendations(movies))
     }, [])
+
+    if (recommendations.length === 0) return <div className="recommendations" style={{ opacity: '0' }} />
 
     return (
         <div className="recommendations">
@@ -24,8 +26,8 @@ const Recommendations: React.FC<{ data: MovieCards }> = ({ data }) => {
                 navigate_before
             </button>
             <Swiper
-                // breakpoints={collectionSwiperBreakpoints}
-                slidesPerView={8}
+                breakpoints={recommendationsSwiperBreakpoints}
+                // slidesPerView={4}
                 modules={[Navigation]}
                 navigation={{
                     prevEl: '.recommendations-prev-btn',

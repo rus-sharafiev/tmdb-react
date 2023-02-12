@@ -1,7 +1,8 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { Navigation } from "swiper"
 import { Swiper, SwiperSlide } from "swiper/react"
+import { preloadCollection } from "../services/preloaders"
 import { collectionSwiperBreakpoints } from "../services/swiperBreakpoints"
 import { Collection, Part } from "../types/collection"
 import Rating from "../ui/rating"
@@ -19,17 +20,28 @@ const releaseDateAsc = (a: Part, b: Part) => {
     return 0;
 }
 
-const Collection: React.FC<{ data: Collection }> = ({ data }) => {
+const Collection: React.FC<{ id: number }> = ({ id }) => {
+    const [collection, setCollection] = useState<Collection>()
+
+    useEffect(() => {
+        if (id)
+            fetch(`/api/collection/${id}`)
+                .then(res => res.json())
+                .then(obj => preloadCollection(obj))
+                .then(collection => setCollection(collection))
+    }, [id])
+
+    if (!collection) return <div className="collection" style={{ maxHeight: '0px', opacity: '0' }} />
 
     return (
         <div className="collection">
             <img
                 className="collection-backdrop"
-                src={data.backdrop_path}
+                src={collection.backdrop_path}
                 alt="collection backdrop"
             />
             <div className="collection-overlay">
-                <div>{data.name}</div>
+                <div>{collection.name}</div>
             </div>
             <button
                 type="button"
@@ -45,7 +57,7 @@ const Collection: React.FC<{ data: Collection }> = ({ data }) => {
                     nextEl: '.collection-next-btn',
                 }}
             >
-                {data.parts
+                {collection.parts
                     .sort(releaseDateAsc)
                     .map((part: Part) =>
                         <SwiperSlide key={'part-' + part.id}>

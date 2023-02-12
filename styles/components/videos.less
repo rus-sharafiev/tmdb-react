@@ -1,0 +1,60 @@
+.video {
+    grid-area: videos;
+
+    div {
+        display: grid;
+        grid: 1fr / repeat(auto-fit, minmax(48px, 1fr));
+        margin: 0 24px -4px;
+
+        span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 12px;
+            margin: 0 -0.5px;
+            height: 40px;
+            border: 1px solid var(--md-sys-color-outline-variant);
+            color: var(--md-sys-color-on-surface);
+            .label-large();
+            white-space: nowrap;
+
+            @state-color: var(--md-sys-color-on-surface);
+            .state-layer();
+
+            &:hover {
+                .hover-state-layer();
+                cursor: pointer;
+            }
+        }
+
+        span:first-child {
+            border-radius: 20px 0 0 20px;
+        }
+
+        span:last-child {
+            border-radius: 0 20px 20px 0;
+        }
+
+        span.active {
+            background-color: var(--md-sys-color-secondary-container);
+            color: var(--md-sys-color-on-secondary-container);
+            @state-color: var(--md-sys-color-on-secondary-container);
+            .state-layer();
+
+            &:hover {
+                .hover-state-layer();
+            }
+        }
+
+    }
+
+    iframe {
+        border: 0;
+        border-radius: 24px;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        .elevation-level2();
+        position: relative;
+        z-index: 2;
+    }
+}

@@ -3,9 +3,13 @@
     position: relative;
 
     width: 100%;
-    margin: 24px 0;
+    max-height: 350px;
+    min-height: min-content;
+    overflow: hidden;
     padding-right: calc(10% - 60px);
     z-index: 1;
+    opacity: 1;
+    transition: max-height 0.2s ease-in, opacity 0.2s ease-in 0.2s;
 
     display: flex;
     justify-content: flex-end;
@@ -14,7 +18,7 @@
     .collection-next-btn {
         width: 50px;
         height: 50px;
-        margin: 90px 0;
+        margin: 110px 0 0;
         background: none;
         border: none;
         outline: none;
@@ -60,7 +64,7 @@
 
     .collection-overlay,
     .collection-backdrop {
-        inset: 14px 0 auto;
+        inset: 36px 0 auto;
         height: 200px;
         border-radius: 24px;
     }
@@ -100,7 +104,7 @@
 
     .card {
         display: grid;
-        grid: 225px 30px / 50px 100px;
+        grid: 225px 30px min-content / 50px 100px;
         margin: 0 4px;
         z-index: 1;
 
@@ -162,7 +166,7 @@
         .swiper-wrapper {
             width: min-content;
             margin: auto 0 0 auto;
-            padding: 2px 0;
+            padding: 24px 0 4px;
         }
 
         each(range(8), {
