@@ -30,7 +30,7 @@ export const collectionSwiperBreakpoints = {
 }
 
 // Actors swiper breakpoints
-export const ActorsSwiperBreakpoints = {
+export const actorsSwiperBreakpoints = {
     820: {
         slidesPerView: 2
     },
@@ -64,4 +64,38 @@ export const ActorsSwiperBreakpoints = {
     2100: {
         slidesPerView: 10
     }
+}
+
+// Actors swiper breakpoints
+export const recommendationsSwiperBreakpoints = {
+    820: {
+        slidesPerView: 4
+    },
+    1025: {
+        slidesPerView: 5
+    },
+    1183: {
+        slidesPerView: 6
+    },
+    1341: {
+        slidesPerView: 7
+    },
+    1499: {
+        slidesPerView: 8
+    },
+    1657: {
+        slidesPerView: 9
+    },
+    1815: {
+        slidesPerView: 10
+    },
+    1973: {
+        slidesPerView: 11
+    },
+    2131: {
+        slidesPerView: 12
+    },
+    2289: {
+        slidesPerView: 13
+    },
 }
