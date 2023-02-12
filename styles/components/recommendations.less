@@ -2,132 +2,142 @@
     grid-area: recomm;
     position: relative;
 
-    width: 100%;
-    margin: 24px 0;
-    padding-right: calc(10% - 60px);
+    width: 106%;
+    margin: 0 -3%;
     z-index: 1;
 
+    opacity: 1;
+    transition: opacity 0.2s ease-in;
+
     display: flex;
+    flex-direction: column;
 
-    .recommendations-prev-btn,
-    .recommendations-next-btn {
-        width: 50px;
-        height: 50px;
-        margin: 90px 0;
-        background: none;
-        border: none;
-        outline: none;
-        cursor: pointer;
-        overflow: hidden;
-        transition: opacity 0.2s ease-in-out;
+    &>div:first-child {
+        .headline-medium();
+        color: var(--md-sys-color-on-surface);
+        padding: 0 0 8px 5%;
+    }
 
-        color: var(--md-sys-color-primary);
-        filter: drop-shadow(0px 1px 2px rgb(0 0 0 / 50%));
-        font-size: 80px;
-        opacity: 0.7;
-        z-index: 1;
+    div:last-child {
 
         display: flex;
         justify-content: center;
-        align-items: center;
 
-        &:hover {
-            filter: drop-shadow(0px 1px 3px rgb(0 0 0 / 60%));
-        }
-
-        &:active {
-            transition: all 0.05s ease-in-out;
-            opacity: 0.8;
-            filter: drop-shadow(0px 1px 2px rgb(0 0 0 / 50%));
-        }
-
-        &.swiper-button-disabled {
-            opacity: 0.1;
-            filter: none;
-            cursor: auto;
-            pointer-events: none;
-        }
-
-        &.swiper-button-lock,
-        &.swiper-button-hidden {
-            opacity: 0;
-            cursor: auto;
-            pointer-events: none;
-        }
-    }
-
-
-    .card {
-        display: grid;
-        grid: 225px 30px / 50px 100px;
-        margin: 0 4px;
-        z-index: 1;
-
-        img {
-            grid-column: 1 / -1;
-            grid-row: 1 / 2;
-            width: 100%;
-            height: 100%;
-            border-radius: 12px;
-            box-shadow:
-                0px 1px 2px rgba(0, 0, 0, 0.15),
-                0px 1px 3px 1px rgba(0, 0, 0, 0.1);
-        }
-
-        svg {
-            grid-column: 1 / 2;
-            grid-row: 1 / 3;
-            justify-self: center;
-            align-self: end;
-            filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.4));
-
-            &.low-votes {
-                filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.4)) grayscale(1);
-            }
-        }
-
-        .rating-text {
-            font-size: 16px;
-        }
-
-        .title {
+        .recommendations-prev-btn,
+        .recommendations-next-btn {
+            width: 50px;
+            height: 50px;
+            margin: 90px 0;
+            background: none;
+            border: none;
+            outline: none;
+            cursor: pointer;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            transition: opacity 0.2s ease-in-out;
 
-            span:nth-child(1) {
-                .body-medium();
-                line-height: 0.9;
-                color: var(--md-sys-color-on-surface);
+            color: var(--md-sys-color-primary);
+            filter: drop-shadow(0px 1px 2px rgb(0 0 0 / 50%));
+            font-size: 80px;
+            opacity: 0.7;
+            z-index: 1;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            &:hover {
+                filter: drop-shadow(0px 1px 3px rgb(0 0 0 / 60%));
+            }
+
+            &:active {
+                transition: all 0.05s ease-in-out;
+                opacity: 0.8;
+                filter: drop-shadow(0px 1px 2px rgb(0 0 0 / 50%));
+            }
+
+            &.swiper-button-disabled {
+                opacity: 0.1;
+                filter: none;
+                cursor: auto;
+                pointer-events: none;
+            }
+
+            &.swiper-button-lock,
+            &.swiper-button-hidden {
+                opacity: 0;
+                cursor: auto;
+                pointer-events: none;
             }
         }
 
-        .title {
-            grid-column: 2 / -1;
-            grid-row: 2 / 4;
-            padding: 4px 2px;
-            gap: 5px;
+
+        .card {
+            display: grid;
+            grid: 225px 30px / 50px 100px;
+            margin: 0 4px;
+            z-index: 1;
+
+            img {
+                grid-column: 1 / -1;
+                grid-row: 1 / 2;
+                width: 100%;
+                height: 100%;
+                border-radius: 12px;
+                box-shadow:
+                    0px 1px 2px rgba(0, 0, 0, 0.15),
+                    0px 1px 3px 1px rgba(0, 0, 0, 0.1);
+            }
+
+            svg {
+                grid-column: 1 / 2;
+                grid-row: 1 / 3;
+                justify-self: center;
+                align-self: end;
+                filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.4));
+
+                &.low-votes {
+                    filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.4)) grayscale(1);
+                }
+            }
+
+            .rating-text {
+                font-size: 16px;
+            }
+
+            .title {
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+
+                span:nth-child(1) {
+                    .body-medium();
+                    line-height: 0.9;
+                    color: var(--md-sys-color-on-surface);
+                }
+            }
+
+            .title {
+                grid-column: 2 / -1;
+                grid-row: 2 / 4;
+                padding: 4px 2px;
+                gap: 5px;
+            }
         }
+
+        .swiper {
+            margin: unset;
+            width: 632px;
+
+            .swiper-wrapper {
+                width: min-content;
+                padding: 2px 0;
+            }
+
+            each(range(9), {
+                @media (min-width: ((@value + 4) * 158px + 235px)) {
+                    width: ((@value + 4) * 158px);
+                }
+            })
     }
-
-    .swiper {
-        margin: unset;
-        width: 1264px;
-
-        // @media (min-width: (1136px)) {
-        //     width: 474px;
-        // }
-
-        .swiper-wrapper {
-            width: min-content;
-            margin: auto 0 0 auto;
-            padding: 2px 0;
-        }
-
-        // each(range(8), {
-        //     @media (min-width: ((@value + 2) * 158px + 820px)) {
-        //         width: ((@value + 2) * 158px);
-        //     }
-        // })
-    }
+}
 }
