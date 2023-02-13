@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useAppSelector, useAppDispatch } from '../store/hooks'
 import CircularProgressIndicator from '../ui/cpi'
-import Select from 'react-select'
 import { MediaCardSkeleton } from '../ui/skeletons';
 
 const Start: React.FC = () => {
@@ -37,7 +36,6 @@ const Start: React.FC = () => {
     //     }
     //     fetcher().then((arr) => setImages(arr))
     // }, [])
-
 
     return (
         <>
