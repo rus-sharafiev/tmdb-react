@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
 import Movie from "../types/movie"
 import Rating from "../ui/rating"
 import CircularProgress from '../ui/cpi'
-import useMaterialTheme from "../hooks/useMaterialTheme"
 import { preloadMovie } from "../services/preloaders"
 import Recommendations from "../components/recommendations"
 import Collection from "../components/collection"
 import Credits from "../components/credits"
 import Videos from "../components/videos"
+import useMaterialTheme from "../hooks/useMaterialTheme"
+
 
 // Movie status
 const status = (status: string) => {
@@ -24,15 +25,15 @@ const status = (status: string) => {
 
 const Movie: React.FC = () => {
     let { id } = useParams()
-    const [themeLoaded, setImagePath, setThemeLoaded] = useMaterialTheme()
     const [movie, setMovie] = useState<Movie>()
+    const [themeLoaded, setThemeImage, setThemeLoaded] = useMaterialTheme()
     const [watchProviders, setWatchProviders] = useState()
 
     // Fetch movie JSON
     useEffect(() => {
 
-        setThemeLoaded(false) // reset themeLoaded
-        setMovie(undefined) // reset movie
+        setMovie(undefined)
+        setThemeLoaded(false)
 
         id &&
             fetch(`/api/movie/${id}`)
@@ -46,7 +47,6 @@ const Movie: React.FC = () => {
         if (!movie) return
 
         console.log(movie)
-        setImagePath(movie.poster_path) // to generate theme
 
         // fetch(`/api/movie/${id}/watch`)
         //     .then(res => res.json())
@@ -60,14 +60,19 @@ const Movie: React.FC = () => {
         return date.toLocaleString('ru', { dateStyle: "long" })
     }
 
-    if (!(movie)) return <CircularProgress className="cpi" />
-    // console.log(watchProviders)
+    if (!movie) return <CircularProgress className="cpi" />
 
     return (
-        <main className="movie">
+        <main className={themeLoaded ? 'movie' : 'movie hidden'}>
             {movie.backdrop_path && <img src={movie.backdrop_path} alt='backdrop' className="backdrop" />}
             <div className="color-overlay" />
-            <img src={movie.poster_path} alt='poster' className="poster" />
+            <img
+                src={movie.poster_path}
+                alt='poster'
+                className="poster"
+                onLoad={(e) => setThemeImage(e.target as HTMLImageElement)}
+                crossOrigin='anonymous'
+            />
             <div className="info">
                 <div className="top">
                     <div className="title">{movie.title}</div>

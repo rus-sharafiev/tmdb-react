@@ -2,34 +2,27 @@ import { useEffect, useState } from "react"
 import { themeFromSourceColor, applyTheme, QuantizerCelebi, Score, argbFromRgb } from "@material/material-color-utilities"
 
 const useMaterialTheme = () => {
-    const [imgPath, setImgPath] = useState<string>('')
+    const [image, setImage] = useState<HTMLImageElement>()
     const [themeLoaded, setThemeLoaded] = useState<boolean>(false)
 
-    const setImagePath: ((imgPath: string) => void) = (imgPath: string) => {
-        imgPath && setImgPath(imgPath)
+    const setThemeImage: ((image: HTMLImageElement) => void) = (image: HTMLImageElement) => {
+        setImage(image)
     }
 
     useEffect(() => {
-        if (!imgPath) return
+        if (!image) return
 
-        async function sourceColorFromImage(): Promise<number> {
-
+        async function sourceColorFromImage(image: HTMLImageElement): Promise<number> {
             const imageBytes = await new Promise<Uint8ClampedArray>((resolve, reject) => {
                 const canvas = document.createElement('canvas')
                 const context = canvas.getContext('2d')
-                if (!context) {
-                    return reject(new Error('Could not get canvas context'))
-                }
-                let image = new Image()
-                image.src = imgPath
-                image.crossOrigin = "Anonymous"
-                image.onload = () => {
-                    canvas.width = image.width
-                    canvas.height = image.height
-                    context.drawImage(image, 0, 0)
-                    resolve(context.getImageData(0, 0, image.width, image.height).data)
-                }
-            })
+                if (!context) return reject(new Error('Could not get canvas context'))
+
+                canvas.width = image.width
+                canvas.height = image.height
+                context.drawImage(image, 0, 0)
+                resolve(context.getImageData(0, 0, image.width, image.height).data);
+            });
 
             const pixels: number[] = []
             for (let i = 0; i < imageBytes.length; i += 4) {
@@ -51,7 +44,7 @@ const useMaterialTheme = () => {
         }
 
         const materialTheme = async () => {
-            const sourceColor: number = await sourceColorFromImage()
+            const sourceColor: number = await sourceColorFromImage(image)
             const theme = themeFromSourceColor(sourceColor)
             const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches
             applyTheme(theme, { target: document.body, dark: false })
@@ -61,9 +54,9 @@ const useMaterialTheme = () => {
 
         return () => document.body.removeAttribute('style')
 
-    }, [imgPath])
+    }, [image])
 
-    return [themeLoaded, setImagePath, setThemeLoaded] as const
+    return [themeLoaded, setThemeImage, setThemeLoaded] as const
 }
 
 

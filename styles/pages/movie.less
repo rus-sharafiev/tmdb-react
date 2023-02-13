@@ -16,6 +16,13 @@
         ".. ...... ...... ...... ...... .."
     ;
 
+    transition: opacity 0.1s ease-in;
+    opacity: 1;
+
+    &.hidden {
+        opacity: 0;
+    }
+
     .backdrop {
         grid-column: 4 / -2;
         grid-row: 2 / 4;
