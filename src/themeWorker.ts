@@ -1,7 +1,6 @@
 import { argbFromRgb, QuantizerCelebi, Score } from "@material/material-color-utilities"
 
 onmessage = function (e) {
-    console.log('Worker: Message received from main script')
     const imageBytes: Uint8ClampedArray = e.data
 
     const pixels: number[] = []
