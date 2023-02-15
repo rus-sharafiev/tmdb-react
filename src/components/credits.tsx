@@ -15,6 +15,8 @@ const Credits: React.FC<{ data: Credits }> = ({ data }) => {
                 .then(actors => setActors(actors))
     }, [])
 
+    if (actors.length === 0) return null
+
     return (
         <>
             <div className="crew">
