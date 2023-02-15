@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { Navigation } from "swiper"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { preloadMovieCards } from "../services/preloaders"
-import { recommendationsSwiperBreakpoints } from "../services/swiperBreakpoints"
+import { recommendationsSwiperBreakpoints } from "../ui/swiperBreakpoints"
 import { MovieCard, MovieCards } from "../types/cards"
 import Rating from "../ui/rating"
 
