@@ -10,37 +10,39 @@ const useMaterialTheme = () => {
     }
 
     useEffect(() => {
+        if (!themeLoaded) document.body.removeAttribute('style')
+    }, [themeLoaded])
+
+    useEffect(() => {
         if (!image) return
 
         async function sourceColorFromImage(image: HTMLImageElement): Promise<number> {
-            const imageBytes = await new Promise<Uint8ClampedArray>((resolve, reject) => {
-                const canvas = document.createElement('canvas')
-                const context = canvas.getContext('2d')
-                if (!context) return reject(new Error('Could not get canvas context'))
 
-                canvas.width = image.width
-                canvas.height = image.height
-                context.drawImage(image, 0, 0)
-                resolve(context.getImageData(0, 0, image.width, image.height).data);
-            });
+            return new Promise((resolve, reject) => {
 
-            const pixels: number[] = []
-            for (let i = 0; i < imageBytes.length; i += 4) {
-                const r = imageBytes[i]
-                const g = imageBytes[i + 1]
-                const b = imageBytes[i + 2]
-                const a = imageBytes[i + 3]
-                if (a < 255) {
-                    continue
+                if (window.Worker) {
+                    const themeWorker = new Worker("/themeWorker.js");
+
+                    const imageBytes = new Promise<Uint8ClampedArray>((resolve, reject) => {
+                        const canvas = document.createElement('canvas')
+                        const context = canvas.getContext('2d')
+                        if (!context) return reject(new Error('Could not get canvas context'))
+
+                        canvas.width = image.width
+                        canvas.height = image.height
+                        context.drawImage(image, 0, 0)
+                        resolve(context.getImageData(0, 0, image.width, image.height).data);
+                    });
+
+                    imageBytes.then(res => themeWorker.postMessage(res))
+
+                    themeWorker.onmessage = function (e) {
+                        resolve(e.data)
+                    }
+                } else {
+                    console.log('Your browser doesn\'t support web workers.');
                 }
-                const argb = argbFromRgb(r, g, b)
-                pixels.push(argb)
-            }
-
-            const result = QuantizerCelebi.quantize(pixels, 128)
-            const ranked = Score.score(result)
-            const top = ranked[0]
-            return top
+            })
         }
 
         const materialTheme = async () => {
