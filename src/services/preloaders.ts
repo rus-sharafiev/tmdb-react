@@ -1,4 +1,4 @@
-import { MovieCard, MovieCards } from "../types/cards"
+import { MovieCard, MovieCards, PersonCard, PersonCards, TvCard, TvCards } from "../types/cards"
 import { Collection, Part } from "../types/collection"
 import Movie, { Actor } from "../types/movie"
 import imageLoader, { imageSize } from "./imageLoader"
@@ -30,8 +30,8 @@ export const preloadCollection = async (content: Collection) => {
 export const preloadCast = async (castArr: Actor[]) => {
     castArr = await Promise.all(
         castArr.map(async (cast: Actor) => {
-            cast.profile_path = await imageLoader(cast.profile_path, imageSize.profile.w185)
-            return cast;
+            cast.profile_path = await imageLoader(cast.profile_path, imageSize.profile.w185, cast.gender === 1 ? '/img/female.png' : '/img/male.png')
+            return cast
         })
     )
     return castArr
@@ -42,6 +42,24 @@ export const preloadMovieCards = async (content: MovieCards, w342?: boolean): Pr
         content.results.map(async (item: MovieCard) => {
             item.poster_path = await imageLoader(item.poster_path, w342 ? imageSize.poster.w342 : imageSize.poster.w185, '/img/no_image.png')
             return item
+        }))
+    return contentResults
+}
+
+export const preloadTvCards = async (content: TvCards, w342?: boolean): Promise<TvCard[]> => {
+    let contentResults = await Promise.all(
+        content.results.map(async (item: TvCard) => {
+            item.poster_path = await imageLoader(item.poster_path, w342 ? imageSize.poster.w342 : imageSize.poster.w185, '/img/no_image.png')
+            return item
+        }))
+    return contentResults
+}
+
+export const preloadPersonCards = async (content: PersonCards): Promise<PersonCard[]> => {
+    let contentResults = await Promise.all(
+        content.results.map(async (person: PersonCard) => {
+            person.profile_path = await imageLoader(person.profile_path, imageSize.profile.w185, person.gender === 1 ? '/img/female.png' : '/img/male.png')
+            return person
         }));
     return contentResults
 }

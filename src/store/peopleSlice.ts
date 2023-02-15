@@ -1,14 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-import imageLoader from '../services/imageLoader'
+import { preloadPersonCards } from '../services/preloaders'
 import { PersonCard } from '../types/cards'
-
-const preloadImages = async (content: { [index: string]: any }) => {
-  let array = await Promise.all(content.results.map(async (item: { [index: string]: any }) => {
-    item.profile_path = await imageLoader(item.profile_path, 'w300', '/img/no_image.png')
-    return item
-  }));
-  return array
-}
 
 const getRussianName = async (id: number) => {
   const cyrillicPattern = /^[\u0410-\u044F\s]+$/
@@ -40,7 +32,7 @@ const getRussianNamesArray = async (people: PersonCard[]) => {
 export const fetchPopularPeople = createAsyncThunk('people/popular', async (page: number) => {
   const response = await fetch(`/api/person/popular/${page}`)
   let array = await response.json()
-  let content = await preloadImages(array)
+  let content = await preloadPersonCards(array)
   return content;
 })
 
