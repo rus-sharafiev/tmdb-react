@@ -9,6 +9,7 @@ import Collection from "../components/collection"
 import Credits from "../components/credits"
 import Videos from "../components/videos"
 import useMaterialTheme from "../hooks/useMaterialTheme"
+import { MovieSkeleton } from "../ui/skeletons"
 
 
 // Movie status
@@ -44,7 +45,7 @@ const Movie: React.FC = () => {
 
     // Set Material theme
     useEffect(() => {
-        if (!movie) return
+        if (!movie) return window.scrollTo({ top: 0, behavior: 'smooth' })
 
         console.log(movie)
 
@@ -79,6 +80,10 @@ const Movie: React.FC = () => {
                             <div className="title">{movie.title}</div>
                             <div className="original_title">{movie.original_title}</div>
                             <div className="tagline">{movie.tagline}</div>
+                            {movie.genres.length > 0 &&
+                                <div className="genres">Жанр<span>{movie.genres.map(genre =>
+                                    <div key={`genre-${genre.id}`}>{genre.name}</div>
+                                )}</span></div>}
                             {movie.overview && <div className="overview">Обзор<span>{movie.overview}</span></div>}
                         </div>
                         <div className="bottom">
@@ -110,7 +115,10 @@ const Movie: React.FC = () => {
                     {themeLoaded && movie.recommendations.results.length > 0 && <Recommendations cards={movie.recommendations} />}
 
                 </main>}
-            {!themeLoaded && <CircularProgress className="cpi" />}
+            {!themeLoaded &&
+                <main className='movie skeleton'>
+                    <MovieSkeleton />
+                </main>}
         </>
     )
 }

@@ -16,4 +16,38 @@ const PersonCardSkeleton: React.FC = () => {
     )
 }
 
-export { MediaCardSkeleton, PersonCardSkeleton }
+const MovieSkeleton: React.FC = () => {
+    return (
+        <>
+            <div><svg xmlns="http://www.w3.org/2000/svg" ><rect /></svg></div>
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" >
+                    <defs>
+
+                        <linearGradient id='gradient' x1="-50vw" x2="150vw" gradientUnits="userSpaceOnUse" gradientTransform="rotate(10)">
+                            <stop offset="0" stopColor="var(--md-sys-color-surface-variant)" stopOpacity="1">
+                                <animate attributeName="offset" values="0;0.7" dur="1.4s" repeatCount="indefinite" />
+                            </stop>
+                            <stop offset="0.1" stopColor="var(--md-sys-color-surface-variant)" stopOpacity="0" >
+                                <animate attributeName="offset" values="0.1;0.8" dur="1.4s" repeatCount="indefinite" />
+                            </stop>
+                            <stop offset="0.2" stopColor="var(--md-sys-color-surface-variant)" stopOpacity="0" >
+                                <animate attributeName="offset" values="0.2;0.9" dur="1.4s" repeatCount="indefinite" />
+                            </stop>
+                            <stop offset="0.3" stopColor="var(--md-sys-color-surface-variant)" stopOpacity="1" >
+                                <animate attributeName="offset" values="0.3;1" dur="1.4s" repeatCount="indefinite" />
+                            </stop>
+                        </linearGradient>
+
+                    </defs>
+                    <rect />
+                </svg>
+            </div>
+            <div><svg xmlns="http://www.w3.org/2000/svg" ><rect /></svg></div>
+            <div><svg xmlns="http://www.w3.org/2000/svg" ><rect /></svg></div>
+            <div><svg xmlns="http://www.w3.org/2000/svg" ><rect /></svg></div>
+        </>
+    )
+}
+
+export { MediaCardSkeleton, PersonCardSkeleton, MovieSkeleton }
