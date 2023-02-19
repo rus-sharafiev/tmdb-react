@@ -20,47 +20,45 @@ const Recommendations: React.FC<{ cards: MovieCards }> = ({ cards }) => {
     return (
         <div className="recommendations">
             <div>Рекомендации</div>
-            <div>
-                <button
-                    type="button"
-                    className='recommendations-prev-btn material-symbols-rounded unselectable'
-                >
-                    navigate_before
-                </button>
-                <Swiper
-                    breakpoints={recommendationsSwiperBreakpoints}
-                    // slidesPerView={4}
-                    modules={[Navigation]}
-                    navigation={{
-                        prevEl: '.recommendations-prev-btn',
-                        nextEl: '.recommendations-next-btn',
-                    }}
-                >
-                    {recommendations.length > 0 &&
-                        recommendations
-                            .map((movie: MovieCard) =>
-                                <SwiperSlide key={'part-' + movie.id}>
-                                    <Link to={`/movie/${movie.id}`} className='card' >
-                                        <img src={movie.poster_path} />
-                                        <Rating
-                                            radius={18}
-                                            rating={parseFloat(movie.vote_average ? movie.vote_average.toFixed(1) : '0')}
-                                            votes={movie.vote_count}
-                                        />
-                                        <div className='title'>
-                                            <span>{movie.title}</span>
-                                        </div>
-                                    </Link>
-                                </SwiperSlide>
-                            )}
-                </Swiper>
-                <button
-                    type="button"
-                    className='recommendations-next-btn material-symbols-rounded unselectable'
-                >
-                    navigate_next
-                </button>
-            </div>
+            <button
+                type="button"
+                className='recommendations-prev-btn material-symbols-rounded unselectable'
+            >
+                navigate_before
+            </button>
+            <Swiper
+                breakpoints={recommendationsSwiperBreakpoints}
+                // slidesPerView={4}
+                modules={[Navigation]}
+                navigation={{
+                    prevEl: '.recommendations-prev-btn',
+                    nextEl: '.recommendations-next-btn',
+                }}
+            >
+                {recommendations.length > 0 &&
+                    recommendations
+                        .map((movie: MovieCard) =>
+                            <SwiperSlide key={'part-' + movie.id}>
+                                <Link to={`/movie/${movie.id}`} className='card' >
+                                    <img src={movie.poster_path} />
+                                    <Rating
+                                        radius={18}
+                                        rating={parseFloat(movie.vote_average ? movie.vote_average.toFixed(1) : '0')}
+                                        votes={movie.vote_count}
+                                    />
+                                    <div className='title'>
+                                        <span>{movie.title}</span>
+                                    </div>
+                                </Link>
+                            </SwiperSlide>
+                        )}
+            </Swiper>
+            <button
+                type="button"
+                className='recommendations-next-btn material-symbols-rounded unselectable'
+            >
+                navigate_next
+            </button>
         </div>
     )
 }
