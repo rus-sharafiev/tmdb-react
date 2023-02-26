@@ -217,11 +217,11 @@
     &.skeleton {
         fill: url(#gradient);
         // fill: var(--md-sys-color-surface-variant);
-        opacity: 0.6;
 
 
-        div {
+        &>div {
             overflow: hidden;
+            opacity: 0.6;
         }
 
         div>svg {
@@ -237,45 +237,51 @@
             height: 100%;
         }
 
-        div:nth-child(1) {
+        &>div:nth-child(1) {
             grid-column: 2 / 3;
             grid-row: 2 / 4;
-            width: calc(100% - 2px);
+            width: calc(100% - 4px);
             height: 100%;
-            clip-path: inset(0 0 0 0 round 24px 0 0 24px);
+            clip-path: inset(0 round 24px 0 0 24px);
         }
 
-        div:nth-child(2) {
+        &>div:nth-child(2) {
             grid-area: poster;
             width: 100%;
             height: 100%;
-            clip-path: inset(0 0 0 0 round 24px);
+            clip-path: inset(0 round 24px);
         }
 
-        div:nth-child(3) {
+        &>div:nth-child(3) {
             grid-column: 4 / -2;
             grid-row: 2 / 4;
-            width: 128px;
-            margin-left: 2px;
+            margin-left: 4px;
             height: 100%;
-            clip-path: path("M0,0v600h12c0-28.7,23.3-52,52-52s52,23.3,52,52h12V0H0z");
+            clip-path: path("M0,0v600h8c0-29.8,24.2-54,54-54s54,24.2,54,54h10V0H0z");
         }
 
-        div:nth-child(4) {
+        &>div:nth-child(4) {
             grid-column: 4 / -2;
             grid-row: 2 / 4;
+            height: 100%;
             width: calc(100% - 130px);
             margin-left: 130px;
-            height: 100%;
-            clip-path: inset(0 0 0 0 round 0 24px 24px 0);
+            clip-path: inset(0 round 0 24px 24px 0);
         }
 
-        div:nth-child(5) {
+        &>div:nth-child(5) {
             grid-area: rating;
             width: 100px;
             height: 100px;
             margin: 0 0 0 16px;
-            clip-path: inset(0 0 0 0 round 50px);
+            clip-path: inset(0 round 50px);
+        }
+
+        &>div:nth-child(6) {
+            grid-area: videos;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            clip-path: inset(0 round 24px);
         }
     }
 }

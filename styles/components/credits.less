@@ -187,3 +187,49 @@
         })
 }
 }
+
+.cast-skeleton {
+    grid-area: actors;
+
+    overflow: hidden;
+    opacity: 0.6;
+
+    display: grid;
+    grid: 1fr / repeat(10, 128px);
+    margin: 0 0 0 74px;
+
+    fill: url(#gradient);
+
+    .skeleton-crew-card {
+        width: 120px;
+        height: 220px;
+        clip-path: path("M108,180H12c-6.6,0-12-5.4-12-12V12C0,5.4,5.4,0,12,0h96c6.6,0,12,5.4,12,12v156C120,174.6,114.6,180,108,180z M116, 193v-6c0-2.2-1.8-4-4-4H8c-2.2, 0-4, 1.8-4, 4v6c0, 2.2, 1.8, 4, 4, 4h104C114.2, 197, 116, 195.2, 116, 193z M63, 209v-6c0-2.2-1.8-4-4-4 H8c-2.2, 0-4, 1.8-4, 4v6c0, 2.2, 1.8, 4, 4, 4h51C61.2, 213, 63, 211.2, 63, 209z");
+        margin: 0 4px;
+
+        &>svg {
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        &>svg>rect {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    width: 256px;
+
+    @media (min-width: (1076px)) {
+        width: 256px;
+    }
+
+    each(range(8), {
+        @media (min-width: ((@value + 2) * 128px + 820px)) {
+            width: ((@value + 2) * 128px);
+        }
+
+    })
+}

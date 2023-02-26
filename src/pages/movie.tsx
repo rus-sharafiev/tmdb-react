@@ -109,7 +109,7 @@ const Movie: React.FC = () => {
                         />
                         <span>Голосов {movie.vote_count}</span>
                     </div>
-                    {themeLoaded && movie.videos.results.length > 0 && <Videos yt={movie.videos.results} />}
+                    {movie.videos.results.length > 0 && <Videos yt={movie.videos.results} />}
                     {themeLoaded && movie.credits && <Credits data={movie.credits} />}
                     {themeLoaded && movie.belongs_to_collection && <Collection id={movie.belongs_to_collection.id} />}
                     {themeLoaded && movie.recommendations.results.length > 0 && <Recommendations cards={movie.recommendations} />}
@@ -118,6 +118,7 @@ const Movie: React.FC = () => {
             {!themeLoaded &&
                 <main className='movie skeleton'>
                     <MovieSkeleton />
+                    <Credits data={null} />
                 </main>}
         </>
     )
