@@ -17,7 +17,7 @@ const Credits: React.FC<{ data: Credits | null }> = ({ data }) => {
 
     return (
         <>
-            {actors.length > 0 && data
+            {actors.length > 0 && data // Crew
                 ?
                 <div className="crew">
                     <div className="director">
@@ -39,8 +39,17 @@ const Credits: React.FC<{ data: Credits | null }> = ({ data }) => {
                             <Link to={`/person/${p.id}`} key={'crew-' + p.id}>{p.name}</Link>)}</span>
                     </div>
                 </div>
-                : null}
-            {actors.length > 0
+                :
+                <div className="crew-skeleton">
+                    {[...Array(3)].map((e, i) =>
+                        <div key={`skeleton-crew-${i}`}>
+                            <div><svg xmlns="http://www.w3.org/2000/svg" ><rect /></svg></div>
+                            <div><svg xmlns="http://www.w3.org/2000/svg" ><rect /></svg></div>
+                        </div>
+                    )}
+                </div>
+            }
+            {actors.length > 0 // Actors
                 ?
                 <div className="cast">
                     <button type="button" className='cast-prev-btn material-symbols-rounded unselectable'>navigate_before</button>
@@ -70,9 +79,10 @@ const Credits: React.FC<{ data: Credits | null }> = ({ data }) => {
                 :
                 <div className="cast-skeleton">
                     {[...Array(10)].map((e, i) =>
-                        <div className="skeleton-crew-card" key={`skeleton-crew-card-${i}`}><svg xmlns="http://www.w3.org/2000/svg" ><rect /></svg></div>
+                        <div className="skeleton-cast-card" key={`skeleton-cast-card-${i}`}><svg xmlns="http://www.w3.org/2000/svg" ><rect /></svg></div>
                     )}
-                </div>}
+                </div>
+            }
         </>
     )
 }

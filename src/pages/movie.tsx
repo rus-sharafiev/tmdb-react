@@ -119,6 +119,7 @@ const Movie: React.FC = () => {
                 <main className='movie skeleton'>
                     <MovieSkeleton />
                     <Credits data={null} />
+                    <Recommendations cards={null} />
                 </main>}
         </>
     )

@@ -34,50 +34,52 @@ const Collection: React.FC<{ id: number }> = ({ id }) => {
     if (!collection) return <div className="collection" style={{ maxHeight: '0px', opacity: '0' }} />
 
     return (
-        <div className="collection">
-            <img
-                className="collection-backdrop"
-                src={collection.backdrop_path}
-                alt="collection backdrop"
-            />
-            <div className="collection-overlay">
-                <div>{collection.name}</div>
+        <>
+            <div className="collection">
+                <img
+                    className="collection-backdrop"
+                    src={collection.backdrop_path}
+                    alt="collection backdrop"
+                />
+                <div className="collection-overlay">
+                    <div>{collection.name}</div>
+                </div>
+                <button
+                    type="button"
+                    className='collection-prev-btn material-symbols-rounded unselectable'
+                >
+                    navigate_before
+                </button>
+                <Swiper
+                    breakpoints={collectionSwiperBreakpoints}
+                    modules={[Navigation]}
+                    navigation={{
+                        prevEl: '.collection-prev-btn',
+                        nextEl: '.collection-next-btn',
+                    }}
+                >
+                    {collection.parts
+                        .sort(releaseDateAsc)
+                        .map((part: Part) =>
+                            <SwiperSlide key={'part-' + part.id}>
+                                <Link to={`/movie/${part.id}`} className='card' >
+                                    <img src={part.poster_path} />
+                                    <Rating radius={18} rating={parseFloat(part.vote_average ? part.vote_average.toFixed(1) : '0')} votes={part.vote_count} />
+                                    <div className='title'>
+                                        <span>{part.title}</span>
+                                    </div>
+                                </Link>
+                            </SwiperSlide>
+                        )}
+                </Swiper>
+                <button
+                    type="button"
+                    className='collection-next-btn material-symbols-rounded unselectable'
+                >
+                    navigate_next
+                </button>
             </div>
-            <button
-                type="button"
-                className='collection-prev-btn material-symbols-rounded unselectable'
-            >
-                navigate_before
-            </button>
-            <Swiper
-                breakpoints={collectionSwiperBreakpoints}
-                modules={[Navigation]}
-                navigation={{
-                    prevEl: '.collection-prev-btn',
-                    nextEl: '.collection-next-btn',
-                }}
-            >
-                {collection.parts
-                    .sort(releaseDateAsc)
-                    .map((part: Part) =>
-                        <SwiperSlide key={'part-' + part.id}>
-                            <Link to={`/movie/${part.id}`} className='card' >
-                                <img src={part.poster_path} />
-                                <Rating radius={18} rating={parseFloat(part.vote_average ? part.vote_average.toFixed(1) : '0')} votes={part.vote_count} />
-                                <div className='title'>
-                                    <span>{part.title}</span>
-                                </div>
-                            </Link>
-                        </SwiperSlide>
-                    )}
-            </Swiper>
-            <button
-                type="button"
-                className='collection-next-btn material-symbols-rounded unselectable'
-            >
-                navigate_next
-            </button>
-        </div>
+        </>
     )
 }
 
