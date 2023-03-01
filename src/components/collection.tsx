@@ -20,7 +20,7 @@ const releaseDateAsc = (a: Part, b: Part) => {
     return 0;
 }
 
-const Collection: React.FC<{ id: number }> = ({ id }) => {
+const Collection: React.FC<{ id: number | null }> = ({ id }) => {
     const [collection, setCollection] = useState<Collection>()
 
     useEffect(() => {
@@ -31,10 +31,9 @@ const Collection: React.FC<{ id: number }> = ({ id }) => {
                 .then(collection => setCollection(collection))
     }, [id])
 
-    if (!collection) return <div className="collection" style={{ maxHeight: '0px', opacity: '0' }} />
-
     return (
-        <>
+        id && collection
+            ?
             <div className="collection">
                 <img
                     className="collection-backdrop"
@@ -79,7 +78,13 @@ const Collection: React.FC<{ id: number }> = ({ id }) => {
                     navigate_next
                 </button>
             </div>
-        </>
+            :
+            <div className="collection-skeleton">
+                <div ><svg xmlns="http://www.w3.org/2000/svg" ><rect /></svg></div>
+                <div className="collection-card"><svg xmlns="http://www.w3.org/2000/svg" ><rect /></svg></div>
+                <div className="collection-card"><svg xmlns="http://www.w3.org/2000/svg" ><rect /></svg></div>
+                <div ><svg xmlns="http://www.w3.org/2000/svg" ><rect /></svg></div>
+            </div>
     )
 }
 

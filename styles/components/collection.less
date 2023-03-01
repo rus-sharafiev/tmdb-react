@@ -3,13 +3,12 @@
     position: relative;
 
     width: 100%;
-    max-height: 350px;
-    min-height: min-content;
+    height: 300px;
     overflow: hidden;
     padding-right: calc(3% - 24px);
     z-index: 1;
-    opacity: 1;
-    transition: max-height 0.2s ease-in, opacity 0.2s ease-in 0.2s;
+
+    transition: opacity 0.2s ease-in 0.2s;
 
     display: flex;
     justify-content: flex-end;
@@ -18,7 +17,7 @@
     .collection-next-btn {
         width: 50px;
         height: 50px;
-        margin: 110px 0 0;
+        margin: 92px 0 0;
         background: none;
         border: none;
         outline: none;
@@ -64,7 +63,7 @@
 
     .collection-overlay,
     .collection-backdrop {
-        inset: 36px 0 auto;
+        inset: 16px 0 auto;
         height: 200px;
         border-radius: 24px;
     }
@@ -168,7 +167,7 @@
         .swiper-wrapper {
             width: min-content;
             margin: auto 0 0 auto;
-            padding: 24px 0 4px;
+            padding: 4px 0;
         }
 
         each(range(8), {
@@ -177,4 +176,56 @@
             }
         })
 }
+}
+
+.collection-skeleton {
+    grid-area: collct;
+    position: relative;
+    height: 300px;
+    padding: 4px calc(3% + 26px) 4px 0;
+
+    fill: url(#gradient);
+    opacity: 0.6;
+
+    display: flex;
+    justify-content: flex-end;
+
+    div {
+        &>svg {
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        &>svg>rect {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    div:first-child {
+        position: absolute;
+        inset: 16px calc(3% + 344px) auto 0;
+        height: 200px;
+        clip-path: inset(0 round 24px 0 0 24px);
+
+    }
+
+    div:last-child {
+        position: absolute;
+        inset: 16px 0 auto auto;
+        width: calc(3% + 24px);
+        height: 200px;
+        clip-path: inset(0 round 0 24px 24px 0);
+
+    }
+
+    .collection-card {
+        width: 150px;
+        height: 288px;
+        clip-path: path("M133,246H56c-2.2,0-4-1.8-4-4v-9c0-2.2,1.8-4,4-4h77c2.2,0,4,1.8,4,4v9C137,244.2,135.2,246,133,246z M25,211 c-12.2,0-22,9.8-22,22s9.8,22,22,22s22-9.8,22-22S37.2,211,25,211z M138,0H12C5.4,0,0,5.4,0,12v201c0,2.7,0.9,5.2,2.4,7.2 C6.9,212.3,15.3,207,25,207c11.6,0,21.4,7.6,24.7,18H138c6.6,0,12-5.4,12-12V12C150,5.4,144.6,0,138,0z");
+        margin: 0 4px;
+    }
 }

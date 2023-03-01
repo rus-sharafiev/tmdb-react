@@ -87,6 +87,12 @@ interface Crew {
     job: string
 }
 
+
+export interface Content {
+    collections: Collection | null,
+    recomm: []
+}
+
 export default interface Movie {
     adult: boolean,
     backdrop_path: string,

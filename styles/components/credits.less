@@ -4,9 +4,8 @@
 
     display: flex;
     gap: 32px;
-    padding: 12px 0 8px 8%;
+    padding: 14px 0 14px 8%;
 
-    opacity: 1;
     transition: opacity 0.2s ease-in;
 
     &:hover div span:last-child a {
@@ -110,7 +109,6 @@
     .card {
         display: grid;
         grid: 180px min-content / 120px;
-        // height: calc(100% - 8px);
         height: 255px;
         margin: 0 4px;
         z-index: 1;
@@ -120,7 +118,7 @@
             content: '';
             position: absolute;
             z-index: -1;
-            inset: -4px;
+            inset: -4px -4px 4px;
             border-radius: 14px;
             background-color: var(--md-sys-color-primary);
             opacity: 0;
@@ -241,7 +239,7 @@
     grid-area: autors;
     display: flex;
     gap: 32px;
-    padding: 12px 0 8px 8%;
+    padding: 14px 0 14px 8%;
 
     opacity: 0.6;
     fill: url(#gradient);

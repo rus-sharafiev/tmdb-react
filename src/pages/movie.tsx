@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
-import Movie from "../types/movie"
+import Movie, { Content } from "../types/movie"
 import Rating from "../ui/rating"
 import CircularProgress from '../ui/cpi'
 import { preloadMovie } from "../services/preloaders"
@@ -29,6 +29,7 @@ const Movie: React.FC = () => {
     const [movie, setMovie] = useState<Movie>()
     const [themeLoaded, setThemeImage, setThemeLoaded] = useMaterialTheme()
     const [watchProviders, setWatchProviders] = useState()
+    const [content, setContent] = useState<Content>({ collections: null, recomm: [] })
 
     // Fetch movie JSON
     useEffect(() => {
@@ -36,6 +37,16 @@ const Movie: React.FC = () => {
         setMovie(undefined)
         setThemeLoaded(false)
 
+        // Check collection and recommendations
+        id &&
+            fetch(`/api/movie/${id}`)
+                .then(res => res.json())
+                .then(movie => setContent({
+                    collections: movie.belongs_to_collection,
+                    recomm: movie.recommendations.results
+                }))
+
+        // Get movie
         id &&
             fetch(`/api/movie/${id}`)
                 .then(res => res.json())
@@ -47,15 +58,13 @@ const Movie: React.FC = () => {
     useEffect(() => {
         if (!movie) return window.scrollTo({ top: 0, behavior: 'smooth' })
 
-        console.log(movie)
-
-        // fetch(`/api/movie/${id}/watch`)
-        //     .then(res => res.json())
-        //     .then(watchProviders => setWatchProviders(watchProviders?.results?.RU))
+        fetch(`/api/movie/${id}/watch`)
+            .then(res => res.json())
+            .then(watchProviders => setWatchProviders(watchProviders?.results?.RU))
 
     }, [movie])
 
-    // Long russian date converter
+    // Date converter to long russian date
     const localDate = (d: string) => {
         if (!d) return 'Не объявлена'
         let date = new Date(d)
@@ -113,13 +122,13 @@ const Movie: React.FC = () => {
                     {themeLoaded && movie.credits && <Credits data={movie.credits} />}
                     {themeLoaded && movie.belongs_to_collection && <Collection id={movie.belongs_to_collection.id} />}
                     {themeLoaded && movie.recommendations.results.length > 0 && <Recommendations cards={movie.recommendations} />}
-
                 </main>}
             {!themeLoaded &&
                 <main className='movie skeleton'>
                     <MovieSkeleton />
                     <Credits data={null} />
-                    <Recommendations cards={null} />
+                    {content.collections !== null && <Collection id={null} />}
+                    {content.recomm.length > 0 && <Recommendations cards={null} />}
                 </main>}
         </>
     )

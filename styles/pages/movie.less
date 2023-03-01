@@ -1,7 +1,7 @@
 // Movie Page
 .movie {
     display: grid;
-    grid-template-rows: 24px 550px 50px 50px 24px min-content min-content minmax(0, min-content) min-content 1fr;
+    grid-template-rows: 24px 550px 50px 50px 40px min-content minmax(280px, min-content) min-content min-content 1fr;
     grid-template-columns: 1fr minmax(16px, 1fr) minmax(400px, 450px) minmax(370px, 20fr) minmax(16px, 4fr) minmax(10px, 2fr);
     grid-template-areas:
         ".. ...... poster ...... ...... .."
@@ -216,7 +216,6 @@
 
     &.skeleton {
         fill: url(#gradient);
-        // fill: var(--md-sys-color-surface-variant);
 
 
         &>div {
