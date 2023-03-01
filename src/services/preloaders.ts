@@ -1,10 +1,23 @@
+import { Actor } from "../types"
 import { MovieCard, MovieCards, PersonCard, PersonCards, TvCard, TvCards } from "../types/cards"
 import { Collection, Part } from "../types/collection"
-import Movie, { Actor } from "../types/movie"
+import Movie from "../types/movie"
+import Tv from "../types/tv"
 import imageLoader, { imageSize } from "./imageLoader"
 
 // Proxy and preload images
 export const preloadMovie = async (content: Movie) => {
+    content.backdrop_path = await imageLoader(content.backdrop_path, imageSize.backdrop.w780)
+    content.poster_path = await imageLoader(content.poster_path, imageSize.poster.w780)
+    content.production_companies = await Promise.all(
+        content.production_companies.map(async (company) => {
+            company.logo_path = await imageLoader(company.logo_path, imageSize.logo.w300)
+            return company
+        })
+    )
+    return content
+}
+export const preloadTv = async (content: Tv) => {
     content.backdrop_path = await imageLoader(content.backdrop_path, imageSize.backdrop.w780)
     content.poster_path = await imageLoader(content.poster_path, imageSize.poster.w780)
     content.production_companies = await Promise.all(

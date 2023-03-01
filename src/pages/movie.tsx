@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import Movie, { Content } from "../types/movie"
 import Rating from "../ui/rating"
-import CircularProgress from '../ui/cpi'
 import { preloadMovie } from "../services/preloaders"
 import Recommendations from "../components/recommendations"
 import Collection from "../components/collection"
