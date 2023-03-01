@@ -1,52 +1,6 @@
 .video {
     grid-area: videos;
-
-    div {
-        display: grid;
-        grid: 1fr / repeat(auto-fit, minmax(48px, 1fr));
-        margin: 0 24px -4px;
-
-        span {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 12px;
-            margin: 0 -0.5px;
-            height: 40px;
-            border: 1px solid var(--md-sys-color-outline-variant);
-            color: var(--md-sys-color-on-surface);
-            .label-large();
-            white-space: nowrap;
-
-            @state-color: var(--md-sys-color-on-surface);
-            .state-layer();
-
-            &:hover {
-                .hover-state-layer();
-                cursor: pointer;
-            }
-        }
-
-        span:first-child {
-            border-radius: 20px 0 0 20px;
-        }
-
-        span:last-child {
-            border-radius: 0 20px 20px 0;
-        }
-
-        span.active {
-            background-color: var(--md-sys-color-secondary-container);
-            color: var(--md-sys-color-on-secondary-container);
-            @state-color: var(--md-sys-color-on-secondary-container);
-            .state-layer();
-
-            &:hover {
-                .hover-state-layer();
-            }
-        }
-
-    }
+    height: min-content;
 
     iframe {
         border: 0;
@@ -55,6 +9,54 @@
         aspect-ratio: 16 / 9;
         .elevation-level2();
         position: relative;
-        z-index: 2;
+        z-index: 3;
     }
+}
+
+
+.video-languages {
+    grid-row: 6 / 8;
+    grid-column: 2 / 4;
+
+    display: grid;
+    grid: 45px 45px / 1fr;
+
+    height: min-content;
+    padding: 24px 0 0;
+
+    span {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        margin: -2px 0 -2px 4px;
+        width: 100px;
+        border: 1px solid var(--md-sys-color-outline-variant);
+        border-radius: 18px 0 0 18px;
+        color: var(--md-sys-color-on-surface);
+        .label-large();
+        white-space: nowrap;
+        transition: margin 0.2s ease-in-out;
+
+        @state-color: var(--md-sys-color-on-surface);
+        .state-layer();
+
+        &:hover {
+            .hover-state-layer();
+            cursor: pointer;
+        }
+    }
+
+    span.active {
+        margin: -2px 0;
+        background-color: var(--md-sys-color-primary);
+        color: var(--md-sys-color-on-primary);
+        @state-color: var(--md-sys-color-on-primary);
+        .state-layer();
+        z-index: 3;
+
+        &:hover {
+            .hover-state-layer();
+        }
+    }
+
 }

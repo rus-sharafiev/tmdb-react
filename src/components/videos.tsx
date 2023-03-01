@@ -22,27 +22,29 @@ const Videos: React.FC<{ yt: Video[] }> = ({ yt }) => {
 
     return (
         videos ?
-            <div className="video">
+            <>
                 {videos.ru &&
-                    <div>
+                    <div className="video-languages">
                         <span
                             className={activeVideo === 'official' ? 'active' : ''}
                             onClick={() => setActiveVideo('official')}
-                        >Оффициальный трейлер</span>
+                        >En</span>
                         <span
                             className={activeVideo === 'ru' ? 'active' : ''}
                             onClick={() => setActiveVideo('ru')}
-                        >Русский трейлер</span>
+                        >Ру</span>
                     </div>}
-                <iframe
-                    src={`https://www.youtube-nocookie.com/embed/${activeVideo === 'official'
-                        ? videos.official
-                        : videos.ru
-                        }`}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                />
-            </div>
+                <div className="video">
+                    <iframe
+                        src={`https://www.youtube-nocookie.com/embed/${activeVideo === 'official'
+                            ? videos.official
+                            : videos.ru
+                            }`}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                    />
+                </div>
+            </>
             : <div className="video" />
     )
 }
