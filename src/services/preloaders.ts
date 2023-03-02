@@ -50,29 +50,14 @@ export const preloadCast = async (castArr: Actor[]) => {
     return castArr
 }
 
-export const preloadMovieCards = async (content: MovieCards, w342?: boolean): Promise<MovieCard[]> => {
+export const preloadCards = async (content: MovieCards | TvCards | PersonCards, w342?: boolean): Promise<MovieCard[] | TvCard[] | PersonCard[]> => {
     let contentResults = await Promise.all(
-        content.results.map(async (item: MovieCard) => {
-            item.poster_path = await imageLoader(item.poster_path, w342 ? imageSize.poster.w342 : imageSize.poster.w185, '/img/no_image.png')
+        content.results.map(async (item: MovieCard | TvCard | PersonCard) => {
+            if ((item as MovieCard | TvCard).poster_path)
+                (item as MovieCard | TvCard).poster_path = await imageLoader((item as MovieCard | TvCard).poster_path, w342 ? imageSize.poster.w342 : imageSize.poster.w185, '/img/no_image.png')
+            if ((item as PersonCard).profile_path)
+                (item as PersonCard).profile_path = await imageLoader((item as PersonCard).profile_path, imageSize.profile.w185, (item as PersonCard).gender === 1 ? '/img/female.png' : '/img/male.png')
             return item
         }))
-    return contentResults
-}
-
-export const preloadTvCards = async (content: TvCards, w342?: boolean): Promise<TvCard[]> => {
-    let contentResults = await Promise.all(
-        content.results.map(async (item: TvCard) => {
-            item.poster_path = await imageLoader(item.poster_path, w342 ? imageSize.poster.w342 : imageSize.poster.w185, '/img/no_image.png')
-            return item
-        }))
-    return contentResults
-}
-
-export const preloadPersonCards = async (content: PersonCards): Promise<PersonCard[]> => {
-    let contentResults = await Promise.all(
-        content.results.map(async (person: PersonCard) => {
-            person.profile_path = await imageLoader(person.profile_path, imageSize.profile.w185, person.gender === 1 ? '/img/female.png' : '/img/male.png')
-            return person
-        }));
-    return contentResults
+    return contentResults as MovieCard[] | TvCard[] | PersonCard[]
 }

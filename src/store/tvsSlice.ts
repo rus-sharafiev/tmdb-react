@@ -1,18 +1,18 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-import { preloadTvCards } from '../services/preloaders'
+import { preloadCards } from '../services/preloaders'
 
 // -------------- Tvs ------------------------------------------------------------------------------------------------------------------
 export const fetchPopularTvs = createAsyncThunk('tvs/popular', async (page: number) => {
   const response = await fetch(`/api/tv/popular/${page}`)
   let array = await response.json()
-  let content = await preloadTvCards(array, true)
+  let content = await preloadCards(array, true)
   return content
 })
 
 export const fetchTopRatedTvs = createAsyncThunk('tvs/top_rated', async (page: number) => {
   const response = await fetch(`/api/tv/top_rated/${page}`)
   let array = await response.json()
-  let content = await preloadTvCards(array, true)
+  let content = await preloadCards(array, true)
   return content
 })
 
@@ -20,7 +20,7 @@ export const fetchAiringTodayTvs = createAsyncThunk('tvs/airing_today', async (p
   try {
     const response = await fetch(`/api/tv/airing_today/${page}`)
     let array = await response.json()
-    let content = await preloadTvCards(array, true)
+    let content = await preloadCards(array, true)
     return content
   } catch (e) {
     console.log(e)

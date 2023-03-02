@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-import { preloadPersonCards } from '../services/preloaders'
+import { preloadCards } from '../services/preloaders'
 import { PersonCard } from '../types/cards'
 
 const getRussianName = async (id: number) => {
@@ -32,7 +32,7 @@ const getRussianNamesArray = async (people: PersonCard[]) => {
 export const fetchPopularPeople = createAsyncThunk('people/popular', async (page: number) => {
   const response = await fetch(`/api/person/popular/${page}`)
   let array = await response.json()
-  let content = await preloadPersonCards(array)
+  let content = await preloadCards(array)
   return content;
 })
 

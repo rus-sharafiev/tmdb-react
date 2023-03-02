@@ -1,18 +1,18 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-import { preloadMovieCards } from '../services/preloaders';
+import { preloadCards } from '../services/preloaders';
 
 // -------------- Movies ------------------------------------------------------------------------------------------------------------------
 export const fetchPopularMovies = createAsyncThunk('movies/popular', async (page: number) => {
   const response = await fetch(`/api/movie/popular/${page}`)
   let array = await response.json()
-  let content = await preloadMovieCards(array, true)
+  let content = await preloadCards(array, true)
   return content;
 })
 
 export const fetchTopRatedMovies = createAsyncThunk('movies/top_rated', async (page: number) => {
   const response = await fetch(`/api/movie/top_rated/${page}`)
   let array = await response.json()
-  let content = await preloadMovieCards(array, true)
+  let content = await preloadCards(array, true)
   return content
 })
 
@@ -20,7 +20,7 @@ export const fetchUpcomingMovies = createAsyncThunk('movies/upcoming', async (pa
   try {
     const response = await fetch(`/api/movie/upcoming/${page}`)
     let array = await response.json()
-    let content = await preloadMovieCards(array, true)
+    let content = await preloadCards(array, true)
     return content
   } catch (e) {
     console.log(e)
