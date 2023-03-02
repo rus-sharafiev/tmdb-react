@@ -2,18 +2,19 @@ import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { Navigation } from "swiper"
 import { Swiper, SwiperSlide } from "swiper/react"
-import { preloadMovieCards } from "../services/preloaders"
+import { preloadCards } from "../services/preloaders"
 import { recommendationsSwiperBreakpoints } from "../ui/swiperBreakpoints"
-import { MovieCard, MovieCards } from "../types/cards"
+import { MovieCard, MovieCards, TvCard, TvCards } from "../types/cards"
 import Rating from "../ui/rating"
 
-const Recommendations: React.FC<{ cards: MovieCards | null }> = ({ cards }) => {
-    const [recommendations, setRecommendations] = useState<MovieCard[]>([])
+const Recommendations: React.FC<{ cards: MovieCards | TvCards | null }> = ({ cards }) => {
+    const [recommendations, setRecommendations] = useState<MovieCard[] | TvCard[]>([])
 
     useEffect(() => {
-        cards &&
-            preloadMovieCards(cards)
-                .then(movies => setRecommendations(movies))
+        if (!cards) return
+
+        preloadCards(cards)
+            .then(recommendations => setRecommendations(recommendations))
     }, [])
 
     return (
@@ -36,17 +37,17 @@ const Recommendations: React.FC<{ cards: MovieCards | null }> = ({ cards }) => {
                     }}
                 >
                     {recommendations
-                        .map((movie: MovieCard) =>
-                            <SwiperSlide key={'part-' + movie.id}>
-                                <Link to={`/movie/${movie.id}`} className='card' >
-                                    <img src={movie.poster_path} />
+                        .map((recommendation: MovieCard | TvCard) =>
+                            <SwiperSlide key={'part-' + recommendation.id}>
+                                <Link to={`/movie/${recommendation.id}`} className='card' >
+                                    <img src={recommendation.poster_path} />
                                     <Rating
                                         radius={18}
-                                        rating={parseFloat(movie.vote_average ? movie.vote_average.toFixed(1) : '0')}
-                                        votes={movie.vote_count}
+                                        rating={parseFloat(recommendation.vote_average ? recommendation.vote_average.toFixed(1) : '0')}
+                                        votes={recommendation.vote_count}
                                     />
                                     <div className='title'>
-                                        <span>{movie.title}</span>
+                                        <span>{(recommendation as MovieCard).title ?? (recommendation as TvCard).name}</span>
                                     </div>
                                 </Link>
                             </SwiperSlide>
