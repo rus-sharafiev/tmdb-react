@@ -1,6 +1,7 @@
 .crew {
     grid-area: autors;
     position: relative;
+    min-height: 80px;
 
     display: flex;
     gap: 32px;
@@ -191,13 +192,14 @@
 .cast-skeleton {
     grid-area: actors;
 
+    margin: 0 0 0 74px;
+    padding: 4px 0;
+
     overflow: hidden;
     opacity: 0.6;
 
     display: grid;
     grid: 1fr / repeat(10, 128px);
-    margin: 0 0 0 74px;
-    padding: 4px 0;
 
     fill: url(#gradient);
 
@@ -237,9 +239,12 @@
 
 .crew-skeleton {
     grid-area: autors;
+
+    min-height: 80px;
+    padding: 14px 0 14px 8%;
+
     display: flex;
     gap: 32px;
-    padding: 14px 0 14px 8%;
 
     opacity: 0.6;
     fill: url(#gradient);
