@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import Movie, { Content } from "../types/movie"
+import Movie from "../types/movie"
 import Rating from "../ui/rating"
 import { preloadMovie } from "../services/preloaders"
 import Recommendations from "../components/recommendations"
@@ -9,6 +9,7 @@ import Credits from "../components/credits"
 import Videos from "../components/videos"
 import useMaterialTheme from "../hooks/useMaterialTheme"
 import { MovieSkeleton } from "../ui/skeletons"
+import { Content } from "../types"
 
 
 // Movie status
@@ -73,7 +74,7 @@ const Movie: React.FC = () => {
     return (
         <>
             {movie &&
-                <main className={themeLoaded ? 'movie' : 'movie hidden'}>
+                <main className={themeLoaded ? 'movie-tv' : 'movie-tv hidden'}>
                     {movie.backdrop_path && <img src={movie.backdrop_path} alt='backdrop' className="backdrop" />}
                     <div className="color-overlay" />
                     <img
@@ -123,7 +124,7 @@ const Movie: React.FC = () => {
                     {themeLoaded && movie.recommendations.results.length > 0 && <Recommendations cards={movie.recommendations} />}
                 </main>}
             {!themeLoaded &&
-                <main className='movie skeleton'>
+                <main className='movie-tv skeleton'>
                     <MovieSkeleton />
                     <Credits data={null} />
                     {content.collections !== null && <Collection id={null} />}

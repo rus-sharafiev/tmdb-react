@@ -4,7 +4,6 @@ import Tv from "../types/tv"
 import Rating from "../ui/rating"
 import { preloadTv } from "../services/preloaders"
 import Recommendations from "../components/recommendations"
-import Collection from "../components/collection"
 import Credits from "../components/credits"
 import Videos from "../components/videos"
 import useMaterialTheme from "../hooks/useMaterialTheme"
@@ -75,7 +74,7 @@ const Tv: React.FC = () => {
     return (
         <>
             {tv &&
-                <main className={themeLoaded ? 'tv' : 'tv hidden'}>
+                <main className={themeLoaded ? 'movie-tv' : 'movie-tv hidden'}>
                     {tv.backdrop_path && <img src={tv.backdrop_path} alt='backdrop' className="backdrop" />}
                     <div className="color-overlay" />
                     <img
@@ -121,15 +120,13 @@ const Tv: React.FC = () => {
                     </div>
                     {tv.videos.results.length > 0 && <Videos yt={tv.videos.results} />}
                     {themeLoaded && tv.credits && <Credits data={tv.credits} />}
-                    {/* {themeLoaded && movie.belongs_to_collection && <Collection id={movie.belongs_to_collection.id} />}
-                    {themeLoaded && movie.recommendations.results.length > 0 && <Recommendations cards={movie.recommendations} />} */}
+                    {themeLoaded && tv.recommendations.results.length > 0 && <Recommendations cards={tv.recommendations} />}
                 </main>}
             {!themeLoaded &&
-                <main className='tv skeleton'>
+                <main className='movie-tv skeleton'>
                     <MovieSkeleton />
                     <Credits data={null} />
-                    {/* {content.collections !== null && <Collection id={null} />}
-                    {content.recomm.length > 0 && <Recommendations cards={null} />} */}
+                    {content.recomm.length > 0 && <Recommendations cards={null} />}
                 </main>}
         </>
     )
