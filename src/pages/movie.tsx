@@ -121,7 +121,7 @@ const Movie: React.FC = () => {
                     {movie.videos.results.length > 0 && <Videos yt={movie.videos.results} />}
                     {themeLoaded && movie.credits && <Credits data={movie.credits} />}
                     {themeLoaded && movie.belongs_to_collection && <Collection id={movie.belongs_to_collection.id} />}
-                    {themeLoaded && movie.recommendations.results.length > 0 && <Recommendations cards={movie.recommendations} />}
+                    {themeLoaded && movie.recommendations.results.length > 0 && <Recommendations cards={movie.recommendations} type='movie' />}
                 </main>}
             {!themeLoaded &&
                 <main className='movie-tv skeleton'>

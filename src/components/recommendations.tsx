@@ -7,14 +7,14 @@ import { recommendationsSwiperBreakpoints } from "../ui/swiperBreakpoints"
 import { MovieCard, MovieCards, TvCard, TvCards } from "../types/cards"
 import Rating from "../ui/rating"
 
-const Recommendations: React.FC<{ cards: MovieCards | TvCards | null }> = ({ cards }) => {
+const Recommendations: React.FC<{ cards: MovieCards | TvCards | null, type?: 'movie' | 'tv' }> = ({ cards, type }) => {
     const [recommendations, setRecommendations] = useState<MovieCard[] | TvCard[]>([])
 
     useEffect(() => {
         if (!cards) return
 
         preloadCards(cards)
-            .then(recommendations => setRecommendations(recommendations))
+            .then(recommendations => setRecommendations(recommendations as MovieCard[] | TvCard[]))
     }, [])
 
     return (
@@ -39,7 +39,7 @@ const Recommendations: React.FC<{ cards: MovieCards | TvCards | null }> = ({ car
                     {recommendations
                         .map((recommendation: MovieCard | TvCard) =>
                             <SwiperSlide key={'part-' + recommendation.id}>
-                                <Link to={`/movie/${recommendation.id}`} className='card' >
+                                <Link to={`/${type}/${recommendation.id}`} className='card' >
                                     <img src={recommendation.poster_path} />
                                     <Rating
                                         radius={18}

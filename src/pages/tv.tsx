@@ -120,7 +120,7 @@ const Tv: React.FC = () => {
                     </div>
                     {tv.videos.results.length > 0 && <Videos yt={tv.videos.results} />}
                     {themeLoaded && tv.credits && <Credits data={tv.credits} />}
-                    {themeLoaded && tv.recommendations.results.length > 0 && <Recommendations cards={tv.recommendations} />}
+                    {themeLoaded && tv.recommendations.results.length > 0 && <Recommendations cards={tv.recommendations} type='tv' />}
                 </main>}
             {!themeLoaded &&
                 <main className='movie-tv skeleton'>
