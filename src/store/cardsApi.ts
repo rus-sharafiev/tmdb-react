@@ -1,119 +1,60 @@
-import { createApi, fetchBaseQuery, defaultSerializeQueryArgs, BaseQueryFn } from '@reduxjs/toolkit/query/react'
-import axios, { AxiosError, AxiosRequestConfig } from 'axios'
+import { createApi } from '@reduxjs/toolkit/query/react'
 import { preloadCards } from '../services/preloaders'
-import { MovieCard, TvCard, TvCards } from '../types/cards'
+import { MovieCard, PersonCard, TvCard, TvCards } from '../types/cards'
 
-const axiosBaseQueryWithPreload = async (url: string) => {
+const baseQueryWithPreload = async (url: string) => {
     try {
-        const result = await axios(url)
-        if (result.data) {
-            result.data = await preloadCards(result.data, true)
-        }
-        return { data: result.data }
-    } catch (axiosError) {
-        let err = axiosError as AxiosError
-        return {
-            error: {
-                status: err.response?.status,
-                data: err.response?.data || err.message,
-            },
-        }
+        let response = await fetch(url)
+        let result = await response.json()
+        result = await preloadCards(result, true)
+        return { data: result }
+    } catch (error) {
+        return { error: { data: error } }
+    }
+}
+
+const mergeArgs = {
+    serializeQueryArgs: ({ endpointName }: { endpointName: string }) => {
+        return endpointName;
+    },
+    merge: (currentCache: MovieCard[] | TvCard[] | PersonCard[], newItems: MovieCard[] & TvCard[] & PersonCard[]) => {
+        currentCache.push(...newItems);
+    },
+    forceRefetch({ currentArg, previousArg }: { currentArg: number | undefined, previousArg: number | undefined }) {
+        return currentArg !== previousArg;
     }
 }
 
 export const cardsApi = createApi({
     reducerPath: 'cardsApi',
-    baseQuery: axiosBaseQueryWithPreload,
+    baseQuery: baseQueryWithPreload,
     endpoints: (builder) => ({
 
         // Movies --------------------------------------------------------------------------
         getPopularMovies: builder.query<MovieCard[], number>({
-            query: (page) => `/api/movie/popular/${page}`,
-            serializeQueryArgs: ({ endpointName }) => {
-                return endpointName;
-            },
-            merge: (currentCache, newItems) => {
-                currentCache.push(...newItems);
-            },
-            forceRefetch({ currentArg, previousArg }) {
-                return currentArg !== previousArg;
-            }
+            query: (page) => `/api/movie/popular/${page}`, ...mergeArgs
         }),
         getTopRatedMovies: builder.query<MovieCard[], number>({
-            query: (page) => `/api/movie/top_rated/${page}`,
-            serializeQueryArgs: ({ endpointName }) => {
-                return endpointName;
-            },
-            merge: (currentCache, newItems) => {
-                currentCache.push(...newItems);
-            },
-            forceRefetch({ currentArg, previousArg }) {
-                return currentArg !== previousArg;
-            }
+            query: (page) => `/api/movie/top_rated/${page}`, ...mergeArgs
         }),
         getUpcomingMovies: builder.query<MovieCard[], number>({
-            query: (page) => `/api/movie/upcoming/${page}`,
-            serializeQueryArgs: ({ endpointName }) => {
-                return endpointName;
-            },
-            merge: (currentCache, newItems) => {
-                currentCache.push(...newItems);
-            },
-            forceRefetch({ currentArg, previousArg }) {
-                return currentArg !== previousArg;
-            }
+            query: (page) => `/api/movie/upcoming/${page}`, ...mergeArgs
         }),
 
         // Tvs -----------------------------------------------------------------------------
         getPopularTvs: builder.query<TvCard[], number>({
-            query: (page) => `/api/tv/popular/${page}`,
-            serializeQueryArgs: ({ endpointName }) => {
-                return endpointName;
-            },
-            merge: (currentCache, newItems) => {
-                currentCache.push(...newItems);
-            },
-            forceRefetch({ currentArg, previousArg }) {
-                return currentArg !== previousArg;
-            }
+            query: (page) => `/api/tv/popular/${page}`, ...mergeArgs
         }),
         getTopRatedTvs: builder.query<TvCard[], number>({
-            query: (page) => `/api/tv/top_rated/${page}`,
-            serializeQueryArgs: ({ endpointName }) => {
-                return endpointName;
-            },
-            merge: (currentCache, newItems) => {
-                currentCache.push(...newItems);
-            },
-            forceRefetch({ currentArg, previousArg }) {
-                return currentArg !== previousArg;
-            }
+            query: (page) => `/api/tv/top_rated/${page}`, ...mergeArgs
         }),
         getAiringTodayTvs: builder.query<TvCard[], number>({
-            query: (page) => `/api/tv/airing_today/${page}`,
-            serializeQueryArgs: ({ endpointName }) => {
-                return endpointName;
-            },
-            merge: (currentCache, newItems) => {
-                currentCache.push(...newItems);
-            },
-            forceRefetch({ currentArg, previousArg }) {
-                return currentArg !== previousArg;
-            }
+            query: (page) => `/api/tv/airing_today/${page}`, ...mergeArgs
         }),
 
         // People --------------------------------------------------------------------------
-        getPopularPeople: builder.query<TvCard[], number>({
-            query: (page) => `/api/person/popular/${page}`,
-            serializeQueryArgs: ({ endpointName }) => {
-                return endpointName;
-            },
-            merge: (currentCache, newItems) => {
-                currentCache.push(...newItems);
-            },
-            forceRefetch({ currentArg, previousArg }) {
-                return currentArg !== previousArg;
-            }
+        getPopularPeople: builder.query<PersonCard[], number>({
+            query: (page) => `/api/person/popular/${page}`, ...mergeArgs
         }),
     }),
 })

@@ -1,88 +1,55 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../store/hooks'
-import { fetchPopularMovies, fetchTopRatedMovies, fetchUpcomingMovies, pmNext, trmNext, umNext } from '../store/moviesSlice'
-import { RootState } from '../store/store'
-import { MovieCard } from '../types/cards'
-import { MediaCardSkeleton } from '../ui/skeletons'
-import Rating from '../ui/rating'
+import { useGetPopularMoviesQuery, useGetTopRatedMoviesQuery, useGetUpcomingMoviesQuery } from '../store/cardsApi'
+import { setMoviesPage } from '../store/listPageSlice'
+import { MovieCards } from '../components/listCards'
 
 const Movies: React.FC = () => {
-    const movies = useAppSelector((state: RootState) => state.movies)
+    const page = useAppSelector(store => store.page.movies)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const { list } = useParams()
     const endOfPage = useRef(null)
+    const [skip, setSkip] = useState({ popular: true, top_rated: true, upcoming: true })
 
-    useEffect(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-    }, [movies.popular.firstLoadDone, movies.top_rated.firstLoadDone, movies.upcoming.firstLoadDone])
+    const popular = useGetPopularMoviesQuery(page.popular, { skip: skip.popular })
+    const topRated = useGetTopRatedMoviesQuery(page.top_rated, { skip: skip.top_rated })
+    const upcoming = useGetUpcomingMoviesQuery(page.upcoming, { skip: skip.upcoming })
 
     useEffect(() => {
         if (!list) navigate('popular', { replace: true })
-
-        switch (list) {
-            case 'popular':
-                if (movies.popular.status === 'idle') dispatch(fetchPopularMovies(movies.popular.page))
-                break
-            case 'top_rated':
-                if (movies.top_rated.status === 'idle') dispatch(fetchTopRatedMovies(movies.top_rated.page))
-                break
-            case 'upcoming':
-                if (movies.upcoming.status === 'idle') dispatch(fetchUpcomingMovies(movies.upcoming.page))
-                break
-        }
+        setSkip({
+            popular: list === 'popular' ? false : true,
+            top_rated: list === 'top_rated' ? false : true,
+            upcoming: list === 'upcoming' ? false : true
+        })
+        if (popular.isLoading || topRated.isLoading || upcoming.isLoading) window.scrollTo({ top: 0, behavior: 'smooth' })
     }, [list])
 
     useEffect(() => {
         const moviesObserver = new IntersectionObserver((entries) => {
             if (entries[0].intersectionRatio <= 0) return
 
-            if (list && movies[list].status === 'complete') {
-                switch (list) {
-                    case 'popular':
-                        dispatch(pmNext())
-                        dispatch(fetchPopularMovies(movies.popular.page + 1))
-                            .then(() => console.log(`Has been loaded page ${movies.popular.page + 1}`))
-                        break
-                    case 'top_rated':
-                        dispatch(trmNext())
-                        dispatch(fetchTopRatedMovies(movies.top_rated.page + 1))
-                            .then(() => console.log(`Has been loaded page ${movies.top_rated.page + 1}`))
-                        break
-                    case 'upcoming':
-                        dispatch(umNext())
-                        dispatch(fetchUpcomingMovies(movies.upcoming.page + 1))
-                            .then(() => console.log(`Has been loaded page ${movies.upcoming.page + 1}`))
-                        break
-                }
-            }
-        });
+            if (list) dispatch(setMoviesPage({ type: list, page: page[list] + 1 }))
+        })
 
-        if (endOfPage.current && list && movies[list].status === 'complete') moviesObserver.observe(endOfPage.current)
+        if (endOfPage.current) moviesObserver.observe(endOfPage.current)
 
         return () => {
             if (endOfPage.current) moviesObserver.unobserve(endOfPage.current)
         }
 
-    }, [movies.popular.status, movies.top_rated.status, movies.upcoming.status])
+    }, [list, popular.isFetching, topRated.isFetching, upcoming.isFetching])
 
     if (!list) return null
 
     return (
         <>
             <div className={'cards'}>
-                {movies[list].content.map((movie: MovieCard) =>
-                    <Link to={`/movie/${movie.id}`} className='card' key={movie.id}>
-                        <img src={movie.poster_path} />
-                        <Rating radius={22.5} rating={parseFloat(movie.vote_average ? movie.vote_average.toFixed(1) : '0')} votes={movie.vote_count} />
-                        <div className='title'>
-                            <span>{movie.title}</span>
-                            <span>{movie.original_title}</span>
-                        </div>
-                    </Link>
-                )}
-                {movies[list].status === 'loading' && [...Array(20)].map((e, i) => <MediaCardSkeleton key={`skeleton-${i}`} />)}
+                {list === 'popular' && <MovieCards cards={popular} />}
+                {list === 'top_rated' && <MovieCards cards={topRated} />}
+                {list === 'upcoming' && <MovieCards cards={upcoming} />}
                 <div className='cards-loader' ref={endOfPage}></div>
             </div>
         </>
