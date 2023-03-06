@@ -1,90 +1,58 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate, } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../store/hooks'
-import { fetchPopularTvs, fetchTopRatedTvs, fetchAiringTodayTvs, ptNext, trtNext, attNext } from '../store/tvsSlice'
 import { RootState } from '../store/store'
-import { TvCard } from '../types/cards'
-import { MediaCardSkeleton } from '../ui/skeletons'
-import Rating from '../ui/rating'
+import { useGetAiringTodayTvsQuery, useGetPopularTvsQuery, useGetTopRatedTvsQuery } from '../store/cardsApi'
+import { setTvsPage } from '../store/listPageSlice'
+import { TvCards } from '../components/listCards'
 
 const Tvs: React.FC = () => {
+    const page = useAppSelector(store => store.page.tvs)
     const tvs = useAppSelector((state: RootState) => state.tvs)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const { list } = useParams()
     const endOfPage = useRef(null)
+    const [skip, setSkip] = useState({ popular: true, top_rated: true, airing_today: true })
 
-
-    useEffect(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-    }, [tvs.popular.firstLoadDone, tvs.top_rated.firstLoadDone, tvs.airing_today.firstLoadDone])
+    const popular = useGetPopularTvsQuery(page.popular, { skip: skip.popular })
+    const topRated = useGetTopRatedTvsQuery(page.top_rated, { skip: skip.top_rated })
+    const airingToday = useGetAiringTodayTvsQuery(page.airing_today, { skip: skip.airing_today })
 
     useEffect(() => {
         if (!list) navigate('popular', { replace: true })
-
-        switch (list) {
-            case 'popular':
-                if (tvs.popular.status === 'idle') dispatch(fetchPopularTvs(tvs.popular.page))
-                break
-            case 'top_rated':
-                if (tvs.top_rated.status === 'idle') dispatch(fetchTopRatedTvs(tvs.top_rated.page))
-                break
-            case 'airing_today':
-                if (tvs.airing_today.status === 'idle') dispatch(fetchAiringTodayTvs(tvs.airing_today.page))
-                break
-        }
+        setSkip({
+            popular: list === 'popular' ? false : true,
+            top_rated: list === 'top_rated' ? false : true,
+            airing_today: list === 'airing_today' ? false : true
+        })
+        if (popular.isLoading || topRated.isLoading || airingToday.isLoading) window.scrollTo({ top: 0, behavior: 'smooth' })
     }, [list])
 
     useEffect(() => {
-        const tvObserver = new IntersectionObserver((entries) => {
+        const tvsObserver = new IntersectionObserver((entries) => {
             if (entries[0].intersectionRatio <= 0) return
 
-            if (list && tvs[list].status === 'complete') {
-                switch (list) {
-                    case 'popular':
-                        dispatch(ptNext())
-                        dispatch(fetchPopularTvs(tvs.popular.page + 1))
-                            .then(() => console.log(`Has been loaded page ${tvs.popular.page + 1}`))
-                        break
-                    case 'top_rated':
-                        dispatch(trtNext())
-                        dispatch(fetchTopRatedTvs(tvs.top_rated.page + 1))
-                            .then(() => console.log(`Has been loaded page ${tvs.top_rated.page + 1}`))
-                        break
-                    case 'airing_today':
-                        dispatch(attNext())
-                        dispatch(fetchAiringTodayTvs(tvs.airing_today.page + 1))
-                            .then(() => console.log(`Has been loaded page ${tvs.airing_today.page + 1}`))
-                        break
-                }
-            }
-        });
+            if (list) dispatch(setTvsPage({ type: list, page: page[list] + 1 }))
+        })
 
-        if (endOfPage.current && list && tvs[list].status === 'complete') tvObserver.observe(endOfPage.current);
+        if (endOfPage.current) tvsObserver.observe(endOfPage.current)
 
         return () => {
-            if (endOfPage.current) tvObserver.unobserve(endOfPage.current);
+            if (endOfPage.current) tvsObserver.unobserve(endOfPage.current)
         }
 
-    }, [tvs.popular.status, tvs.top_rated.status, tvs.airing_today.status])
+    }, [list, popular.isFetching, topRated.isFetching, airingToday.isFetching])
 
     if (!list) return null
 
     return (
         <>
             <div className={'cards'}>
-                {tvs[list].content.map((tv: TvCard) =>
-                    <Link to={`/tv/${tv.id}`} className='card' key={tv.id}>
-                        <img src={tv.poster_path} />
-                        <Rating radius={22.5} rating={parseFloat(tv.vote_average ? tv.vote_average.toFixed(1) : '0')} votes={tv.vote_count} />
-                        <div className='title'>
-                            <span>{tv.name}</span>
-                            <span>{tv.original_name}</span>
-                        </div>
-                    </Link>
-                )}
+                {list === 'popular' && <TvCards cards={popular} />}
+                {list === 'top_rated' && <TvCards cards={topRated} />}
+                {list === 'airing_today' && <TvCards cards={topRated} />}
                 <div className='cards-loader' ref={endOfPage}></div>
-                {tvs[list].status === 'loading' && [...Array(20)].map((e, i) => <MediaCardSkeleton key={`skeleton-${i}`} />)}
             </div>
         </>
     )

@@ -44,8 +44,8 @@ export const listPageSlice = createSlice({
         setMoviesPage: (state, action: PayloadAction<listPayload>) => {
             state.movies = { ...state.movies, [action.payload.type]: action.payload.page }
         },
-        setTvsPage: (state, action: PayloadAction<listPages['tvs']>) => {
-            state.tvs = action.payload
+        setTvsPage: (state, action: PayloadAction<listPayload>) => {
+            state.tvs = { ...state.tvs, [action.payload.type]: action.payload.page }
         },
         setPeoplePage: (state, action: PayloadAction<listPages['people']>) => {
             state.people = action.payload
