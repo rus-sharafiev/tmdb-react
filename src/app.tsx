@@ -2,7 +2,6 @@ import React from 'react'
 import { Routes, Route, NavLink, Outlet } from "react-router-dom"
 import Logo from './ui/logo'
 
-import Lists from './ui/lists'
 import Start from './pages/start'
 import Movies from './pages/movies'
 import Movie from './pages/movie'
@@ -11,6 +10,7 @@ import Tv from './pages/tv'
 import People from './pages/people'
 import Person from './pages/person'
 import useScrollDir from './hooks/useScrollDir'
+import CardsLayout from './components/CardsLayout'
 
 const App: React.FC = () => {
     const scrollDir = useScrollDir('up')
@@ -31,15 +31,15 @@ const App: React.FC = () => {
         <>
             <Routes>
                 <Route path="/" element={<Start />} />
-                <Route path="/movies" element={<Lists type='movie' />}>
+                <Route path="/movies" element={<CardsLayout type='movie' />}>
                     <Route index element={<Movies />} />
                     <Route path=":list" element={<Movies />} />
                 </Route>
-                <Route path="/tvs" element={<Lists type='tv' />} >
+                <Route path="/tvs" element={<CardsLayout type='tv' />} >
                     <Route index element={<Tvs />} />
                     <Route path=":list" element={<Tvs />} />
                 </Route>
-                <Route path="/people" element={<Lists type='person' />} >
+                <Route path="/people" element={<CardsLayout type='person' />} >
                     <Route index element={<People />} />
                     <Route path=":list" element={<People />} />
                 </Route>

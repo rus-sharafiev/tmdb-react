@@ -13,7 +13,7 @@ const Tab: React.FC<{ to: string, name: string }> = ({ to, name }) => {
     )
 }
 
-const Lists: React.FC<{ type: 'movie' | 'tv' | 'person' }> = ({ type }) => {
+const CardsLayout: React.FC<{ type: 'movie' | 'tv' | 'person' }> = ({ type }) => {
     const scrollDir = useScrollDir('up')
 
     return (
@@ -31,4 +31,4 @@ const Lists: React.FC<{ type: 'movie' | 'tv' | 'person' }> = ({ type }) => {
     )
 }
 
-export default Lists
+export default CardsLayout
