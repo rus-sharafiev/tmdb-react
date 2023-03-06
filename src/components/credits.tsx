@@ -3,8 +3,8 @@ import { Link } from "react-router-dom"
 import { Navigation } from "swiper"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { preloadCast } from "../services/preloaders"
+import { Actor, Credits } from "../types"
 import { actorsSwiperBreakpoints } from "../ui/swiperBreakpoints"
-import { Actor, Credits } from "../types/movie"
 
 const Credits: React.FC<{ data: Credits | null }> = ({ data }) => {
     const [actors, setActors] = useState<Actor[]>([])

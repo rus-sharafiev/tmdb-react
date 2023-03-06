@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import Movie from "../types/movie"
 import Rating from "../ui/rating"
-import { preloadMovie } from "../services/preloaders"
+import { preloadMedia } from "../services/preloaders"
 import Recommendations from "../components/recommendations"
 import Collection from "../components/collection"
 import Credits from "../components/credits"
@@ -10,6 +10,7 @@ import Videos from "../components/videos"
 import useMaterialTheme from "../hooks/useMaterialTheme"
 import { MovieSkeleton } from "../ui/skeletons"
 import { Content } from "../types"
+import { localDate } from "../services/dateConverter"
 
 
 // Movie status
@@ -29,7 +30,7 @@ const Movie: React.FC = () => {
     const [movie, setMovie] = useState<Movie>()
     const [themeLoaded, setThemeImage, setThemeLoaded] = useMaterialTheme()
     const [watchProviders, setWatchProviders] = useState()
-    const [content, setContent] = useState<Content>({ collections: null, recomm: [] })
+    const [content, setContent] = useState<Content>({ collections: null, recomm: null })
 
     // Fetch movie JSON
     useEffect(() => {
@@ -50,7 +51,7 @@ const Movie: React.FC = () => {
         id &&
             fetch(`/api/movie/${id}`)
                 .then(res => res.json())
-                .then(obj => preloadMovie(obj))
+                .then(obj => preloadMedia(obj) as Promise<Movie>)
                 .then(movie => setMovie(movie))
     }, [id])
 
@@ -63,13 +64,6 @@ const Movie: React.FC = () => {
             .then(watchProviders => setWatchProviders(watchProviders?.results?.RU))
 
     }, [movie])
-
-    // Date converter to long russian date
-    const localDate = (d: string) => {
-        if (!d) return 'Не объявлена'
-        let date = new Date(d)
-        return date.toLocaleString('ru', { dateStyle: "long" })
-    }
 
     return (
         <>
@@ -128,7 +122,7 @@ const Movie: React.FC = () => {
                     <MovieSkeleton />
                     <Credits data={null} />
                     {content.collections !== null && <Collection id={null} />}
-                    {content.recomm.length > 0 && <Recommendations cards={null} />}
+                    {content.recomm && <Recommendations cards={null} />}
                 </main>}
         </>
     )
