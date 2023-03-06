@@ -1,3 +1,4 @@
+import { MovieCard, MovieCards, TvCard, TvCards } from "./cards"
 
 export interface Collection {
     id: number,
@@ -88,8 +89,9 @@ export interface Crew {
 
 
 export interface Content {
-    collections: Collection | null,
-    recomm: []
+    collections?: Collection | null,
+    seasons?: number
+    recomm: TvCard[] | MovieCard[] | null
 }
 
 export interface CreatedBy {

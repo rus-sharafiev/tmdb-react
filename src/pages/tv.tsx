@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import Tv from "../types/tv"
 import Rating from "../ui/rating"
-import { preloadTv } from "../services/preloaders"
+import { preloadMedia } from "../services/preloaders"
 import Recommendations from "../components/recommendations"
 import Credits from "../components/credits"
 import Videos from "../components/videos"
 import useMaterialTheme from "../hooks/useMaterialTheme"
 import { MovieSkeleton } from "../ui/skeletons"
 import { Content } from "../types"
+import Seasons from "../components/Seasons"
+import { localDate } from "../services/dateConverter"
 
 // Tv status
 const status = (status: string) => {
@@ -27,28 +29,25 @@ const Tv: React.FC = () => {
     const [tv, setTv] = useState<Tv>()
     const [themeLoaded, setThemeImage, setThemeLoaded] = useMaterialTheme()
     const [watchProviders, setWatchProviders] = useState()
-    const [content, setContent] = useState<Content>({ collections: null, recomm: [] })
+    const [content, setContent] = useState<Content>({ seasons: 0, recomm: null })
 
-    // Fetch movie JSON
+    // Fetch tv JSON
     useEffect(() => {
 
         setTv(undefined)
         setThemeLoaded(false)
 
-        // Check collection and recommendations
+        // Get tv
         id &&
             fetch(`/api/tv/${id}`)
                 .then(res => res.json())
-                .then(tv => setContent({
-                    collections: null,
-                    recomm: tv.recommendations.results
-                }))
-
-        // Get movie
-        id &&
-            fetch(`/api/tv/${id}`)
-                .then(res => res.json())
-                .then(obj => preloadTv(obj))
+                .then((rawTv: Tv) => {
+                    setContent({        // Check seasons and recommendations
+                        seasons: Object.keys(rawTv.seasons).length,
+                        recomm: rawTv.recommendations.results
+                    })
+                    return preloadMedia(rawTv) as Promise<Tv>
+                })
                 .then(tv => setTv(tv))
     }, [id])
 
@@ -63,13 +62,6 @@ const Tv: React.FC = () => {
         //     .then(watchProviders => setWatchProviders(watchProviders?.results?.RU))
 
     }, [tv])
-
-    // Date converter to long russian date
-    const localDate = (d: string) => {
-        if (!d) return 'Не объявлена'
-        let date = new Date(d)
-        return date.toLocaleString('ru', { dateStyle: "long" })
-    }
 
     return (
         <>
@@ -96,11 +88,10 @@ const Tv: React.FC = () => {
                             {tv.overview && <div className="overview">Обзор<span>{tv.overview}</span></div>}
                         </div>
                         <div className="bottom">
+                            <div className="first-air-date">Первая серия<span>{localDate(tv.first_air_date)}</span></div>
+                            <div className="last-air-date">Посленияя серияы<span>{localDate(tv.last_air_date)}</span></div>
                             <div className="status">Статус<span>{status(tv.status)}</span></div>
-                            <div className="release_date">Дата премьеры<span>{localDate(tv.first_air_date)}</span></div>
-                            {/* <div className="budget">Бюджет<span>$ {tv.budget.toLocaleString('ru')}</span></div>
-                            <div className="revenue">Сборы<span>$ {tv.revenue.toLocaleString('ru')}</span></div> */}
-
+                            <div className="number-of-episodes">Всего серий<span>{tv.number_of_episodes}</span></div>
                         </div>
                     </div>
                     {tv.production_companies.length > 0 &&
@@ -120,13 +111,14 @@ const Tv: React.FC = () => {
                     </div>
                     {tv.videos.results.length > 0 && <Videos yt={tv.videos.results} />}
                     {themeLoaded && tv.credits && <Credits data={tv.credits} />}
+                    {themeLoaded && tv.seasons.length > 0 && <Seasons data={tv.seasons} qtt={content.seasons} fallBackImage={tv.poster_path} />}
                     {themeLoaded && tv.recommendations.results.length > 0 && <Recommendations cards={tv.recommendations} type='tv' />}
                 </main>}
             {!themeLoaded &&
                 <main className='movie-tv skeleton'>
                     <MovieSkeleton />
                     <Credits data={null} />
-                    {content.recomm.length > 0 && <Recommendations cards={null} />}
+                    {content.recomm && <Recommendations cards={null} />}
                 </main>}
         </>
     )

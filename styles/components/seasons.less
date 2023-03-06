@@ -1,0 +1,97 @@
+.seasons {
+    grid-area: season;
+    padding-bottom: 64px;
+    position: relative;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 195px);
+    gap: 16px 8px;
+
+    &>div:first-child {
+        .display-medium();
+        line-height: 0.7;
+        color: var(--md-sys-color-primary);
+        opacity: 0.08;
+        position: absolute;
+        top: -36px;
+        left: -25px;
+        right: 75px;
+
+        display: flex;
+
+        &::after {
+            content: '';
+            width: 100%;
+            border-bottom: 1px solid var(--md-sys-color-primary);
+        }
+    }
+
+    .season-card {
+        display: grid;
+        grid: 293px 28px 11px 11px / 37px 150px;
+        align-items: center;
+        gap: 0 8px;
+
+        img {
+            grid-column: 1 / -1;
+            grid-row: 1 / 2;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            .elevation-level1();
+
+            &.no-poster {
+                filter: grayscale(1);
+                opacity: 0.3;
+            }
+        }
+
+        .season-name {
+            grid-column: 2 / -1;
+            grid-row: 2 / 3;
+            color: var(--md-sys-color-on-surface);
+            .label-large();
+            line-height: 0.8;
+        }
+
+        .season-number {
+            grid-column: 1 / 2;
+            grid-row: 2 / 5;
+            justify-self: center;
+            padding-top: 4px;
+
+            color: var(--md-sys-color-primary);
+            font-family: 'Roboto Flex', sans-serif;
+            font-size: 48px;
+            font-stretch: 25%;
+            line-height: 0.8;
+            letter-spacing: -0.1em;
+
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+
+            span {
+                font-size: 18px;
+            }
+        }
+
+        .season-air-date,
+        .season-episode-count {
+            color: var(--md-sys-color-outline-variant);
+            opacity: 0.8;
+            .label-small();
+        }
+
+        .season-air-date {
+            grid-column: 2 / -1;
+            grid-row: 3 / 4;
+        }
+
+        .season-episode-count {
+            grid-column: 2 / -1;
+            grid-row: 4 / 5;
+        }
+    }
+
+}
