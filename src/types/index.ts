@@ -1,4 +1,4 @@
-import { MovieCard, MovieCards, TvCard, TvCards } from "./cards"
+import { MovieCard, MovieCards, TvCard, TvCards } from './cards'
 
 export interface Collection {
     id: number,
@@ -71,6 +71,14 @@ export interface Actor {
     character: string,
     credit_id: string,
     order: number
+}
+
+export interface Creator {
+    id: number,
+    credit_id: string,
+    name: string,
+    gender: number,
+    profile_path: string
 }
 
 export interface Crew {

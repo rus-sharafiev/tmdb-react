@@ -114,14 +114,14 @@ const Tv: React.FC = () => {
                         <span>Голосов {tv.vote_count}</span>
                     </div>
                     {tv.videos.results.length > 0 && <Videos yt={tv.videos.results} />}
-                    {themeLoaded && tv.credits && <Credits data={tv.credits} />}
+                    {themeLoaded && tv.credits && <Credits credits={tv.credits} creator={tv.created_by} />}
                     {themeLoaded && tv.seasons.length > 0 && <Seasons data={tv.seasons} qtt={content.seasons} fallBackImage={tv.poster_path} />}
                     {themeLoaded && tv.recommendations.results.length > 0 && <Recommendations cards={tv.recommendations} type='tv' qtt={content.recommendations} />}
                 </main>}
             {!themeLoaded &&
                 <main className='movie-tv skeleton'>
                     <MovieSkeleton />
-                    <Credits data={null} />
+                    <Credits credits={null} creator={[]} />
                     {content.recommendations !== 0 && <Recommendations cards={null} qtt={content.recommendations} />}
                 </main>}
         </>
