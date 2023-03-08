@@ -110,7 +110,20 @@
 
                 span {
                     display: flex;
-                    gap: 5px
+                    gap: 5px;
+
+                    div {
+                        display: inline;
+
+                        &::after {
+                            content: ' | ';
+                            opacity: 0.3;
+                        }
+
+                        &:last-child::after {
+                            content: '';
+                        }
+                    }
                 }
             }
 
@@ -134,7 +147,7 @@
 
         .bottom {
             display: grid;
-            grid: 35px 35px / 140px 170px;
+            grid: 35px 35px / 170px 170px;
             align-items: end;
             gap: 8px;
 
