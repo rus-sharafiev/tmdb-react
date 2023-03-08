@@ -7,7 +7,7 @@ import { recommendationsSwiperBreakpoints } from "../ui/swiperBreakpoints"
 import { MovieCard, MovieCards, TvCard, TvCards } from "../types/cards"
 import Rating from "../ui/rating"
 
-const Recommendations: React.FC<{ cards: MovieCards | TvCards | null, type?: 'movie' | 'tv' }> = ({ cards, type }) => {
+const Recommendations: React.FC<{ cards: MovieCards | TvCards | null, type?: 'movie' | 'tv', qtt?: number }> = ({ cards, type, qtt }) => {
     const [recommendations, setRecommendations] = useState<MovieCard[] | TvCard[]>([])
 
     useEffect(() => {
@@ -61,11 +61,14 @@ const Recommendations: React.FC<{ cards: MovieCards | TvCards | null, type?: 'mo
                 </button>
             </div>
             :
-            <div className="recommendations-skeleton">
-                {[...Array(10)].map((e, i) =>
-                    <div className="recommendations-card" key={`recommendations-card-${i}`}><svg xmlns="http://www.w3.org/2000/svg" ><rect /></svg></div>
-                )}
-            </div>
+            qtt
+                ?
+                <div className="recommendations-skeleton">
+                    {[...Array(qtt > 10 ? 10 : qtt)].map((e, i) =>
+                        <div className="recommendations-card" key={`recommendations-card-${i}`}><svg xmlns="http://www.w3.org/2000/svg" ><rect /></svg></div>
+                    )}
+                </div>
+                : null
     )
 }
 

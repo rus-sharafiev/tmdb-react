@@ -89,9 +89,9 @@ export interface Crew {
 
 
 export interface Content {
-    collections?: Collection | null,
+    collections?: boolean,
     seasons?: number
-    recomm: TvCard[] | MovieCard[] | null
+    recommendations: number
 }
 
 export interface CreatedBy {
