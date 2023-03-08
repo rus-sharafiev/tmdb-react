@@ -1,6 +1,14 @@
 .video {
     grid-area: videos;
     height: min-content;
+    position: relative;
+
+    .video-languages {
+        .m3-segmented-buttons();
+        position: absolute;
+        margin: -4px 24px;
+        inset: auto 0 -30px;
+    }
 
     iframe {
         border: 0;
@@ -14,49 +22,49 @@
 }
 
 
-.video-languages {
-    grid-row: 6 / 8;
-    grid-column: 2 / 4;
+// .video-languages {
+//     grid-row: 6 / 8;
+//     grid-column: 2 / 4;
 
-    display: grid;
-    grid: 45px 45px / 1fr;
+//     display: grid;
+//     grid: 45px 45px / 1fr;
 
-    height: min-content;
-    padding: 24px 0 0;
+//     height: min-content;
+//     padding: 24px 0 0;
 
-    span {
-        display: flex;
-        align-items: center;
-        padding: 12px;
-        margin: -2px 0 -2px 4px;
-        width: 100px;
-        border: 1px solid var(--md-sys-color-outline-variant);
-        border-radius: 18px 0 0 18px;
-        color: var(--md-sys-color-on-surface);
-        .label-large();
-        white-space: nowrap;
-        transition: margin 0.2s ease-in-out;
+//     span {
+//         display: flex;
+//         align-items: center;
+//         padding: 12px;
+//         margin: -2px 0 -2px 4px;
+//         width: 100px;
+//         border: 1px solid var(--md-sys-color-outline-variant);
+//         border-radius: 18px 0 0 18px;
+//         color: var(--md-sys-color-on-surface);
+//         .label-large();
+//         white-space: nowrap;
+//         transition: margin 0.2s ease-in-out;
 
-        @state-color: var(--md-sys-color-on-surface);
-        .state-layer();
+//         @state-color: var(--md-sys-color-on-surface);
+//         .state-layer();
 
-        &:hover {
-            .hover-state-layer();
-            cursor: pointer;
-        }
-    }
+//         &:hover {
+//             .hover-state-layer();
+//             cursor: pointer;
+//         }
+//     }
 
-    span.active {
-        margin: -2px 0;
-        background-color: var(--md-sys-color-primary);
-        color: var(--md-sys-color-on-primary);
-        @state-color: var(--md-sys-color-on-primary);
-        .state-layer();
-        z-index: 3;
+//     span.active {
+//         margin: -2px 0;
+//         background-color: var(--md-sys-color-primary);
+//         color: var(--md-sys-color-on-primary);
+//         @state-color: var(--md-sys-color-on-primary);
+//         .state-layer();
+//         z-index: 3;
 
-        &:hover {
-            .hover-state-layer();
-        }
-    }
+//         &:hover {
+//             .hover-state-layer();
+//         }
+//     }
 
-}
+// }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Video } from "../types/movie"
+import { Video } from "../types"
 
 const Videos: React.FC<{ yt: Video[] }> = ({ yt }) => {
     const [activeVideo, setActiveVideo] = useState<string>('official')
@@ -21,31 +21,31 @@ const Videos: React.FC<{ yt: Video[] }> = ({ yt }) => {
 
 
     return (
-        videos ?
-            <>
+        videos
+            ?
+            <div className="video">
                 {videos.ru &&
                     <div className="video-languages">
                         <span
                             className={activeVideo === 'official' ? 'active' : ''}
                             onClick={() => setActiveVideo('official')}
-                        >En</span>
+                        >Официальный</span>
                         <span
                             className={activeVideo === 'ru' ? 'active' : ''}
                             onClick={() => setActiveVideo('ru')}
-                        >Ру</span>
+                        >Русский</span>
                     </div>}
-                <div className="video">
-                    <iframe
-                        src={`https://www.youtube-nocookie.com/embed/${activeVideo === 'official'
-                            ? videos.official
-                            : videos.ru
-                            }`}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowFullScreen
-                    />
-                </div>
-            </>
-            : <div className="video" />
+                <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${activeVideo === 'official'
+                        ? videos.official
+                        : videos.ru
+                        }`}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                />
+            </div>
+            :
+            <div className="video" />
     )
 }
 
