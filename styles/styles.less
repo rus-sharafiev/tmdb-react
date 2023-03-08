@@ -59,7 +59,7 @@ body {
         height: 100vh;
         inset: 0;
         background-color: var(--md-sys-color-primary);
-        opacity: 0.05;
+        opacity: 0.1;
         z-index: -1;
     }
 }
@@ -144,12 +144,15 @@ header {
     &>.overlay {
         @state-color: var(--md-sys-color-primary);
         .state-layer();
-        .surface-tint();
 
         position: absolute;
         inset: 0;
         background: var(--md-sys-color-surface);
         opacity: 0.9;
+
+        &::before {
+            opacity: 0.1;
+        }
     }
 
     label {
@@ -225,6 +228,10 @@ header {
 
     svg {
         width: 65px;
+
+        rect {
+            opacity: 0.08;
+        }
     }
 
     @media (max-width: @size[tablet]) {
