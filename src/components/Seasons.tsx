@@ -21,11 +21,10 @@ const SeasonCard: React.FC<{ season: Season | undefined, fallBackImage: string }
     )
 }
 
-const Seasons: React.FC<{ data?: Season[], qtt?: number, fallBackImage?: string }> = ({ data, qtt, fallBackImage }) => {
+const Seasons: React.FC<{ data?: Season[] | undefined, qtt?: number, fallBackImage?: string }> = ({ data, qtt, fallBackImage }) => {
     const [seasons, setSeasons] = useState<Season[] | null>(null)
 
     useEffect(() => {
-        console.log(data)
         data &&
             preloadSeasons(data)
                 .then((seasons: Season[]) => setSeasons(seasons))
@@ -47,8 +46,14 @@ const Seasons: React.FC<{ data?: Season[], qtt?: number, fallBackImage?: string 
                 <SeasonCard season={seasons.find(season => season.season_number === 0)} fallBackImage={fallBackImage ?? ''} />
             </div>
             :
-            <div>
-            </div>
+            qtt
+                ?
+                <div className="seasons-skeleton">
+                    {[...Array(qtt)].map((e, i) =>
+                        <div className="season-card" key={`season-card-${i}`}><svg xmlns="http://www.w3.org/2000/svg" ><rect /></svg></div>
+                    )}
+                </div>
+                : null
     )
 }
 

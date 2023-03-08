@@ -122,7 +122,8 @@ const Tv: React.FC = () => {
                 <main className='movie-tv skeleton'>
                     <MovieSkeleton />
                     <Credits credits={null} creator={[]} />
-                    {content.recommendations !== 0 && <Recommendations cards={null} qtt={content.recommendations} />}
+                    {content.seasons !== 0 && <Seasons qtt={content.seasons} />}
+                    {content.recommendations !== 0 && <Recommendations qtt={content.recommendations} />}
                 </main>}
         </>
     )
