@@ -30,7 +30,7 @@ const Movie: React.FC = () => {
     const [movie, setMovie] = useState<Movie>()
     const [themeLoaded, setThemeImage, setThemeLoaded] = useMaterialTheme()
     const [watchProviders, setWatchProviders] = useState()
-    const [content, setContent] = useState<Content>({ collections: null, recomm: null })
+    const [content, setContent] = useState<Content>({ collections: false, recommendations: 0 })
 
     // Fetch movie JSON
     useEffect(() => {
@@ -42,17 +42,19 @@ const Movie: React.FC = () => {
         id &&
             fetch(`/api/movie/${id}`)
                 .then(res => res.json())
-                .then(movie => setContent({
-                    collections: movie.belongs_to_collection,
-                    recomm: movie.recommendations.results
-                }))
-
-        // Get movie
-        id &&
-            fetch(`/api/movie/${id}`)
-                .then(res => res.json())
-                .then(obj => preloadMedia(obj) as Promise<Movie>)
-                .then(movie => setMovie(movie))
+                .then((rawMovie: Movie) => {
+                    setContent({        // Check collections and recommendations
+                        collections: rawMovie.belongs_to_collection ? true : false,
+                        recommendations: rawMovie.recommendations.results.length
+                    })
+                    return preloadMedia(rawMovie) as Promise<Movie>
+                })
+                .then(movie => {
+                    setMovie(movie)
+                    movie.poster_bitmap
+                        ? setThemeImage(movie.poster_bitmap)
+                        : setThemeLoaded(true)
+                })
     }, [id])
 
     // Set Material theme
@@ -75,7 +77,6 @@ const Movie: React.FC = () => {
                         src={movie?.poster_path}
                         alt='poster'
                         className="poster"
-                        onLoad={(e) => setThemeImage(e.target as HTMLImageElement)}
                         crossOrigin='anonymous'
                     />
                     <div className="info">
@@ -115,14 +116,14 @@ const Movie: React.FC = () => {
                     {movie.videos.results.length > 0 && <Videos yt={movie.videos.results} />}
                     {themeLoaded && movie.credits && <Credits data={movie.credits} />}
                     {themeLoaded && movie.belongs_to_collection && <Collection id={movie.belongs_to_collection.id} />}
-                    {themeLoaded && movie.recommendations.results.length > 0 && <Recommendations cards={movie.recommendations} type='movie' />}
+                    {themeLoaded && movie.recommendations.results.length > 0 && <Recommendations cards={movie.recommendations} type='movie' qtt={content.recommendations} />}
                 </main>}
             {!themeLoaded &&
                 <main className='movie-tv skeleton'>
                     <MovieSkeleton />
                     <Credits data={null} />
-                    {content.collections !== null && <Collection id={null} />}
-                    {content.recomm && <Recommendations cards={null} />}
+                    {content.collections && <Collection id={null} />}
+                    {content.recommendations !== 0 && <Recommendations cards={null} qtt={content.recommendations} />}
                 </main>}
         </>
     )

@@ -39,4 +39,5 @@ export default interface Tv {
     },
     credits: Credits,
     recommendations: TvCards,
+    poster_bitmap?: ImageBitmap
 }

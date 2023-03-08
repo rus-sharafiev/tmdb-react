@@ -29,7 +29,7 @@ const Tv: React.FC = () => {
     const [tv, setTv] = useState<Tv>()
     const [themeLoaded, setThemeImage, setThemeLoaded] = useMaterialTheme()
     const [watchProviders, setWatchProviders] = useState()
-    const [content, setContent] = useState<Content>({ seasons: 0, recomm: null })
+    const [content, setContent] = useState<Content>({ seasons: 0, recommendations: 0 })
 
     // Fetch tv JSON
     useEffect(() => {
@@ -44,11 +44,16 @@ const Tv: React.FC = () => {
                 .then((rawTv: Tv) => {
                     setContent({        // Check seasons and recommendations
                         seasons: Object.keys(rawTv.seasons).length,
-                        recomm: rawTv.recommendations.results
+                        recommendations: rawTv.recommendations.results.length
                     })
                     return preloadMedia(rawTv) as Promise<Tv>
                 })
-                .then(tv => setTv(tv))
+                .then(tv => {
+                    setTv(tv)
+                    tv.poster_bitmap
+                        ? setThemeImage(tv.poster_bitmap)
+                        : setThemeLoaded(true)
+                })
     }, [id])
 
     // Set Material theme
@@ -73,7 +78,6 @@ const Tv: React.FC = () => {
                         src={tv?.poster_path}
                         alt='poster'
                         className="poster"
-                        onLoad={(e) => setThemeImage(e.target as HTMLImageElement)}
                         crossOrigin='anonymous'
                     />
                     <div className="info">
@@ -112,13 +116,13 @@ const Tv: React.FC = () => {
                     {tv.videos.results.length > 0 && <Videos yt={tv.videos.results} />}
                     {themeLoaded && tv.credits && <Credits data={tv.credits} />}
                     {themeLoaded && tv.seasons.length > 0 && <Seasons data={tv.seasons} qtt={content.seasons} fallBackImage={tv.poster_path} />}
-                    {themeLoaded && tv.recommendations.results.length > 0 && <Recommendations cards={tv.recommendations} type='tv' />}
+                    {themeLoaded && tv.recommendations.results.length > 0 && <Recommendations cards={tv.recommendations} type='tv' qtt={content.recommendations} />}
                 </main>}
             {!themeLoaded &&
                 <main className='movie-tv skeleton'>
                     <MovieSkeleton />
                     <Credits data={null} />
-                    {content.recomm && <Recommendations cards={null} />}
+                    {content.recommendations !== 0 && <Recommendations cards={null} qtt={content.recommendations} />}
                 </main>}
         </>
     )

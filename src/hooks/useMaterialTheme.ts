@@ -2,10 +2,10 @@ import { useEffect, useState } from "react"
 import { themeFromSourceColor, applyTheme, QuantizerCelebi, Score, argbFromRgb } from "@material/material-color-utilities"
 
 const useMaterialTheme = () => {
-    const [image, setImage] = useState<HTMLImageElement>()
+    const [image, setImage] = useState<ImageBitmap>()
     const [themeLoaded, setThemeLoaded] = useState<boolean>(false)
 
-    const setThemeImage: ((image: HTMLImageElement) => void) = (image: HTMLImageElement) => {
+    const setThemeImage: ((image: ImageBitmap) => void) = (image: ImageBitmap) => {
         setImage(image)
     }
 
@@ -16,7 +16,7 @@ const useMaterialTheme = () => {
     useEffect(() => {
         if (!image) return
 
-        async function sourceColorFromImage(image: HTMLImageElement): Promise<number> {
+        async function sourceColorFromImage(image: ImageBitmap): Promise<number> {
 
             return new Promise((resolve, reject) => {
 
@@ -40,6 +40,7 @@ const useMaterialTheme = () => {
                         resolve(e.data)
                     }
                 } else {
+                    setThemeLoaded(true)
                     console.log('Your browser doesn\'t support web workers.');
                 }
             })

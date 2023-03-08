@@ -38,4 +38,5 @@ export default interface Movie {
         logos: Image[],
         posters: Image[]
     }
+    poster_bitmap?: ImageBitmap
 }

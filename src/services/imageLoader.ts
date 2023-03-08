@@ -60,17 +60,18 @@ const loadImage = async (url: string): Promise<string> => {
 }
 
 
-const imageLoader = (path: string | null, size: string, fallBack?: string): Promise<string> | string => {
+const imageLoader = (path: string | null, size: string, fallBack?: string, bitmap?: boolean): Promise<string | { img: string, bitmap: ImageBitmap }> | string => {
 
     if (!path) return fallBack ?? ''
 
     let url = 'https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=' + encodeURIComponent('https://image.tmdb.org/t/p/' + size + path)
 
     return new Promise((resolve, reject) => {
-        const worker = new Worker("/image-worker.js")
+        const worker = new Worker(bitmap ? "/image-worker-bitmap.js" : "/image-worker.js")
         worker.onmessage = async (event) => {
-            const url = event.data
+            const url = event.data.url
             let img = await loadImage(url)
+            if (bitmap) resolve({ img, bitmap: event.data.imgBitmap })
             resolve(img)
         }
         worker.postMessage(url)

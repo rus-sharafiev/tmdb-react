@@ -11,6 +11,7 @@
     "server": "esbuild server/server.ts --outfile=server/index.js --allow-overwrite --bundle --minify --platform=node",
     "tworker": "esbuild src/workers/themeWorker.ts --outfile=build/theme-worker.js --allow-overwrite --bundle --minify",
     "iworker": "esbuild src/workers/imageWorker.ts --outfile=build/image-worker.js --allow-overwrite --bundle --minify",
+    "iworkerb": "esbuild src/workers/imageWorkerBItmap.ts --outfile=build/image-worker-bitmap.js --allow-overwrite --bundle --minify",
     "start": "node server/index.js"
   },
   "dependencies": {
