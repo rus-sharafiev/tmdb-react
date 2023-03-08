@@ -7,7 +7,7 @@ import { recommendationsSwiperBreakpoints } from "../ui/swiperBreakpoints"
 import { MovieCard, MovieCards, TvCard, TvCards } from "../types/cards"
 import Rating from "../ui/rating"
 
-const Recommendations: React.FC<{ cards: MovieCards | TvCards | null, type?: 'movie' | 'tv', qtt?: number }> = ({ cards, type, qtt }) => {
+const Recommendations: React.FC<{ cards?: MovieCards | TvCards | undefined, type?: 'movie' | 'tv', qtt?: number }> = ({ cards, type, qtt }) => {
     const [recommendations, setRecommendations] = useState<MovieCard[] | TvCard[]>([])
 
     useEffect(() => {

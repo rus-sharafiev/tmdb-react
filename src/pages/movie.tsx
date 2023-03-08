@@ -123,7 +123,7 @@ const Movie: React.FC = () => {
                     <MovieSkeleton />
                     <Credits credits={null} />
                     {content.collections && <Collection id={null} />}
-                    {content.recommendations !== 0 && <Recommendations cards={null} qtt={content.recommendations} />}
+                    {content.recommendations !== 0 && <Recommendations qtt={content.recommendations} />}
                 </main>}
         </>
     )
