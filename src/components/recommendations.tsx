@@ -11,10 +11,9 @@ const Recommendations: React.FC<{ cards?: MovieCards | TvCards | undefined, type
     const [recommendations, setRecommendations] = useState<MovieCard[] | TvCard[]>([])
 
     useEffect(() => {
-        if (!cards) return
-
-        preloadCards(cards)
-            .then(recommendations => setRecommendations(recommendations as MovieCard[] | TvCard[]))
+        cards &&
+            preloadCards(cards)
+                .then(recommendations => setRecommendations(recommendations as MovieCard[] | TvCard[]))
     }, [])
 
     return (

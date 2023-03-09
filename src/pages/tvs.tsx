@@ -51,7 +51,7 @@ const Tvs: React.FC = () => {
             <div className={'cards'}>
                 {list === 'popular' && <TvCards cards={popular} />}
                 {list === 'top_rated' && <TvCards cards={topRated} />}
-                {list === 'airing_today' && <TvCards cards={topRated} />}
+                {list === 'airing_today' && <TvCards cards={airingToday} />}
                 <div className='cards-loader' ref={endOfPage}></div>
             </div>
         </>
