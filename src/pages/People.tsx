@@ -5,12 +5,15 @@ import { fetchPopularPeople, fetchRussianNames, ppNext } from '../store/peopleSl
 import { RootState } from '../store/store'
 import { PersonCard } from '../types/cards'
 import CircularProgressIndicator from '../ui/cpi'
+import Tab from '../components/Tab'
+import useScrollDir from '../hooks/useScrollDir'
 
 const People: React.FC = () => {
     const people = useAppSelector((state: RootState) => state.people)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const { list } = useParams()
+    const scrollDir = useScrollDir('up')
 
     useEffect(() => {
         if (!list) navigate('popular', { replace: true })
@@ -26,7 +29,12 @@ const People: React.FC = () => {
     if (!list) return null
 
     return (
-        <>
+        <main className='lists'>
+            <div className={'tabs ' + scrollDir}>
+                <Tab to='popular' name='Популярные' />
+                <Tab to='top_rated' name='Лучшие' />
+                <Tab to='upcoming' name='Ожидаемые' />
+            </div>
             <div className={people[list].status !== 'complete' ? 'cards hidden' : 'cards'}>
                 {people[list].status === 'complete' && people[list].content.map((person: PersonCard) => {
                     let name = person.name
@@ -46,7 +54,7 @@ const People: React.FC = () => {
                 })}
             </div>
             {people[list].status === 'loading' && <CircularProgressIndicator className='cpi' />}
-        </>
+        </main>
     )
 };
 

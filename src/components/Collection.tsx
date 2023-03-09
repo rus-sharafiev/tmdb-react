@@ -25,7 +25,7 @@ const Collection: React.FC<{ id: number | null }> = ({ id }) => {
 
     useEffect(() => {
         if (id)
-            fetch(`/api/collection/${id}`)
+            fetch(`https://api.rutmdb.ru/api/collection/${id}`)
                 .then(res => res.json())
                 .then(obj => preloadCollection(obj))
                 .then(collection => setCollection(collection))

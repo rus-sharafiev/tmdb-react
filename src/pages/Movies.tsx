@@ -4,6 +4,8 @@ import { useAppSelector, useAppDispatch } from '../store/hooks'
 import { useGetPopularMoviesQuery, useGetTopRatedMoviesQuery, useGetUpcomingMoviesQuery } from '../store/cardsApi'
 import { setMoviesPage } from '../store/listPageSlice'
 import { MovieCards } from '../components/listCards'
+import Tab from '../components/Tab'
+import useScrollDir from '../hooks/useScrollDir'
 
 const Movies: React.FC = () => {
     const page = useAppSelector(store => store.page.movies)
@@ -11,6 +13,7 @@ const Movies: React.FC = () => {
     const navigate = useNavigate()
     const { list } = useParams()
     const endOfPage = useRef(null)
+    const scrollDir = useScrollDir('up')
     const [skip, setSkip] = useState({ popular: true, top_rated: true, upcoming: true })
 
     const popular = useGetPopularMoviesQuery(page.popular, { skip: skip.popular })
@@ -19,6 +22,7 @@ const Movies: React.FC = () => {
 
     useEffect(() => {
         if (!list) navigate('popular', { replace: true })
+
         setSkip({
             popular: list === 'popular' ? false : true,
             top_rated: list === 'top_rated' ? false : true,
@@ -45,14 +49,19 @@ const Movies: React.FC = () => {
     if (!list) return null
 
     return (
-        <>
+        <main className='lists'>
+            <div className={'tabs ' + scrollDir}>
+                <Tab to='/movie/popular' name='Популярные' />
+                <Tab to='/movie/top_rated' name='Лучшие' />
+                <Tab to='/movie/upcoming' name='Ожидаемые' />
+            </div>
             <div className={'cards'}>
                 {list === 'popular' && <MovieCards cards={popular} />}
                 {list === 'top_rated' && <MovieCards cards={topRated} />}
                 {list === 'upcoming' && <MovieCards cards={upcoming} />}
                 <div className='cards-loader' ref={endOfPage}></div>
             </div>
-        </>
+        </main>
     )
 };
 

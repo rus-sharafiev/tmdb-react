@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useAppSelector, useAppDispatch } from '../store/hooks'
 import CircularProgressIndicator from '../ui/cpi'
-import { MediaCardSkeleton } from '../ui/skeletons';
+import { MediaCardSkeleton } from '../ui/skeletons'
 
-const Start: React.FC = () => {
+const Home: React.FC = () => {
     // const [images, setImages] = useState([])
     // var arr: [] = []
 
@@ -44,6 +44,6 @@ const Start: React.FC = () => {
             </main>
         </>
     )
-};
+}
 
-export default Start;
+export default Home

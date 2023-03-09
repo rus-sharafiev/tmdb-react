@@ -5,6 +5,8 @@ import { RootState } from '../store/store'
 import { useGetAiringTodayTvsQuery, useGetPopularTvsQuery, useGetTopRatedTvsQuery } from '../store/cardsApi'
 import { setTvsPage } from '../store/listPageSlice'
 import { TvCards } from '../components/listCards'
+import Tab from '../components/Tab'
+import useScrollDir from '../hooks/useScrollDir'
 
 const Tvs: React.FC = () => {
     const page = useAppSelector(store => store.page.tvs)
@@ -13,6 +15,7 @@ const Tvs: React.FC = () => {
     const navigate = useNavigate()
     const { list } = useParams()
     const endOfPage = useRef(null)
+    const scrollDir = useScrollDir('up')
     const [skip, setSkip] = useState({ popular: true, top_rated: true, airing_today: true })
 
     const popular = useGetPopularTvsQuery(page.popular, { skip: skip.popular })
@@ -47,15 +50,20 @@ const Tvs: React.FC = () => {
     if (!list) return null
 
     return (
-        <>
+        <main className='lists'>
+            <div className={'tabs ' + scrollDir}>
+                <Tab to='popular' name='Популярные' />
+                <Tab to='top_rated' name='Лучшие' />
+                <Tab to='airing_today' name='В эфире сегодня' />
+            </div>
             <div className={'cards'}>
                 {list === 'popular' && <TvCards cards={popular} />}
                 {list === 'top_rated' && <TvCards cards={topRated} />}
                 {list === 'airing_today' && <TvCards cards={airingToday} />}
                 <div className='cards-loader' ref={endOfPage}></div>
             </div>
-        </>
+        </main>
     )
-};
+}
 
-export default Tvs;
+export default Tvs

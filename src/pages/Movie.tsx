@@ -4,7 +4,7 @@ import Movie from "../types/movie"
 import Rating from "../ui/rating"
 import { preloadMedia } from "../services/preloaders"
 import Recommendations from "../components/recommendations"
-import Collection from "../components/collection"
+import Collection from "../components/Collection"
 import Credits from "../components/credits"
 import Videos from "../components/videos"
 import useMaterialTheme from "../hooks/useMaterialTheme"
@@ -26,7 +26,7 @@ const status = (status: string) => {
 }
 
 const Movie: React.FC = () => {
-    let { id } = useParams()
+    const { id } = useParams()
     const [movie, setMovie] = useState<Movie>()
     const [themeLoaded, setThemeImage, setThemeLoaded] = useMaterialTheme()
     const [watchProviders, setWatchProviders] = useState()
@@ -40,7 +40,7 @@ const Movie: React.FC = () => {
 
         // Check collection and recommendations
         id &&
-            fetch(`/api/movie/${id}`)
+            fetch(`https://api.rutmdb.ru/api/movie/${id}`)
                 .then(res => res.json())
                 .then((rawMovie: Movie) => {
                     setContent({        // Check collections and recommendations
@@ -61,9 +61,9 @@ const Movie: React.FC = () => {
     useEffect(() => {
         if (!movie) return window.scrollTo({ top: 0, behavior: 'smooth' })
 
-        fetch(`/api/movie/${id}/watch`)
-            .then(res => res.json())
-            .then(watchProviders => setWatchProviders(watchProviders?.results?.RU))
+        // fetch(`https://api.rutmdb.ru/api/movie/${id}/watch`)
+        //     .then(res => res.json())
+        //     .then(watchProviders => setWatchProviders(watchProviders?.results?.RU))
 
     }, [movie])
 

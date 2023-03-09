@@ -4,7 +4,7 @@ import { hydrateRoot, createRoot } from 'react-dom/client'
 import { store } from './store/store'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
-import App from './app'
+import App from './App'
 
 document.querySelector('body')?.classList.add('icons-hidden')
 document.fonts.load("24px Material Symbols Rounded")

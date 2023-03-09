@@ -39,7 +39,7 @@ const Tv: React.FC = () => {
 
         // Get tv
         id &&
-            fetch(`/api/tv/${id}`)
+            fetch(`https://api.rutmdb.ru/api/tv/${id}`)
                 .then(res => res.json())
                 .then((rawTv: Tv) => {
                     setContent({        // Check seasons and recommendations
@@ -62,7 +62,7 @@ const Tv: React.FC = () => {
 
         console.log(tv)
 
-        // fetch(`/api/tv/${id}/watch`)
+        // fetch(`https://api.rutmdb.ru/api/tv/${id}/watch`)
         //     .then(res => res.json())
         //     .then(watchProviders => setWatchProviders(watchProviders?.results?.RU))
 
