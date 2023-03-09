@@ -32,30 +32,30 @@ export const cardsApi = createApi({
 
         // Movies --------------------------------------------------------------------------
         getPopularMovies: builder.query<MovieCard[], number>({
-            query: (page) => `/api/movie/popular/${page}`, ...mergeArgs
+            query: (page) => `https://api.rutmdb.ru/api/movie/popular/${page}`, ...mergeArgs
         }),
         getTopRatedMovies: builder.query<MovieCard[], number>({
-            query: (page) => `/api/movie/top_rated/${page}`, ...mergeArgs
+            query: (page) => `https://api.rutmdb.ru/api/movie/top_rated/${page}`, ...mergeArgs
         }),
         getUpcomingMovies: builder.query<MovieCard[], number>({
-            query: (page) => `/api/movie/upcoming/${page}`, ...mergeArgs
+            query: (page) => `https://api.rutmdb.ru/api/movie/upcoming/${page}`, ...mergeArgs
         }),
 
         // Tvs -----------------------------------------------------------------------------
         getPopularTvs: builder.query<TvCard[], number>({
-            query: (page) => `/api/tv/popular/${page}`, ...mergeArgs
+            query: (page) => `https://api.rutmdb.ru/api/tv/popular/${page}`, ...mergeArgs
         }),
         getTopRatedTvs: builder.query<TvCard[], number>({
-            query: (page) => `/api/tv/top_rated/${page}`, ...mergeArgs
+            query: (page) => `https://api.rutmdb.ru/api/tv/top_rated/${page}`, ...mergeArgs
         }),
         getAiringTodayTvs: builder.query<TvCard[], number>({
-            query: (page) => `/api/tv/airing_today/${page}`, ...mergeArgs
+            query: (page) => `https://api.rutmdb.ru/api/tv/airing_today/${page}`, ...mergeArgs
         }),
 
         // People --------------------------------------------------------------------------
         getPopularPeople: builder.query<PersonCard[], number>({
-            query: (page) => `/api/person/popular/${page}`, ...mergeArgs
-        }),
+            query: (page) => `https://api.rutmdb.ru/api/person/popular/${page}`, ...mergeArgs
+        })
     }),
 })
 

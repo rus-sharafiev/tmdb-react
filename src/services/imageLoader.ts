@@ -64,7 +64,9 @@ const imageLoader = (path: string | null, size: string, fallBack?: string, bitma
 
     if (!path) return fallBack ?? ''
 
-    let url = 'https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=' + encodeURIComponent('https://image.tmdb.org/t/p/' + size + path)
+    // let url = 'https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=' + encodeURIComponent('https://image.tmdb.org/t/p/' + size + path)
+
+    let url = 'https://image.rutmdb.ru/t/p/' + size + path
 
     return new Promise((resolve, reject) => {
         const worker = new Worker(bitmap ? "/image-worker-bitmap.js" : "/image-worker.js")
@@ -79,28 +81,3 @@ const imageLoader = (path: string | null, size: string, fallBack?: string, bitma
 }
 
 export default imageLoader
-
-
-
-// const imageLoader = async (path: string | null, size: string, fallBack?: string, oneMoreAttempt?: boolean): Promise<string> => {
-
-//     if (!path) return fallBack ?? ''
-
-//     return new Promise((res) => {
-//         // let url = 'https://image.rutmdb.ru/t/p/' + size + path
-//         let url = 'https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=' + encodeURIComponent('https://image.tmdb.org/t/p/' + size + path)
-//         let image = new Image()
-//         image.crossOrigin = "Anonymous"
-//         image.onload = () => {
-//             res(image.src)
-//         }
-//         image.onerror = () => {
-//             if (!oneMoreAttempt)
-//                 setTimeout(() => {
-//                     console.log('One more attemt to load image')
-//                     imageLoader(path, size, fallBack, true)
-//                 }, 2000);
-//         }
-//         image.src = url
-//     });
-// }
