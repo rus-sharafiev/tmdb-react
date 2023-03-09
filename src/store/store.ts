@@ -1,20 +1,20 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
-import { peopleContentSlice } from './peopleSlice'
-import { tvsContentSlice } from './tvsSlice'
 import { cardsApi } from './cardsApi'
+import { collectionApi } from './collectionApi'
 import { listPageSlice } from './listPageSlice'
 
 export const store = configureStore({
     reducer: {
-        tvs: tvsContentSlice.reducer,
-        people: peopleContentSlice.reducer,
         page: listPageSlice.reducer,
 
         [cardsApi.reducerPath]: cardsApi.reducer,
+        [collectionApi.reducerPath]: collectionApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(cardsApi.middleware)
+        getDefaultMiddleware()
+            .concat(cardsApi.middleware)
+            .concat(collectionApi.middleware)
 })
 
 setupListeners(store.dispatch)
