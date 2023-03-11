@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
-import { cardsApi } from './cardsApi'
-import { collectionApi } from './collectionApi'
+import { cardsApi } from './api/cardsApi'
+import { collectionApi } from './api/collectionApi'
 import { listPageSlice } from './listPageSlice'
 
 export const store = configureStore({

@@ -1,7 +1,7 @@
 import React from 'react'
 import { hydrateRoot, createRoot } from 'react-dom/client'
 
-import { store } from './store/store'
+import { store } from './store'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App'

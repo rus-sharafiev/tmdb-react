@@ -1,12 +1,12 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
-import { preloadCards } from '../services/preloaders'
-import { Collection } from '../types'
+import { preloadCollection } from '../../services/preloaders'
+import { Collection } from '../../types/collection'
 
 const baseQueryWithPreload = async (url: string) => {
     try {
-        let response = await fetch(url)
+        let response = await fetch(`https://api.rutmdb.ru${url}`)
         let result = await response.json()
-        result = await preloadCards(result, true)
+        result = await preloadCollection(result)
         return { data: result }
     } catch (error) {
         return { error: { data: error } }
@@ -14,13 +14,13 @@ const baseQueryWithPreload = async (url: string) => {
 }
 
 export const collectionApi = createApi({
-    reducerPath: 'cardsApi',
+    reducerPath: 'collectionApi',
     baseQuery: baseQueryWithPreload,
     endpoints: (builder) => ({
 
         // Collection ----------------------------------------------------------------------
         getMoviesCollection: builder.query<Collection, number>({
-            query: (id) => `https://api.rutmdb.ru/api/collection/${id}`
+            query: (id) => `/api/collection/${id}`
         }),
     }),
 })

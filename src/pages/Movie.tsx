@@ -3,9 +3,9 @@ import { useParams } from "react-router-dom"
 import Movie from "../types/movie"
 import Rating from "../ui/rating"
 import { preloadMedia } from "../services/preloaders"
-import Recommendations from "../components/recommendations"
+import Recommendations from "../components/Recommendations"
 import Collection from "../components/Collection"
-import Credits from "../components/credits"
+import Credits from "../components/Credits"
 import Videos from "../components/videos"
 import useMaterialTheme from "../hooks/useMaterialTheme"
 import { MovieSkeleton } from "../ui/skeletons"
@@ -122,7 +122,7 @@ const Movie: React.FC = () => {
                 <main className='movie-tv skeleton'>
                     <MovieSkeleton />
                     <Credits credits={null} />
-                    {content.collections && <Collection id={null} />}
+                    {content.collections && <Collection />}
                     {content.recommendations !== 0 && <Recommendations qtt={content.recommendations} />}
                 </main>}
         </>

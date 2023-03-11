@@ -1,10 +1,10 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
-import { preloadCards } from '../services/preloaders'
-import { MovieCard, PersonCard, TvCard, TvCards } from '../types/cards'
+import { preloadCards } from '../../services/preloaders'
+import { MovieCard, PersonCard, TvCard, TvCards } from '../../types/cards'
 
 const baseQueryWithPreload = async (url: string) => {
     try {
-        let response = await fetch(url)
+        let response = await fetch(`https://api.rutmdb.ru${url}`)
         let result = await response.json()
         result = await preloadCards(result, true)
         return { data: result }
@@ -28,33 +28,34 @@ const mergeArgs = {
 export const cardsApi = createApi({
     reducerPath: 'cardsApi',
     baseQuery: baseQueryWithPreload,
+    keepUnusedDataFor: 3600,
     endpoints: (builder) => ({
 
         // Movies --------------------------------------------------------------------------
         getPopularMovies: builder.query<MovieCard[], number>({
-            query: (page) => `https://api.rutmdb.ru/api/movie/popular/${page}`, ...mergeArgs
+            query: (page) => `/api/movie/popular/${page}`, ...mergeArgs
         }),
         getTopRatedMovies: builder.query<MovieCard[], number>({
-            query: (page) => `https://api.rutmdb.ru/api/movie/top_rated/${page}`, ...mergeArgs
+            query: (page) => `/api/movie/top_rated/${page}`, ...mergeArgs
         }),
         getUpcomingMovies: builder.query<MovieCard[], number>({
-            query: (page) => `https://api.rutmdb.ru/api/movie/upcoming/${page}`, ...mergeArgs
+            query: (page) => `/api/movie/upcoming/${page}`, ...mergeArgs
         }),
 
         // Tvs -----------------------------------------------------------------------------
         getPopularTvs: builder.query<TvCard[], number>({
-            query: (page) => `https://api.rutmdb.ru/api/tv/popular/${page}`, ...mergeArgs
+            query: (page) => `/api/tv/popular/${page}`, ...mergeArgs
         }),
         getTopRatedTvs: builder.query<TvCard[], number>({
-            query: (page) => `https://api.rutmdb.ru/api/tv/top_rated/${page}`, ...mergeArgs
+            query: (page) => `/api/tv/top_rated/${page}`, ...mergeArgs
         }),
         getAiringTodayTvs: builder.query<TvCard[], number>({
-            query: (page) => `https://api.rutmdb.ru/api/tv/airing_today/${page}`, ...mergeArgs
+            query: (page) => `/api/tv/airing_today/${page}`, ...mergeArgs
         }),
 
         // People --------------------------------------------------------------------------
         getPopularPeople: builder.query<PersonCard[], number>({
-            query: (page) => `https://api.rutmdb.ru/api/person/popular/${page}`, ...mergeArgs
+            query: (page) => `/api/person/popular/${page}`, ...mergeArgs
         })
     }),
 })

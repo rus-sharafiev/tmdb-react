@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom"
 import Tv from "../types/tv"
 import Rating from "../ui/rating"
 import { preloadMedia } from "../services/preloaders"
-import Recommendations from "../components/recommendations"
-import Credits from "../components/credits"
+import Recommendations from "../components/Recommendations"
+import Credits from "../components/Credits"
 import Videos from "../components/videos"
 import useMaterialTheme from "../hooks/useMaterialTheme"
 import { MovieSkeleton } from "../ui/skeletons"
@@ -56,11 +56,8 @@ const Tv: React.FC = () => {
                 })
     }, [id])
 
-    // Set Material theme
     useEffect(() => {
         if (!tv) return window.scrollTo({ top: 0, behavior: 'smooth' })
-
-        console.log(tv)
 
         // fetch(`https://api.rutmdb.ru/api/tv/${id}/watch`)
         //     .then(res => res.json())

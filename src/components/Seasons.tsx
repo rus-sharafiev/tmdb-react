@@ -30,10 +30,6 @@ const Seasons: React.FC<{ data?: Season[] | undefined, qtt?: number, fallBackIma
                 .then((seasons: Season[]) => setSeasons(seasons))
     }, [data])
 
-    useEffect(() => {
-        console.log(seasons)
-    }, [seasons])
-
     return (
         seasons
             ?
