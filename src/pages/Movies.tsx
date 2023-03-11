@@ -44,9 +44,9 @@ const Movies: React.FC = () => {
     return (
         <main className='lists'>
             <div className={'tabs ' + scrollDir}>
-                <Tab to='/movie/popular' name='Популярные' />
-                <Tab to='/movie/top_rated' name='Лучшие' />
-                <Tab to='/movie/upcoming' name='Ожидаемые' />
+                <Tab to='/movie/list/popular' name='Популярные' />
+                <Tab to='/movie/list/top_rated' name='Лучшие' />
+                <Tab to='/movie/list/upcoming' name='Ожидаемые' />
             </div>
             <div className={'cards'}>
                 {list === 'popular' && <MovieCards cards={popular} />}

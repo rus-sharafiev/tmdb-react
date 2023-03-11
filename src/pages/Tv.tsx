@@ -112,7 +112,7 @@ const Tv: React.FC = () => {
                     </div>
                     {tv.videos.results.length > 0 && <Videos yt={tv.videos.results} />}
                     {themeLoaded && tv.credits && <Credits credits={tv.credits} creator={tv.created_by} />}
-                    {themeLoaded && tv.seasons.length > 0 && <Seasons data={tv.seasons} qtt={content.seasons} fallBackImage={tv.poster_path} />}
+                    {themeLoaded && tv.seasons.length > 0 && <Seasons data={tv.seasons} qtt={content.seasons} fallBackImage={tv.poster_path} tvId={tv.id} />}
                     {themeLoaded && tv.recommendations.results.length > 0 && <Recommendations cards={tv.recommendations} type='tv' qtt={content.recommendations} />}
                 </main>}
             {!themeLoaded &&

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import { localDate } from "../services/dateConverter"
 import { preloadSeasons } from "../services/preloaders"
 import { Season } from "../types"
 
-const SeasonCard: React.FC<{ season: Season | undefined, fallBackImage: string }> = ({ season, fallBackImage }) => {
+const SeasonCard: React.FC<{ season: Season | undefined, fallBackImage: string, tvId?: number }> = ({ season, fallBackImage, tvId }) => {
     if (!season) return null
 
     return (
-        <div className="season-card">
+        <Link to={`/tv/${tvId}/season/${season.season_number}`} className="season-card">
             <div className="season-number">{season.season_number !== 0 && <span>#</span>}{season.season_number !== 0 ? season.season_number : '#'}</div>
             <img
                 src={season.poster_path !== '' ? season.poster_path : fallBackImage}
@@ -17,11 +18,11 @@ const SeasonCard: React.FC<{ season: Season | undefined, fallBackImage: string }
             <div className="season-name">{season.name}</div>
             <div className="season-air-date">{localDate(season.air_date)}</div>
             <div className="season-episode-count">Серий {season.episode_count}</div>
-        </div>
+        </Link>
     )
 }
 
-const Seasons: React.FC<{ data?: Season[] | undefined, qtt?: number, fallBackImage?: string }> = ({ data, qtt, fallBackImage }) => {
+const Seasons: React.FC<{ data?: Season[] | undefined, qtt?: number, fallBackImage?: string, tvId?: number }> = ({ data, qtt, fallBackImage, tvId }) => {
     const [seasons, setSeasons] = useState<Season[] | null>(null)
 
     useEffect(() => {
@@ -37,9 +38,9 @@ const Seasons: React.FC<{ data?: Season[] | undefined, qtt?: number, fallBackIma
                 <div>Сезоны</div>
                 {seasons.map((season: Season) =>
                     season.season_number !== 0 &&
-                    <SeasonCard season={season} key={`season-${season.id}`} fallBackImage={fallBackImage ?? ''} />
+                    <SeasonCard season={season} key={`season-${season.id}`} fallBackImage={fallBackImage ?? ''} tvId={tvId} />
                 )}
-                <SeasonCard season={seasons.find(season => season.season_number === 0)} fallBackImage={fallBackImage ?? ''} />
+                <SeasonCard season={seasons.find(season => season.season_number === 0)} fallBackImage={fallBackImage ?? ''} tvId={tvId} />
             </div>
             :
             qtt

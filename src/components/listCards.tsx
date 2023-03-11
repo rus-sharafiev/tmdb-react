@@ -8,7 +8,7 @@ export const MovieCards: React.FC<{ cards: any }> = ({ cards }) => {
     return (
         <>
             {cards.data?.map((movie: MovieCard) =>
-                <Link to={`/movie/id/${movie.id}`} className='card' key={movie.id}>
+                <Link to={`/movie/${movie.id}`} className='card' key={movie.id}>
                     <img src={movie.poster_path} />
                     <Rating radius={22.5} rating={parseFloat(movie.vote_average ? movie.vote_average.toFixed(1) : '0')} votes={movie.vote_count} />
                     <div className='title'>
@@ -26,7 +26,7 @@ export const TvCards: React.FC<{ cards: any }> = ({ cards }) => {
     return (
         <>
             {cards.data?.map((tv: TvCard) =>
-                <Link to={`/tv/id/${tv.id}`} className='card' key={tv.id}>
+                <Link to={`/tv/${tv.id}`} className='card' key={tv.id}>
                     <img src={tv.poster_path} />
                     <Rating radius={22.5} rating={parseFloat(tv.vote_average ? tv.vote_average.toFixed(1) : '0')} votes={tv.vote_count} />
                     <div className='title'>
@@ -44,7 +44,7 @@ export const PersonCards: React.FC<{ cards: any }> = ({ cards }) => {
     return (
         <>
             {cards.data?.map((person: PersonCard) =>
-                <Link to={`/person/id/${person.id}`} className='card' key={person.id}>
+                <Link to={`/person/${person.id}`} className='card' key={person.id}>
                     <img src={person.profile_path} alt='image' />
                     <div className='name'>
                         {/* <span>{name}</span> */}
