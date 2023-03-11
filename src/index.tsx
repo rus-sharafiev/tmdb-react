@@ -3,8 +3,8 @@ import { hydrateRoot, createRoot } from 'react-dom/client'
 
 import { store } from './store'
 import { Provider } from 'react-redux'
-import { BrowserRouter } from 'react-router-dom'
-import App from './App'
+import { BrowserRouter, RouterProvider } from 'react-router-dom'
+import router from './router'
 
 document.querySelector('body')?.classList.add('icons-hidden')
 document.fonts.load("24px Material Symbols Rounded")
@@ -22,11 +22,9 @@ document.fonts.load("24px Material Symbols Rounded")
 //                 <title>RU TMDB</title>
 //             </head>
 //             <body>
-//                 <Provider store={store}>
-//                     <BrowserRouter>
-//                         <App />
-//                     </BrowserRouter>
-//                 </Provider>
+//                  <Provider store={store}>
+//                      <RouterProvider router={router} />
+//                  </Provider> */}
 //             </body>
 //         </html>
 //     )
@@ -36,8 +34,6 @@ document.fonts.load("24px Material Symbols Rounded")
 createRoot(document.getElementById('root') as HTMLElement)
     .render(
         <Provider store={store}>
-            <BrowserRouter>
-                <App />
-            </BrowserRouter>
+            <RouterProvider router={router} />
         </Provider>
     )
