@@ -1,6 +1,6 @@
 import React from "react"
 import { Link } from "react-router-dom"
-import { MovieCard, TvCard } from "../types/cards"
+import { MovieCard, PersonCard, TvCard } from "../types/cards"
 import Rating from "../ui/rating"
 import { MediaCardSkeleton } from "../ui/skeletons"
 
@@ -32,6 +32,23 @@ export const TvCards: React.FC<{ cards: any }> = ({ cards }) => {
                     <div className='title'>
                         <span>{tv.name}</span>
                         <span>{tv.original_name}</span>
+                    </div>
+                </Link>
+            )}
+            {cards.isFetching && [...Array(20)].map((e, i) => <MediaCardSkeleton key={`skeleton-${i}`} />)}
+        </>
+    )
+}
+
+export const PersonCards: React.FC<{ cards: any }> = ({ cards }) => {
+    return (
+        <>
+            {cards.data?.map((person: PersonCard) =>
+                <Link to={`/person/id/${person.id}`} className='card' key={person.id}>
+                    <img src={person.profile_path} alt='image' />
+                    <div className='name'>
+                        {/* <span>{name}</span> */}
+                        <span>{person.name}</span>
                     </div>
                 </Link>
             )}

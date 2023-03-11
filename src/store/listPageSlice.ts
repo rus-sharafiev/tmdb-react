@@ -47,8 +47,8 @@ export const listPageSlice = createSlice({
         setTvsPage: (state, action: PayloadAction<listPayload>) => {
             state.tvs = { ...state.tvs, [action.payload.type]: action.payload.page }
         },
-        setPeoplePage: (state, action: PayloadAction<listPages['people']>) => {
-            state.people = action.payload
+        setPeoplePage: (state, action: PayloadAction<listPayload>) => {
+            state.people = { ...state.people, [action.payload.type]: action.payload.page }
         },
     }
 })

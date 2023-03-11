@@ -1,61 +1,55 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useAppSelector, useAppDispatch } from '../store/hooks'
-import { fetchPopularPeople, fetchRussianNames, ppNext } from '../store/peopleSlice'
-import { RootState } from '../store/store'
-import { PersonCard } from '../types/cards'
-import CircularProgressIndicator from '../ui/cpi'
+import { useAppSelector, useAppDispatch } from '../hooks/store'
 import Tab from '../components/Tab'
 import useScrollDir from '../hooks/useScrollDir'
+import { useGetPopularPeopleQuery } from '../store/api/cardsApi'
+import { setPeoplePage } from '../store/listPageSlice'
+import { PersonCards } from '../components/listCards'
 
 const People: React.FC = () => {
-    const people = useAppSelector((state: RootState) => state.people)
+    const page = useAppSelector(store => store.page.people)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const { list } = useParams()
+    const endOfPage = useRef(null)
     const scrollDir = useScrollDir('up')
+
+    const popular = useGetPopularPeopleQuery(page.popular)
 
     useEffect(() => {
         if (!list) navigate('popular', { replace: true })
-
-        switch (list) {
-            case 'popular':
-                if (people.popular.status === 'idle') dispatch(fetchPopularPeople(people.popular.page))
-                if (people.russianNames.status === 'idle') dispatch(fetchRussianNames(people.popular.page))
-                break;
-        }
+        if (popular.isLoading) window.scrollTo({ top: 0, behavior: 'smooth' })
     }, [list])
+
+    useEffect(() => {
+        const peopleObserver = new IntersectionObserver((entries) => {
+            if (entries[0].intersectionRatio <= 0) return
+
+            if (list) dispatch(setPeoplePage({ type: list, page: page[list] + 1 }))
+        })
+
+        if (endOfPage.current) peopleObserver.observe(endOfPage.current)
+
+        return () => {
+            if (endOfPage.current) peopleObserver.unobserve(endOfPage.current)
+        }
+
+    }, [list, popular.isFetching])
 
     if (!list) return null
 
     return (
         <main className='lists'>
             <div className={'tabs ' + scrollDir}>
-                <Tab to='popular' name='Популярные' />
-                <Tab to='top_rated' name='Лучшие' />
-                <Tab to='upcoming' name='Ожидаемые' />
+                <Tab to='/person/popular' name='Популярные' />
             </div>
-            <div className={people[list].status !== 'complete' ? 'cards hidden' : 'cards'}>
-                {people[list].status === 'complete' && people[list].content.map((person: PersonCard) => {
-                    let name = person.name
-                    people.russianNames.content.length !== 0
-                        && people.russianNames.content.map((rusName: { id: number, name: string }) =>
-                            rusName.id === person.id
-                                ? name = rusName.name
-                                : null)
-                    return (
-                        <div className='card' key={person.id}>
-                            <img src={person.profile_path} alt='image' />
-                            <div className='name'>
-                                <span>{name}</span>
-                                <span>{person.name}</span>
-                            </div>
-                        </div>)
-                })}
+            <div className={'cards'}>
+                {list === 'popular' && <PersonCards cards={popular} />}
+                <div className='cards-loader' ref={endOfPage}></div>
             </div>
-            {people[list].status === 'loading' && <CircularProgressIndicator className='cpi' />}
         </main>
     )
-};
+}
 
-export default People;
+export default People
