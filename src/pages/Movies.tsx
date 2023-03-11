@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useAppSelector, useAppDispatch } from '../store/hooks'
-import { useGetPopularMoviesQuery, useGetTopRatedMoviesQuery, useGetUpcomingMoviesQuery } from '../store/cardsApi'
+import { useAppSelector, useAppDispatch } from '../hooks/store'
+import { useGetPopularMoviesQuery, useGetTopRatedMoviesQuery, useGetUpcomingMoviesQuery } from '../store/api/cardsApi'
 import { setMoviesPage } from '../store/listPageSlice'
 import { MovieCards } from '../components/listCards'
 import Tab from '../components/Tab'
@@ -14,20 +14,13 @@ const Movies: React.FC = () => {
     const { list } = useParams()
     const endOfPage = useRef(null)
     const scrollDir = useScrollDir('up')
-    const [skip, setSkip] = useState({ popular: true, top_rated: true, upcoming: true })
 
-    const popular = useGetPopularMoviesQuery(page.popular, { skip: skip.popular })
-    const topRated = useGetTopRatedMoviesQuery(page.top_rated, { skip: skip.top_rated })
-    const upcoming = useGetUpcomingMoviesQuery(page.upcoming, { skip: skip.upcoming })
+    const popular = useGetPopularMoviesQuery(page.popular)
+    const topRated = useGetTopRatedMoviesQuery(page.top_rated)
+    const upcoming = useGetUpcomingMoviesQuery(page.upcoming)
 
     useEffect(() => {
         if (!list) navigate('popular', { replace: true })
-
-        setSkip({
-            popular: list === 'popular' ? false : true,
-            top_rated: list === 'top_rated' ? false : true,
-            upcoming: list === 'upcoming' ? false : true
-        })
         if (popular.isLoading || topRated.isLoading || upcoming.isLoading) window.scrollTo({ top: 0, behavior: 'smooth' })
     }, [list])
 
@@ -63,6 +56,6 @@ const Movies: React.FC = () => {
             </div>
         </main>
     )
-};
+}
 
-export default Movies;
+export default Movies
