@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { Link } from "react-router-dom"
 import { Navigation } from "swiper"
 import { Swiper, SwiperSlide } from "swiper/react"
-import { preloadCollection } from "../services/preloaders"
 import { collectionSwiperBreakpoints } from "../ui/swiperBreakpoints"
 import { Collection, Part } from "../types/collection"
 import Rating from "../ui/rating"
+import { useGetMoviesCollectionQuery } from "../store/api/collectionApi"
 
 // Sort collection movies by release date
 const releaseDateAsc = (a: Part, b: Part) => {
@@ -20,28 +20,21 @@ const releaseDateAsc = (a: Part, b: Part) => {
     return 0;
 }
 
-const Collection: React.FC<{ id: number | null }> = ({ id }) => {
-    const [collection, setCollection] = useState<Collection>()
+const Collection: React.FC<{ id?: number }> = ({ id }) => {
 
-    useEffect(() => {
-        if (id)
-            fetch(`https://api.rutmdb.ru/api/collection/${id}`)
-                .then(res => res.json())
-                .then(obj => preloadCollection(obj))
-                .then(collection => setCollection(collection))
-    }, [id])
+    const collection = id ? useGetMoviesCollectionQuery(id) : undefined
 
     return (
-        id && collection
+        id && collection && collection.isSuccess
             ?
             <div className="collection">
                 <img
                     className="collection-backdrop"
-                    src={collection.backdrop_path}
+                    src={collection.data.backdrop_path}
                     alt="collection backdrop"
                 />
-                <div className="collection-overlay">
-                    <div>{collection.name}</div>
+                <div className="collection-overlay unselectable">
+                    <div>{collection.data.name}</div>
                 </div>
                 <button
                     type="button"
@@ -57,7 +50,8 @@ const Collection: React.FC<{ id: number | null }> = ({ id }) => {
                         nextEl: '.collection-next-btn',
                     }}
                 >
-                    {collection.parts
+                    {collection.data.parts
+                        .slice()
                         .sort(releaseDateAsc)
                         .map((part: Part) =>
                             <SwiperSlide key={'part-' + part.id}>
