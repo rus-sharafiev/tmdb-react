@@ -14,13 +14,21 @@ const Movies: React.FC = () => {
     const { list } = useParams()
     const endOfPage = useRef(null)
     const scrollDir = useScrollDir('up')
+    const [skip, setSkip] = useState({ popular: true, top_rated: true, upcoming: true })
 
-    const popular = useGetPopularMoviesQuery(page.popular)
-    const topRated = useGetTopRatedMoviesQuery(page.top_rated)
-    const upcoming = useGetUpcomingMoviesQuery(page.upcoming)
+    const popular = useGetPopularMoviesQuery(page.popular, { skip: skip.popular })
+    const topRated = useGetTopRatedMoviesQuery(page.top_rated, { skip: skip.top_rated })
+    const upcoming = useGetUpcomingMoviesQuery(page.upcoming, { skip: skip.upcoming })
 
     useEffect(() => {
         if (!list) navigate('popular', { replace: true })
+
+        setSkip({
+            popular: list === 'popular' ? false : true,
+            top_rated: list === 'top_rated' ? false : true,
+            upcoming: list === 'upcoming' ? false : true
+        })
+
         if (popular.isLoading || topRated.isLoading || upcoming.isLoading) window.scrollTo({ top: 0, behavior: 'smooth' })
     }, [list])
 

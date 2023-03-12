@@ -14,13 +14,21 @@ const Tvs: React.FC = () => {
     const { list } = useParams()
     const endOfPage = useRef(null)
     const scrollDir = useScrollDir('up')
+    const [skip, setSkip] = useState({ popular: true, top_rated: true, airing_today: true })
 
-    const popular = useGetPopularTvsQuery(page.popular)
-    const topRated = useGetTopRatedTvsQuery(page.top_rated)
-    const airingToday = useGetAiringTodayTvsQuery(page.airing_today)
+    const popular = useGetPopularTvsQuery(page.popular, { skip: skip.popular })
+    const topRated = useGetTopRatedTvsQuery(page.top_rated, { skip: skip.top_rated })
+    const airingToday = useGetAiringTodayTvsQuery(page.airing_today, { skip: skip.airing_today })
 
     useEffect(() => {
         if (!list) navigate('popular', { replace: true })
+
+        setSkip({
+            popular: list === 'popular' ? false : true,
+            top_rated: list === 'top_rated' ? false : true,
+            airing_today: list === 'airing_today' ? false : true
+        })
+
         if (popular.isLoading || topRated.isLoading || airingToday.isLoading) window.scrollTo({ top: 0, behavior: 'smooth' })
     }, [list])
 
