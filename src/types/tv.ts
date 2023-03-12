@@ -1,4 +1,4 @@
-import { CreatedBy, Credits, EpisodeToAir, Genre, Network, ProductionCompanie, ProductionCountrie, Season, SpokenLanguage, Video } from '.'
+import { CreatedBy, Credits, EpisodeToAir, Genre, Network, ProductionCompanie, ProductionCountrie, TvSeason, SpokenLanguage, Video } from '.'
 import { TvCards } from './cards'
 
 export default interface Tv {
@@ -27,7 +27,7 @@ export default interface Tv {
     poster_path: string,
     production_companies: ProductionCompanie[],
     production_countries: ProductionCountrie[],
-    seasons: Season[],
+    seasons: TvSeason[],
     spoken_languages: SpokenLanguage[],
     status: string,
     tagline: string,

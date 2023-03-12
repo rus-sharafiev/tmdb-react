@@ -1,9 +1,11 @@
-import { Actor, Season } from "../types"
+import { Actor, TvSeason } from "../types"
 import { MovieCard, MovieCards, PersonCard, PersonCards, TvCard, TvCards } from "../types/cards"
 import { Collection, Part } from "../types/collection"
 import Movie from "../types/movie"
+import { Episode, Season } from "../types/season"
 import Tv from "../types/tv"
 import imageLoader, { imageSize } from "./imageLoader"
+import themeFromImageBitmap from "./themeFromImageBitmap"
 
 // Proxy and preload images
 export const preloadMedia = async (content: Movie | Tv) => {
@@ -18,6 +20,24 @@ export const preloadMedia = async (content: Movie | Tv) => {
     )
     content = { ...content, poster_bitmap: posterData.bitmap }
     return content
+}
+
+export const preloadSeason = async (content: Season): Promise<Season> => {
+    let posterData = await imageLoader(content.poster_path, imageSize.poster.w500, '', true) as { img: string, bitmap: ImageBitmap }
+    content.poster_path = posterData.img
+    let theme = await themeFromImageBitmap(posterData.bitmap)
+    content = { ...content, theme }
+    return content
+}
+
+export const preloadEpisodes = async (content: Episode[]): Promise<Episode[]> => {
+    return await Promise.all(
+        content.slice().map(async (episode: Episode) => {
+            let resultEpisode: Episode = { ...{}, ...episode }
+            resultEpisode.still_path = await imageLoader(episode.still_path, imageSize.still.w300) as string
+            return resultEpisode
+        })
+    )
 }
 
 export const preloadCollection = async (content: Collection) => {
@@ -41,8 +61,8 @@ export const preloadCast = async (castArr: Actor[]) => {
     )
 }
 
-export const preloadSeasons = async (seasons: Season[]): Promise<Season[]> => {
-    return await Promise.all(seasons.map(async (season: Season) => {
+export const preloadSeasons = async (seasons: TvSeason[]): Promise<TvSeason[]> => {
+    return await Promise.all(seasons.map(async (season: TvSeason) => {
         season.poster_path = await imageLoader(season.poster_path, imageSize.poster.w342) as string
         return season
     }))

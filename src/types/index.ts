@@ -132,7 +132,7 @@ export interface Network {
     origin_country: string
 }
 
-export interface Season {
+export interface TvSeason {
     air_date: string,
     episode_count: number,
     id: number,

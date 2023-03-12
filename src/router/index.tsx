@@ -23,7 +23,7 @@ export const AppRoutes: ReactNode =
         <Route path="/tv" element={<Navigate to="/tv/list" replace={true} />} />
         <Route path="/tv/list/:list?" element={<Tvs />} />
         <Route path="/tv/:id" element={<Tv />} />
-        <Route path="/tv/:id/season/:number" element={<Season />} />
+        <Route path="/tv/:tvId/season/:seasonNumber" element={<Season />} />
 
         <Route path="/person" element={<Navigate to="/person/list" replace={true} />} />
         <Route path="/person/list/:list?" element={<People />} />
