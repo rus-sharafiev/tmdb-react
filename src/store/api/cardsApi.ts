@@ -28,7 +28,7 @@ const mergeArgs = {
 export const cardsApi = createApi({
     reducerPath: 'cardsApi',
     baseQuery: baseQueryWithPreload,
-    keepUnusedDataFor: 3600,
+    keepUnusedDataFor: 12 * 60 * 60,
     endpoints: (builder) => ({
 
         // Movies --------------------------------------------------------------------------
