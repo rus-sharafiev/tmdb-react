@@ -71,12 +71,7 @@ const Tv: React.FC = () => {
                 <main className={themeLoaded ? 'movie-tv' : 'movie-tv hidden'}>
                     {tv.backdrop_path && <img src={tv.backdrop_path} alt='backdrop' className="backdrop" />}
                     <div className="color-overlay" />
-                    <img
-                        src={tv?.poster_path}
-                        alt='poster'
-                        className="poster"
-                        crossOrigin='anonymous'
-                    />
+                    <img src={tv?.poster_path} alt='poster' className="poster" />
                     <div className="info">
                         <div className="top">
                             <div className="title">{tv.name}</div>
