@@ -1,3 +1,4 @@
+import { Theme } from '@material/material-color-utilities'
 import { Crew, Actor } from './'
 
 export interface Episode {
@@ -29,5 +30,6 @@ export interface Season {
     credits: {
         cast: Actor[],
         crew: Crew[]
-    }
+    },
+    theme?: Theme
 }
