@@ -1,3 +1,4 @@
+import { Theme } from '@material/material-color-utilities'
 import { CreatedBy, Credits, EpisodeToAir, Genre, Network, ProductionCompanie, ProductionCountrie, TvSeason, SpokenLanguage, Video } from '.'
 import { TvCards } from './cards'
 
@@ -39,5 +40,5 @@ export default interface Tv {
     },
     credits: Credits,
     recommendations: TvCards,
-    poster_bitmap?: ImageBitmap
+    theme?: Theme
 }

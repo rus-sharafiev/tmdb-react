@@ -1,3 +1,4 @@
+import { Theme } from "@material/material-color-utilities"
 import { Collection, Credits, Genre, ProductionCompanie, ProductionCountrie, SpokenLanguage, Video, Image } from "."
 import { MovieCards } from "./cards"
 
@@ -38,5 +39,5 @@ export default interface Movie {
         logos: Image[],
         posters: Image[]
     }
-    poster_bitmap?: ImageBitmap
+    theme?: Theme
 }

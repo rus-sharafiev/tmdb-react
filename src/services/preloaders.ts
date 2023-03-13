@@ -9,29 +9,37 @@ import themeFromImageBitmap from "./themeFromImageBitmap"
 
 // Proxy and preload images
 export const preloadMedia = async (content: Movie | Tv) => {
-    content.backdrop_path = await imageLoader(content.backdrop_path, imageSize.backdrop.w780) as string
-    let posterData = await imageLoader(content.poster_path, imageSize.poster.w780, '', true) as { img: string, bitmap: ImageBitmap }
-    content.poster_path = posterData.img
-    content.production_companies = await Promise.all(
-        content.production_companies.map(async (company) => {
-            company.logo_path = await imageLoader(company.logo_path, imageSize.logo.w300) as string
-            return company
-        })
-    )
-    content = { ...content, poster_bitmap: posterData.bitmap }
+    let resolvedData = await Promise.all([
+        imageLoader(content.backdrop_path, imageSize.backdrop.w780) as Promise<string>,
+        imageLoader(content.poster_path, imageSize.poster.w780, '', true) as Promise<{ img: string, bitmap: ImageBitmap }>,
+        Promise.all(
+            content.production_companies.map(async (company) => {
+                company.logo_path = await imageLoader(company.logo_path, imageSize.logo.w300) as string
+                return company
+            })
+        )
+    ])
+    content.backdrop_path = resolvedData[0]
+    content.poster_path = resolvedData[1].img
+    content.production_companies = resolvedData[2]
+    let theme = await themeFromImageBitmap(resolvedData[1].bitmap)
+    content = { ...content, theme }
     return content
 }
 
 export const preloadSeason = async (content: Season): Promise<Season> => {
-    let posterData = await imageLoader(content.poster_path, imageSize.poster.w500, '', true) as { img: string, bitmap: ImageBitmap }
-    content.poster_path = posterData.img
-    content.episodes = await Promise.all(
-        content.episodes.map(async (episode: Episode) => {
-            episode.still_path = await imageLoader(episode.still_path, imageSize.still.w300) as string
-            return episode
-        })
-    )
-    let theme = await themeFromImageBitmap(posterData.bitmap)
+    let resolvedData = await Promise.all([
+        imageLoader(content.poster_path, imageSize.poster.w500, '', true) as Promise<{ img: string, bitmap: ImageBitmap }>,
+        Promise.all(
+            content.episodes.map(async (episode: Episode) => {
+                episode.still_path = await imageLoader(episode.still_path, imageSize.still.w300) as string
+                return episode
+            })
+        )
+    ])
+    content.episodes = resolvedData[1]
+    content.poster_path = resolvedData[0].img
+    let theme = await themeFromImageBitmap(resolvedData[0].bitmap)
     content = { ...content, theme }
     return content
 }
