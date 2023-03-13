@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import { collectionSwiperBreakpoints } from "../ui/swiperBreakpoints"
 import { Collection, Part } from "../types/collection"
 import Rating from "../ui/rating"
-import { useGetMoviesCollectionQuery } from "../store/api/collectionApi"
+import { useGetMoviesCollectionQuery } from "../services/api/collectionApi"
 
 // Sort collection movies by release date
 const releaseDateAsc = (a: Part, b: Part) => {

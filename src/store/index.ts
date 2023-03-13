@@ -1,13 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
-import { cardsApi } from './api/cardsApi'
-import { collectionApi } from './api/collectionApi'
-import { seasonApi } from './api/seasonApi'
-import { listPageSlice } from './listPageSlice'
+
+import listPageReduces from './listPageSlice'
+import { cardsApi } from '../services/api/cardsApi'
+import { collectionApi } from '../services/api/collectionApi'
+import { seasonApi } from '../services/api/seasonApi'
 
 export const store = configureStore({
     reducer: {
-        page: listPageSlice.reducer,
+        page: listPageReduces,
 
         [cardsApi.reducerPath]: cardsApi.reducer,
         [collectionApi.reducerPath]: collectionApi.reducer,

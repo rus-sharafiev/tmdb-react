@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../hooks/store'
 import Tab from '../components/Tab'
 import useScrollDir from '../hooks/useScrollDir'
-import { useGetPopularPeopleQuery } from '../store/api/cardsApi'
+import { useGetPopularPeopleQuery } from '../services/api/cardsApi'
 import { setPeoplePage } from '../store/listPageSlice'
 import { PersonCards } from '../components/listCards'
 

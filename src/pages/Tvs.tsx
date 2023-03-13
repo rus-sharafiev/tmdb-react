@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate, } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../hooks/store'
-import { useGetAiringTodayTvsQuery, useGetPopularTvsQuery, useGetTopRatedTvsQuery } from '../store/api/cardsApi'
+import { useGetAiringTodayTvsQuery, useGetPopularTvsQuery, useGetTopRatedTvsQuery } from '../services/api/cardsApi'
 import { setTvsPage } from '../store/listPageSlice'
 import { TvCards } from '../components/listCards'
 import Tab from '../components/Tab'

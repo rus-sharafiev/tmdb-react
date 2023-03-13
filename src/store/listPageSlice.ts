@@ -37,7 +37,7 @@ const initialState: listPages = {
     }
 }
 
-export const listPageSlice = createSlice({
+const listPageSlice = createSlice({
     name: 'page',
     initialState,
     reducers: {
@@ -54,3 +54,5 @@ export const listPageSlice = createSlice({
 })
 
 export const { setMoviesPage, setTvsPage, setPeoplePage } = listPageSlice.actions
+
+export default listPageSlice.reducer

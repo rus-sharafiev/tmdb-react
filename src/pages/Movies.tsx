@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../hooks/store'
-import { useGetPopularMoviesQuery, useGetTopRatedMoviesQuery, useGetUpcomingMoviesQuery } from '../store/api/cardsApi'
+import { useGetPopularMoviesQuery, useGetTopRatedMoviesQuery, useGetUpcomingMoviesQuery } from '../services/api/cardsApi'
 import { setMoviesPage } from '../store/listPageSlice'
 import { MovieCards } from '../components/listCards'
 import Tab from '../components/Tab'
