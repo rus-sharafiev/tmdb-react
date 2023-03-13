@@ -2,13 +2,13 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../hooks/store'
 import { useGetPopularMoviesQuery, useGetTopRatedMoviesQuery, useGetUpcomingMoviesQuery } from '../services/api/cardsApi'
-import { setMoviesPage } from '../store/listPageSlice'
+import { setMoviesPage } from '../store/contentSlice'
 import { MovieCards } from '../components/listCards'
 import Tab from '../components/Tab'
 import useScrollDir from '../hooks/useScrollDir'
 
 const Movies: React.FC = () => {
-    const page = useAppSelector(store => store.page.movies)
+    const page = useAppSelector(store => store.content.movies)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const { list } = useParams()

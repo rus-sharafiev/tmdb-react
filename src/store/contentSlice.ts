@@ -37,8 +37,8 @@ const initialState: listPages = {
     }
 }
 
-const listPageSlice = createSlice({
-    name: 'page',
+const contentSlice = createSlice({
+    name: 'content',
     initialState,
     reducers: {
         setMoviesPage: (state, action: PayloadAction<listPayload>) => {
@@ -53,6 +53,6 @@ const listPageSlice = createSlice({
     }
 })
 
-export const { setMoviesPage, setTvsPage, setPeoplePage } = listPageSlice.actions
+export const { setMoviesPage, setTvsPage, setPeoplePage } = contentSlice.actions
 
-export default listPageSlice.reducer
+export default contentSlice.reducer
