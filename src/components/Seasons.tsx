@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { localDate } from "../services/dateConverter"
 import { preloadSeasons } from "../services/preloaders"
-import { Season } from "../types"
+import { TvSeason } from "../types"
 
-const SeasonCard: React.FC<{ season: Season | undefined, fallBackImage: string, tvId?: number }> = ({ season, fallBackImage, tvId }) => {
+const SeasonCard: React.FC<{ season: TvSeason | undefined, fallBackImage: string, tvId?: number }> = ({ season, fallBackImage, tvId }) => {
     if (!season) return null
 
     return (
@@ -22,21 +22,24 @@ const SeasonCard: React.FC<{ season: Season | undefined, fallBackImage: string, 
     )
 }
 
-const Seasons: React.FC<{ data?: Season[] | undefined, qtt?: number, fallBackImage?: string, tvId?: number }> = ({ data, qtt, fallBackImage, tvId }) => {
-    const [seasons, setSeasons] = useState<Season[] | null>(null)
+const Seasons: React.FC<{ data?: TvSeason[] | undefined, qtt?: number, fallBackImage?: string, tvId?: number }> = ({ data, qtt, fallBackImage, tvId }) => {
+    const [seasons, setSeasons] = useState<TvSeason[] | null>(null)
+    const [isLoaded, setIsLoaded] = useState(false)
 
     useEffect(() => {
+        setIsLoaded(false)
         data &&
-            preloadSeasons(data)
-                .then((seasons: Season[]) => setSeasons(seasons))
+            preloadSeasons(JSON.parse(JSON.stringify(data)))
+                .then((seasons: TvSeason[]) => setSeasons(seasons))
+                .then(() => setIsLoaded(true))
     }, [data])
 
     return (
-        seasons
+        seasons && isLoaded
             ?
             <div className="seasons">
                 <div>Сезоны</div>
-                {seasons.map((season: Season) =>
+                {seasons.map((season: TvSeason) =>
                     season.season_number !== 0 &&
                     <SeasonCard season={season} key={`season-${season.id}`} fallBackImage={fallBackImage ?? ''} tvId={tvId} />
                 )}

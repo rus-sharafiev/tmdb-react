@@ -9,15 +9,18 @@ import Rating from "../ui/rating"
 
 const Recommendations: React.FC<{ cards?: MovieCards | TvCards | undefined, type?: 'movie' | 'tv', qtt?: number }> = ({ cards, type, qtt }) => {
     const [recommendations, setRecommendations] = useState<MovieCard[] | TvCard[]>([])
+    const [isLoaded, setIsLoaded] = useState(false)
 
     useEffect(() => {
+        setIsLoaded(false)
         cards &&
-            preloadCards(cards)
+            preloadCards(JSON.parse(JSON.stringify(cards)))
                 .then(recommendations => setRecommendations(recommendations as MovieCard[] | TvCard[]))
-    }, [])
+                .then(() => setIsLoaded(true))
+    }, [cards])
 
     return (
-        recommendations.length > 0
+        recommendations.length > 0 && isLoaded
             ?
             <div className="recommendations">
                 <div>Рекомендации</div>

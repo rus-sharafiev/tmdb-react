@@ -8,16 +8,19 @@ import { actorsSwiperBreakpoints } from "../ui/swiperBreakpoints"
 
 const Credits: React.FC<{ credits: Credits | null, creator?: Creator[] }> = ({ credits, creator }) => {
     const [actors, setActors] = useState<Actor[]>([])
+    const [isLoaded, setIsLoaded] = useState(false)
 
     useEffect(() => {
+        setIsLoaded(false)
         if (credits)
-            preloadCast(credits.cast)
+            preloadCast(JSON.parse(JSON.stringify(credits.cast)))
                 .then(actors => setActors(actors))
+                .then(() => setIsLoaded(true))
     }, [credits])
 
     return (
         <>
-            {actors.length > 0 && credits // Crew
+            {actors.length > 0 && credits && isLoaded // Crew
                 ?
                 <div className="crew">
                     {creator
@@ -60,7 +63,7 @@ const Credits: React.FC<{ credits: Credits | null, creator?: Creator[] }> = ({ c
                     )}
                 </div>
             }
-            {actors.length > 0 // Actors
+            {actors.length > 0 && isLoaded // Actors
                 ?
                 <div className="cast">
                     <button type="button" className='cast-prev-btn material-symbols-rounded unselectable'>navigate_before</button>

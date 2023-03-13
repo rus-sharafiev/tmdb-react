@@ -12,8 +12,8 @@ const Videos: React.FC<{ yt: Video[] }> = ({ yt }) => {
 
         if (yt.length > 0) {
             setVideos({
-                official: yt.reverse().find(r => r.type === "Trailer" && r.official && r.iso_639_1 === 'en')?.key,
-                ru: yt.reverse().find(r => r.type === "Trailer" && r.iso_639_1 === 'ru')?.key
+                official: yt.slice().reverse().find(r => r.type === "Trailer" && r.official && r.iso_639_1 === 'en')?.key,
+                ru: yt.slice().reverse().find(r => r.type === "Trailer" && r.iso_639_1 === 'ru')?.key
             })
         }
 
