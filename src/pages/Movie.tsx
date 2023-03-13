@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import Movie from "../types/movie"
 import Rating from "../ui/rating"
-import { preloadMedia } from "../services/preloaders"
 import Recommendations from "../components/Recommendations"
 import Collection from "../components/Collection"
 import Credits from "../components/Credits"
-import Videos from "../components/videos"
-import useMaterialTheme from "../hooks/useMaterialTheme"
+import Videos from "../components/Videos"
 import { MovieSkeleton } from "../ui/skeletons"
 import { Content } from "../types"
 import { localDate } from "../services/dateConverter"
+import { useGetMovieQuery } from "../services/api/mediaApi"
+import { applyTheme } from "@material/material-color-utilities"
 
 
 // Movie status
@@ -27,80 +27,77 @@ const status = (status: string) => {
 
 const Movie: React.FC = () => {
     const { id } = useParams()
-    const [movie, setMovie] = useState<Movie>()
-    const [themeLoaded, setThemeImage, setThemeLoaded] = useMaterialTheme()
     const [watchProviders, setWatchProviders] = useState()
     const [content, setContent] = useState<Content>({ collections: false, recommendations: 0 })
 
-    // Fetch movie JSON
+    const movie = id ? useGetMovieQuery(id) : undefined
+    const [isVisible, setIsVisible] = useState(false)
+
     useEffect(() => {
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
+        setIsVisible(false)
 
-        setMovie(undefined)
-        setThemeLoaded(false)
-
-        // Check collection and recommendations
         id &&
             fetch(`https://api.rutmdb.ru/api/movie/${id}`)
                 .then(res => res.json())
-                .then((rawMovie: Movie) => {
+                .then((rawMovie: Movie) =>
                     setContent({        // Check collections and recommendations
                         collections: rawMovie.belongs_to_collection ? true : false,
                         recommendations: rawMovie.recommendations.results.length
                     })
-                    return preloadMedia(rawMovie) as Promise<Movie>
-                })
-                .then(movie => {
-                    setMovie(movie)
-                    movie.poster_bitmap
-                        ? setThemeImage(movie.poster_bitmap)
-                        : setThemeLoaded(true)
-                })
+                )
     }, [id])
 
-    // Set Material theme
     useEffect(() => {
-        if (!movie) return window.scrollTo({ top: 0, behavior: 'smooth' })
+        if (movie?.isFetching) return
 
-        // fetch(`https://api.rutmdb.ru/api/movie/${id}/watch`)
-        //     .then(res => res.json())
-        //     .then(watchProviders => setWatchProviders(watchProviders?.results?.RU))
+        movie?.data?.theme &&
+            applyTheme(movie.data.theme, { target: document.body, dark: false })
+
+        setTimeout(() => setIsVisible(true), 10)
+
+        return () => document.body.removeAttribute('style')
 
     }, [movie])
 
     return (
         <>
-            {movie &&
-                <main className={themeLoaded ? 'movie-tv' : 'movie-tv hidden'}>
-                    {movie.backdrop_path && <img src={movie.backdrop_path} alt='backdrop' className="backdrop" />}
+            {movie?.data &&
+                <main className={isVisible ? 'movie-tv' : 'movie-tv hidden'}>
+                    {movie.data.backdrop_path &&
+                        <img
+                            src={movie.data.backdrop_path}
+                            alt='backdrop'
+                            className="backdrop"
+                        />}
                     <div className="color-overlay" />
                     <img
-                        src={movie?.poster_path}
+                        src={movie.data.poster_path}
                         alt='poster'
                         className="poster"
-                        crossOrigin='anonymous'
                     />
                     <div className="info">
                         <div className="top">
-                            <div className="title">{movie.title}</div>
-                            <div className="original_title">{movie.original_title}</div>
-                            <div className="tagline">{movie.tagline}</div>
-                            {movie.genres.length > 0 &&
-                                <div className="genres">Жанр<span>{movie.genres.map(genre =>
+                            <div className="title">{movie.data.title}</div>
+                            <div className="original_title">{movie.data.original_title}</div>
+                            <div className="tagline">{movie.data.tagline}</div>
+                            {movie.data.genres.length > 0 &&
+                                <div className="genres">Жанр<span>{movie.data.genres.map(genre =>
                                     <div key={`genre-${genre.id}`}>{genre.name}</div>
                                 )}</span></div>}
-                            {movie.overview && <div className="overview">Обзор<span>{movie.overview}</span></div>}
+                            {movie.data.overview && <div className="overview">Обзор<span>{movie.data.overview}</span></div>}
                         </div>
                         <div className="bottom">
-                            <div className="status">Статус<span>{status(movie.status)}</span></div>
-                            <div className="release_date">Дата премьеры<span>{localDate(movie.release_date)}</span></div>
-                            <div className="budget">Бюджет<span>$ {movie?.budget.toLocaleString('ru')}</span></div>
-                            <div className="revenue">Сборы<span>$ {movie?.revenue.toLocaleString('ru')}</span></div>
+                            <div className="status">Статус<span>{status(movie.data.status)}</span></div>
+                            <div className="release_date">Дата премьеры<span>{localDate(movie.data.release_date)}</span></div>
+                            <div className="budget">Бюджет<span>$ {movie.data.budget.toLocaleString('ru')}</span></div>
+                            <div className="revenue">Сборы<span>$ {movie.data.revenue.toLocaleString('ru')}</span></div>
 
                         </div>
                     </div>
-                    {movie.production_companies.length > 0 &&
+                    {movie.data.production_companies.length > 0 &&
                         <div className="companies">
-                            {movie.production_companies.map((company) =>
+                            {movie.data.production_companies.map((company) =>
                                 company.logo_path &&
                                 <img src={company.logo_path} alt='logo' key={'conpany-' + company.id} />)}
                         </div>}
@@ -108,17 +105,22 @@ const Movie: React.FC = () => {
                         <span>Пользовательский рейтинг</span>
                         <Rating
                             radius={40.5}
-                            rating={parseFloat(movie.vote_average ? movie.vote_average.toFixed(1) : '0')}
-                            votes={movie.vote_count}
+                            rating={parseFloat(movie.data.vote_average ? movie.data.vote_average.toFixed(1) : '0')}
+                            votes={movie.data.vote_count}
                         />
-                        <span>Голосов {movie.vote_count}</span>
+                        <span>Голосов {movie.data.vote_count}</span>
                     </div>
-                    {movie.videos.results.length > 0 && <Videos yt={movie.videos.results} />}
-                    {themeLoaded && movie.credits && <Credits credits={movie.credits} />}
-                    {themeLoaded && movie.belongs_to_collection && <Collection id={movie.belongs_to_collection.id} />}
-                    {themeLoaded && movie.recommendations.results.length > 0 && <Recommendations cards={movie.recommendations} type='movie' qtt={content.recommendations} />}
+                    {movie.isSuccess && movie.data.videos.results.length > 0 &&
+                        <Videos yt={movie.data.videos.results} />}
+                    {movie.isSuccess && movie.data.credits &&
+                        <Credits credits={movie.data.credits} />}
+                    {movie.isSuccess && movie.data.belongs_to_collection &&
+                        <Collection id={movie.data.belongs_to_collection.id} />}
+                    {movie.isSuccess && movie.data.recommendations.results.length > 0 &&
+                        <Recommendations cards={movie.data.recommendations} type='movie' qtt={content.recommendations} />}
                 </main>}
-            {!themeLoaded &&
+
+            {movie?.isFetching &&
                 <main className='movie-tv skeleton'>
                     <MovieSkeleton />
                     <Credits credits={null} />
