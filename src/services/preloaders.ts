@@ -25,20 +25,26 @@ export const preloadMedia = async (content: Movie | Tv) => {
 export const preloadSeason = async (content: Season): Promise<Season> => {
     let posterData = await imageLoader(content.poster_path, imageSize.poster.w500, '', true) as { img: string, bitmap: ImageBitmap }
     content.poster_path = posterData.img
+    content.episodes = await Promise.all(
+        content.episodes.map(async (episode: Episode) => {
+            episode.still_path = await imageLoader(episode.still_path, imageSize.still.w300) as string
+            return episode
+        })
+    )
     let theme = await themeFromImageBitmap(posterData.bitmap)
     content = { ...content, theme }
     return content
 }
 
-export const preloadEpisodes = async (content: Episode[]): Promise<Episode[]> => {
-    return await Promise.all(
-        content.slice().map(async (episode: Episode) => {
-            let resultEpisode: Episode = { ...{}, ...episode }
-            resultEpisode.still_path = await imageLoader(episode.still_path, imageSize.still.w300) as string
-            return resultEpisode
-        })
-    )
-}
+// export const preloadEpisodes = async (content: Episode[]): Promise<Episode[]> => {
+//     return await Promise.all(
+//         content.slice().map(async (episode: Episode) => {
+//             let resultEpisode: Episode = { ...{}, ...episode }
+//             resultEpisode.still_path = await imageLoader(episode.still_path, imageSize.still.w300) as string
+//             return resultEpisode
+//         })
+//     )
+// }
 
 export const preloadCollection = async (content: Collection) => {
     content.backdrop_path = await imageLoader(content.backdrop_path, imageSize.backdrop.w780) as string
