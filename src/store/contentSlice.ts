@@ -1,27 +1,17 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 
-interface listPages {
-    movies: {
-        popular: number,
-        top_rated: number,
-        upcoming: number
-    },
-    tvs: {
-        popular: number,
-        top_rated: number,
-        airing_today: number
-    },
-    people: {
-        popular: number,
-    }
-}
-
-interface listPayload {
+interface ListPagePayload {
     type: string,
     page: number
 }
 
-const initialState: listPages = {
+interface ContentPayload {
+    recommendations: number,
+    seasons?: number,
+    collections?: boolean
+}
+
+const initialState = {
     movies: {
         popular: 1,
         top_rated: 1,
@@ -34,6 +24,11 @@ const initialState: listPages = {
     },
     people: {
         popular: 1,
+    },
+    content: {
+        seasons: 0,
+        recommendations: 0,
+        collections: false
     }
 }
 
@@ -41,18 +36,21 @@ const contentSlice = createSlice({
     name: 'content',
     initialState,
     reducers: {
-        setMoviesPage: (state, action: PayloadAction<listPayload>) => {
+        setMoviesPage: (state, action: PayloadAction<ListPagePayload>) => {
             state.movies = { ...state.movies, [action.payload.type]: action.payload.page }
         },
-        setTvsPage: (state, action: PayloadAction<listPayload>) => {
+        setTvsPage: (state, action: PayloadAction<ListPagePayload>) => {
             state.tvs = { ...state.tvs, [action.payload.type]: action.payload.page }
         },
-        setPeoplePage: (state, action: PayloadAction<listPayload>) => {
+        setPeoplePage: (state, action: PayloadAction<ListPagePayload>) => {
             state.people = { ...state.people, [action.payload.type]: action.payload.page }
         },
+        setContent: (state, action: PayloadAction<ContentPayload>) => {
+            state.content = { ...state.content, ...action.payload }
+        }
     }
 })
 
-export const { setMoviesPage, setTvsPage, setPeoplePage } = contentSlice.actions
+export const { setMoviesPage, setTvsPage, setPeoplePage, setContent } = contentSlice.actions
 
 export default contentSlice.reducer
