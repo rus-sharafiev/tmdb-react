@@ -7,6 +7,7 @@ import { collectionApi } from '../services/api/collectionApi'
 import { seasonApi } from '../services/api/seasonApi'
 import { mediaApi } from '../services/api/mediaApi'
 import { recommendationsApi } from '../services/api/recommendationsApi'
+import { creditsApi } from '../services/api/creditsApi'
 
 export const store = configureStore({
     reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
         [seasonApi.reducerPath]: seasonApi.reducer,
         [mediaApi.reducerPath]: mediaApi.reducer,
         [recommendationsApi.reducerPath]: recommendationsApi.reducer,
+        [creditsApi.reducerPath]: creditsApi.reducer,
 
     },
     middleware: (getDefaultMiddleware) =>
@@ -28,6 +30,7 @@ export const store = configureStore({
             .concat(seasonApi.middleware)
             .concat(mediaApi.middleware)
             .concat(recommendationsApi.middleware)
+            .concat(creditsApi.middleware)
 })
 
 setupListeners(store.dispatch)
