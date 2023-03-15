@@ -1,11 +1,11 @@
 import { Theme } from '@material/material-color-utilities'
-import { CreatedBy, Credits, EpisodeToAir, Genre, Network, ProductionCompanie, ProductionCountrie, TvSeason, SpokenLanguage, Video } from '.'
+import { Creator, Credits, EpisodeToAir, Genre, Network, ProductionCompanie, ProductionCountrie, TvSeason, SpokenLanguage, Video } from '.'
 import { TvCards } from './cards'
 
 export default interface Tv {
     adult: boolean,
     backdrop_path: string,
-    created_by: CreatedBy[],
+    created_by: Creator[],
     episode_run_time: number[],
     first_air_date: string,
     genres: Genre[],
