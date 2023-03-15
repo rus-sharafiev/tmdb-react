@@ -27,7 +27,6 @@ const status = (status: string) => {
 
 const Movie: React.FC = () => {
     const { id } = useParams()
-    const [watchProviders, setWatchProviders] = useState()
     const [content, setContent] = useState<Content>({ collections: false, recommendations: 0 })
 
     const movie = id ? useGetMovieQuery(id) : undefined
@@ -49,12 +48,10 @@ const Movie: React.FC = () => {
     }, [id])
 
     useEffect(() => {
-        if (movie?.isFetching) return
-
         movie?.data?.theme &&
             applyTheme(movie.data.theme, { target: document.body, dark: false })
 
-        setTimeout(() => setIsVisible(true), 10)
+        !movie?.isFetching && setIsVisible(true)
 
         return () => document.body.removeAttribute('style')
 
@@ -62,7 +59,7 @@ const Movie: React.FC = () => {
 
     return (
         <>
-            {movie?.data &&
+            {movie?.data && !movie?.isFetching &&
                 <main className={isVisible ? 'movie-tv' : 'movie-tv hidden'}>
                     {movie.data.backdrop_path &&
                         <img
@@ -110,20 +107,16 @@ const Movie: React.FC = () => {
                         />
                         <span>Голосов {movie.data.vote_count}</span>
                     </div>
-                    {movie.isSuccess && movie.data.videos.results.length > 0 &&
-                        <Videos yt={movie.data.videos.results} />}
-                    {movie.isSuccess && movie.data.credits &&
-                        <Credits credits={movie.data.credits} />}
-                    {movie.isSuccess && movie.data.belongs_to_collection &&
-                        <Collection id={movie.data.belongs_to_collection.id} />}
-                    {movie.isSuccess && movie.data.recommendations.results.length > 0 &&
-                        <Recommendations cards={movie.data.recommendations} type='movie' qtt={content.recommendations} />}
+                    <Videos yt={movie.data.videos.results} />
+                    <Credits id={movie.data.id} />
+                    {content.collections && <Collection id={movie.data.belongs_to_collection?.id} />}
+                    {content.recommendations !== 0 && <Recommendations id={movie.data.id} type='movie' qtt={content.recommendations} />}
                 </main>}
 
             {movie?.isFetching &&
                 <main className='movie-tv skeleton'>
                     <MovieSkeleton />
-                    <Credits credits={null} />
+                    <Credits />
                     {content.collections && <Collection />}
                     {content.recommendations !== 0 && <Recommendations qtt={content.recommendations} />}
                 </main>}

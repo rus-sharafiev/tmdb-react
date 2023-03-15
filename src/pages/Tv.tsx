@@ -26,15 +26,14 @@ const status = (status: string) => {
 
 const Tv: React.FC = () => {
     let { id } = useParams()
-    const [watchProviders, setWatchProviders] = useState()
     const [content, setContent] = useState<Content>({ seasons: 0, recommendations: 0 })
 
     const tv = id ? useGetTvQuery(id) : undefined
     const [isVisible, setIsVisible] = useState(false)
 
     useEffect(() => {
-        setIsVisible(false)
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
+        setIsVisible(false)
 
         id &&
             fetch(`https://api.rutmdb.ru/api/tv/${id}`)
@@ -47,12 +46,10 @@ const Tv: React.FC = () => {
     }, [id])
 
     useEffect(() => {
-        if (tv?.isFetching) return
-
         tv?.data?.theme &&
             applyTheme(tv.data.theme, { target: document.body, dark: false })
 
-        setTimeout(() => setIsVisible(true), 10)
+        !tv?.isFetching && setIsVisible(true)
 
         return () => document.body.removeAttribute('style')
 
@@ -60,7 +57,7 @@ const Tv: React.FC = () => {
 
     return (
         <>
-            {tv?.data &&
+            {tv?.data && !tv.isFetching &&
                 <main className={isVisible ? 'movie-tv' : 'movie-tv hidden'}>
                     {tv.data.backdrop_path &&
                         <img
@@ -109,18 +106,19 @@ const Tv: React.FC = () => {
                     </div>
                     {tv.data.videos.results.length > 0 && <Videos yt={tv.data.videos.results} />}
                     {tv.isSuccess && tv.data.credits &&
-                        <Credits credits={tv.data.credits} creator={tv.data.created_by} />}
+                        <Credits id={tv.data.id} creator={tv.data.created_by} />}
                     {tv.isSuccess && tv.data.seasons.length > 0 &&
                         <Seasons data={tv.data.seasons} qtt={content.seasons} fallBackImage={tv.data.poster_path} tvId={tv.data.id} />}
                     {tv.isSuccess && tv.data.recommendations.results.length > 0 &&
-                        <Recommendations cards={tv.data.recommendations} type='tv' qtt={content.recommendations} />}
+                        <Recommendations id={tv.data.id} type='tv' />}
                 </main>}
+
             {tv?.isFetching &&
                 <main className='movie-tv skeleton'>
                     <MovieSkeleton />
-                    <Credits credits={null} creator={[]} />
+                    <Credits creator={[]} />
                     {content.seasons !== 0 && <Seasons qtt={content.seasons} />}
-                    {content.recommendations !== 0 && <Recommendations qtt={content.recommendations} />}
+                    {content.recommendations !== 0 && <Recommendations />}
                 </main>}
         </>
     )
