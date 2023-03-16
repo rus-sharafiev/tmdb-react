@@ -1,28 +1,14 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
-import { MovieCard, TvCard } from '../../types/cards'
+import api, { ApiError } from '..'
+import { MovieCard, MovieCards, PersonCards, TvCard, TvCards } from '../../types/cards'
 import { preloadCards } from '../preloaders'
 
 const baseQueryWithPreload = async (url: string) => {
-    try {
-        let response = await fetch(`https://api.rutmdb.ru${url}`)
-        if (response.status !== 200)
-            return {
-                error: {
-                    status: response.status,
-                    data: response.statusText
-                }
-            }
-        let result = await response.json()
-        result = await preloadCards(result)
-        return { data: result }
+    let result = await api.get(`https://api.rutmdb.ru${url}`) as MovieCards | TvCards | PersonCards | ApiError
+    if ('error' in result) return result
 
-    } catch (error) {
-        return {
-            error: {
-                data: error
-            }
-        }
-    }
+    let cards = await preloadCards(result)
+    return { data: cards }
 }
 
 export const recommendationsApi = createApi({

@@ -1,29 +1,15 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
+import api, { ApiError } from '..'
 import Movie from '../../types/movie'
 import Tv from '../../types/tv'
 import { preloadMedia } from '../preloaders'
 
 const baseQueryWithPreload = async (url: string) => {
-    try {
-        let response = await fetch(`https://api.rutmdb.ru${url}`)
-        if (response.status !== 200)
-            return {
-                error: {
-                    status: response.status,
-                    data: response.statusText
-                }
-            }
-        let result = await response.json()
-        result = await preloadMedia(result)
-        return { data: result }
+    let result = await api.get(`https://api.rutmdb.ru${url}`) as Movie | Tv | ApiError
+    if ('error' in result) return result
 
-    } catch (error) {
-        return {
-            error: {
-                data: error
-            }
-        }
-    }
+    result = await preloadMedia(result)
+    return { data: result }
 }
 
 export const mediaApi = createApi({

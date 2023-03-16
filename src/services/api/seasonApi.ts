@@ -1,28 +1,14 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
+import api, { ApiError } from '..'
 import { preloadSeason } from '../../services/preloaders'
 import { Season } from '../../types/season'
 
 const baseQueryWithPreload = async (url: string) => {
-    try {
-        let response = await fetch(`https://api.rutmdb.ru${url}`)
-        if (response.status !== 200)
-            return {
-                error: {
-                    status: response.status,
-                    data: response.statusText
-                }
-            }
-        let result = await response.json()
-        result = await preloadSeason(result) as Season
-        return { data: result }
+    let result = await api.get(`https://api.rutmdb.ru${url}`) as Season | ApiError
+    if ('error' in result) return result
 
-    } catch (error) {
-        return {
-            error: {
-                data: error
-            }
-        }
-    }
+    result = await preloadSeason(result)
+    return { data: result }
 }
 
 export const seasonApi = createApi({
