@@ -10,12 +10,9 @@ const Credits: React.FC<{ id?: number | null, creator?: Creator[] }> = ({ id, cr
     const [isVisible, setIsVisible] = useState(false)
 
     const credits = id
-        ?
-        creator
-            ?
-            useGetTvCreditsQuery(id)
-            :
-            useGetMovieCreditsQuery(id)
+        ? creator
+            ? useGetTvCreditsQuery(id)
+            : useGetMovieCreditsQuery(id)
         : undefined
 
     useEffect(() => {

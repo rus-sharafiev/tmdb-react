@@ -11,12 +11,9 @@ const Recommendations: React.FC<{ id?: number, type?: 'movie' | 'tv', qtt?: numb
     const [isVisible, setIsVisible] = useState(false)
 
     const recommendations = id
-        ?
-        type === 'movie'
-            ?
-            useGetMovieRecommendationsQuery(id)
-            :
-            useGetTvRecommendationsQuery(id)
+        ? type === 'movie'
+            ? useGetMovieRecommendationsQuery(id)
+            : useGetTvRecommendationsQuery(id)
         : undefined
 
     useEffect(() => {
