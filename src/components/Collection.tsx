@@ -52,7 +52,7 @@ const Collection: React.FC<{ id?: number }> = ({ id }) => {
                             .sort(releaseDateAsc)
                             .map((part: Part) =>
                                 <SwiperSlide key={'part-' + part.id}>
-                                    <Link to={`/movie/${part.id}`} className='card' >
+                                    <Link to={`/movie/${part.id}`} className={part.no_poster ? 'card no-poster' : 'card'} >
                                         <img src={part.poster_path} />
                                         <Rating radius={18} rating={parseFloat(part.vote_average ? part.vote_average.toFixed(1) : '0')} votes={part.vote_count} />
                                         <div className='title'>

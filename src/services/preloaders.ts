@@ -44,21 +44,13 @@ export const preloadSeason = async (content: Season): Promise<Season> => {
     return content
 }
 
-// export const preloadEpisodes = async (content: Episode[]): Promise<Episode[]> => {
-//     return await Promise.all(
-//         content.slice().map(async (episode: Episode) => {
-//             let resultEpisode: Episode = { ...{}, ...episode }
-//             resultEpisode.still_path = await imageLoader(episode.still_path, imageSize.still.w300) as string
-//             return resultEpisode
-//         })
-//     )
-// }
-
 export const preloadCollection = async (content: Collection) => {
     content.backdrop_path = await imageLoader(content.backdrop_path, imageSize.backdrop.w780) as string
     content.poster_path = await imageLoader(content.poster_path, imageSize.poster.w185) as string
     content.parts = await Promise.all(
         content.parts.map(async (part: Part) => {
+            if (!part.poster_path)
+                part = { ...part, no_poster: true }
             part.poster_path = await imageLoader(part.poster_path, imageSize.poster.w185, content.poster_path) as string
             return part
         })

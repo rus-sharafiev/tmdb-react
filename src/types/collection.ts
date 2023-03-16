@@ -12,7 +12,8 @@ export interface Part {
     title: string,
     video: boolean,
     vote_average: number,
-    vote_count: number
+    vote_count: number,
+    no_poster?: boolean
 }
 
 export interface Collection {
