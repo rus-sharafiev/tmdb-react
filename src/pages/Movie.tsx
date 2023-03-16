@@ -11,6 +11,7 @@ import { Content } from "../types"
 import { localDate } from "../services/dateConverter"
 import { useGetMovieQuery } from "../services/api/mediaApi"
 import { applyTheme } from "@material/material-color-utilities"
+import { useGetMovieContentQuery } from "../services/api/contentApi"
 
 
 // Movie status
@@ -27,31 +28,23 @@ const status = (status: string) => {
 
 const Movie: React.FC = () => {
     const { id } = useParams()
-    const [content, setContent] = useState<Content>({ collections: false, recommendations: 0 })
-
+    const content = id ? useGetMovieContentQuery(id) : undefined
     const movie = id ? useGetMovieQuery(id) : undefined
     const [isVisible, setIsVisible] = useState(false)
 
     useEffect(() => {
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
+        document.body.removeAttribute('style')
         setIsVisible(false)
-
-        id &&
-            fetch(`https://api.rutmdb.ru/api/movie/${id}`)
-                .then(res => res.json())
-                .then((rawMovie: Movie) =>
-                    setContent({        // Check collections and recommendations
-                        collections: rawMovie.belongs_to_collection ? true : false,
-                        recommendations: rawMovie.recommendations.results.length
-                    })
-                )
     }, [id])
 
     useEffect(() => {
+        if (movie?.isFetching) return
+
         movie?.data?.theme &&
             applyTheme(movie.data.theme, { target: document.body, dark: false })
 
-        !movie?.isFetching && setIsVisible(true)
+        setIsVisible(true)
 
         return () => document.body.removeAttribute('style')
 
@@ -109,16 +102,19 @@ const Movie: React.FC = () => {
                     </div>
                     <Videos yt={movie.data.videos.results} />
                     <Credits id={movie.data.id} />
-                    {content.collections && <Collection id={movie.data.belongs_to_collection?.id} />}
-                    {content.recommendations !== 0 && <Recommendations id={movie.data.id} type='movie' qtt={content.recommendations} />}
+                    {!content?.isFetching && content?.data?.collections &&
+                        <Collection id={movie.data.belongs_to_collection?.id} />}
+                    {!content?.isFetching && content?.data?.recommendations && content.data.recommendations > 0 &&
+                        <Recommendations id={movie.data.id} type='movie' qtt={content.data.recommendations} />}
                 </main>}
 
             {movie?.isFetching &&
                 <main className='movie-tv skeleton'>
                     <MovieSkeleton />
                     <Credits />
-                    {content.collections && <Collection />}
-                    {content.recommendations !== 0 && <Recommendations qtt={content.recommendations} />}
+                    {!content?.isFetching && content?.data?.collections && <Collection />}
+                    {!content?.isFetching && content?.data?.recommendations && content.data.recommendations > 0 &&
+                        <Recommendations qtt={content.data.recommendations} />}
                 </main>}
         </>
     )

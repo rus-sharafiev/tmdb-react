@@ -11,6 +11,7 @@ import Seasons from "../components/Seasons"
 import { localDate } from "../services/dateConverter"
 import { useGetTvQuery } from "../services/api/mediaApi"
 import { applyTheme } from "@material/material-color-utilities"
+import { useGetTvContentQuery } from "../services/api/contentApi"
 
 // Tv status
 const status = (status: string) => {
@@ -26,30 +27,24 @@ const status = (status: string) => {
 
 const Tv: React.FC = () => {
     let { id } = useParams()
-    const [content, setContent] = useState<Content>({ seasons: 0, recommendations: 0 })
 
+    const content = id ? useGetTvContentQuery(id) : undefined
     const tv = id ? useGetTvQuery(id) : undefined
     const [isVisible, setIsVisible] = useState(false)
 
     useEffect(() => {
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
+        document.body.removeAttribute('style')
         setIsVisible(false)
-
-        id &&
-            fetch(`https://api.rutmdb.ru/api/tv/${id}`)
-                .then(res => res.json())
-                .then((rawTv: Tv) =>
-                    setContent({        // Check seasons and recommendations
-                        seasons: Object.keys(rawTv.seasons).length,
-                        recommendations: rawTv.recommendations.results.length
-                    }))
     }, [id])
 
     useEffect(() => {
+        if (tv?.isFetching) return
+
         tv?.data?.theme &&
             applyTheme(tv.data.theme, { target: document.body, dark: false })
 
-        !tv?.isFetching && setIsVisible(true)
+        setIsVisible(true)
 
         return () => document.body.removeAttribute('style')
 
@@ -104,21 +99,22 @@ const Tv: React.FC = () => {
                         />
                         <span>Голосов {tv.data.vote_count}</span>
                     </div>
-                    {tv.data.videos.results.length > 0 && <Videos yt={tv.data.videos.results} />}
-                    {tv.isSuccess && tv.data.credits &&
-                        <Credits id={tv.data.id} creator={tv.data.created_by} />}
-                    {tv.isSuccess && tv.data.seasons.length > 0 &&
-                        <Seasons data={tv.data.seasons} qtt={content.seasons} fallBackImage={tv.data.poster_path} tvId={tv.data.id} />}
-                    {tv.isSuccess && tv.data.recommendations.results.length > 0 &&
-                        <Recommendations id={tv.data.id} type='tv' />}
+                    <Videos yt={tv.data.videos.results} />
+                    <Credits id={tv.data.id} creator={tv.data.created_by} />
+                    {!content?.isFetching && content?.data?.seasons &&
+                        <Seasons data={tv.data.seasons} qtt={content.data.seasons} fallBackImage={tv.data.poster_path} tvId={tv.data.id} />}
+                    {!content?.isFetching && content?.data?.recommendations && content.data.recommendations > 0 &&
+                        <Recommendations id={tv.data.id} type='tv' qtt={content.data.recommendations} />}
                 </main>}
 
             {tv?.isFetching &&
                 <main className='movie-tv skeleton'>
                     <MovieSkeleton />
                     <Credits creator={[]} />
-                    {content.seasons !== 0 && <Seasons qtt={content.seasons} />}
-                    {content.recommendations !== 0 && <Recommendations />}
+                    {!content?.isFetching && content?.data?.seasons &&
+                        <Seasons qtt={content.data.seasons} />}
+                    {!content?.isFetching && content?.data?.recommendations && content.data.recommendations > 0 &&
+                        <Recommendations qtt={content.data.recommendations} />}
                 </main>}
         </>
     )
