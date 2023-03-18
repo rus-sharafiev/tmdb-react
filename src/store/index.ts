@@ -1,7 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 
-import contentReducer from './contentSlice'
+import rootReducer from './reducers'
+
 import { cardsApi } from '../services/api/cardsApi'
 import { collectionApi } from '../services/api/collectionApi'
 import { seasonApi } from '../services/api/seasonApi'
@@ -11,18 +12,7 @@ import { creditsApi } from '../services/api/creditsApi'
 import { contentApi } from '../services/api/contentApi'
 
 export const store = configureStore({
-    reducer: {
-        content: contentReducer,
-
-        [cardsApi.reducerPath]: cardsApi.reducer,
-        [collectionApi.reducerPath]: collectionApi.reducer,
-        [seasonApi.reducerPath]: seasonApi.reducer,
-        [mediaApi.reducerPath]: mediaApi.reducer,
-        [recommendationsApi.reducerPath]: recommendationsApi.reducer,
-        [creditsApi.reducerPath]: creditsApi.reducer,
-        [contentApi.reducerPath]: contentApi.reducer,
-
-    },
+    reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: false

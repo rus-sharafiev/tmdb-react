@@ -4,11 +4,11 @@ import { useAppSelector, useAppDispatch } from '../hooks/store'
 import Tab from '../components/Tab'
 import useScrollDir from '../hooks/useScrollDir'
 import { useGetPopularPeopleQuery } from '../services/api/cardsApi'
-import { setPeoplePage } from '../store/contentSlice'
+import { setPeoplePage } from '../store/reducers/pagesSlice'
 import { PersonCards } from '../components/listCards'
 
 const People: React.FC = () => {
-    const page = useAppSelector(store => store.content.people)
+    const page = useAppSelector(store => store.pages.people)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const { list } = useParams()

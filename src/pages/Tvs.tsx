@@ -2,13 +2,13 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate, } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../hooks/store'
 import { useGetAiringTodayTvsQuery, useGetPopularTvsQuery, useGetTopRatedTvsQuery } from '../services/api/cardsApi'
-import { setTvsPage } from '../store/contentSlice'
+import { setTvsPage } from '../store/reducers/pagesSlice'
 import { TvCards } from '../components/listCards'
 import Tab from '../components/Tab'
 import useScrollDir from '../hooks/useScrollDir'
 
 const Tvs: React.FC = () => {
-    const page = useAppSelector(store => store.content.tvs)
+    const page = useAppSelector(store => store.pages.tvs)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const { list } = useParams()

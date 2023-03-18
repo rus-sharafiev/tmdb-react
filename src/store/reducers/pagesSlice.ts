@@ -5,12 +5,6 @@ interface ListPagePayload {
     page: number
 }
 
-interface ContentPayload {
-    recommendations: number,
-    seasons?: number,
-    collections?: boolean
-}
-
 const initialState = {
     movies: {
         popular: 1,
@@ -25,15 +19,15 @@ const initialState = {
     people: {
         popular: 1,
     },
-    content: {
-        seasons: 0,
-        recommendations: 0,
-        collections: false
+    search: {
+        movies: 1,
+        tvs: 1,
+        people: 1
     }
 }
 
-const contentSlice = createSlice({
-    name: 'content',
+const pagesSlice = createSlice({
+    name: 'pages',
     initialState,
     reducers: {
         setMoviesPage: (state, action: PayloadAction<ListPagePayload>) => {
@@ -45,12 +39,12 @@ const contentSlice = createSlice({
         setPeoplePage: (state, action: PayloadAction<ListPagePayload>) => {
             state.people = { ...state.people, [action.payload.type]: action.payload.page }
         },
-        setContent: (state, action: PayloadAction<ContentPayload>) => {
-            state.content = { ...state.content, ...action.payload }
+        setSearchPage: (state, action: PayloadAction<ListPagePayload>) => {
+            state.search = { ...state.search, [action.payload.type]: action.payload.page }
         }
     }
 })
 
-export const { setMoviesPage, setTvsPage, setPeoplePage, setContent } = contentSlice.actions
+export const { setMoviesPage, setTvsPage, setPeoplePage, setSearchPage } = pagesSlice.actions
 
-export default contentSlice.reducer
+export default pagesSlice.reducer
