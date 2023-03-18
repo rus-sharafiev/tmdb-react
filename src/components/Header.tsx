@@ -1,5 +1,6 @@
 import React from "react"
 import useScrollDir from "../hooks/useScrollDir"
+import SearchBar from "./SearchBar"
 
 const Header: React.FC = () => {
     const scrollDir = useScrollDir('up')
@@ -7,10 +8,7 @@ const Header: React.FC = () => {
     return (
         <header className={scrollDir}>
             <div className='overlay' />
-            <label>
-                search
-                <input type={'text'} placeholder='Поиск по фильмам, сериалам и людям' />
-            </label>
+            < SearchBar />
         </header>
     )
 }

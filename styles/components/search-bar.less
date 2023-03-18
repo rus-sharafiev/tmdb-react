@@ -1,0 +1,70 @@
+.search-bar {
+    @state-color: var(--md-sys-color-primary);
+    .state-layer();
+
+    &::before {
+        opacity: 0.08;
+    }
+
+    position: absolute;
+    inset: 8px 88px auto;
+
+    height: 56px;
+    width: 100%;
+    min-width: 360px;
+    max-width: 720px;
+    border-radius: 28px;
+    color: var(--md-sys-color-outline);
+
+    display: flex;
+    flex-direction: column;
+
+    label {
+
+        font-family: 'Material Symbols Rounded';
+        font-size: 24px;
+        line-height: 1;
+        direction: ltr;
+        -webkit-font-feature-settings: 'liga';
+        font-feature-settings: 'liga';
+        -webkit-font-smoothing: antialiased;
+
+        display: grid;
+        grid: 56px min-content / 56px 1fr;
+        align-items: center;
+        justify-items: center;
+
+        input {
+            position: absolute;
+            inset: 0;
+            color: var(--md-sys-color-on-surface);
+            padding-left: 56px;
+            border: none;
+            background: none;
+            outline: none;
+            border-radius: 28px;
+            z-index: -1;
+            transition: all 0.2s ease-in-out;
+            .body-large();
+
+            &::placeholder {
+                color: var(--md-sys-color-outline-variant);
+            }
+
+            // &:not(:placeholder-shown),
+            &:focus {
+                background: var(--md-sys-color-surface);
+                .elevation-level3()
+            }
+
+            .avatar {
+                width: 30px;
+            }
+        }
+    }
+
+    .suggestions {
+        display: flex;
+        flex-direction: column;
+    }
+}
