@@ -10,6 +10,7 @@ import Tv from '../pages/Tv'
 import People from '../pages/People'
 import Person from '../pages/Person'
 import Season from '../pages/Season'
+import Search from "../pages/Search"
 
 export const AppRoutes: ReactNode =
     <Route path="/" element={<App />}>
@@ -28,6 +29,8 @@ export const AppRoutes: ReactNode =
         <Route path="/person" element={<Navigate to="/person/list" replace={true} />} />
         <Route path="/person/list/:list?" element={<People />} />
         <Route path="/person/:id" element={<Person />} />
+
+        <Route path="/search/:list/:query" element={<Search />} />
 
     </Route>
 
