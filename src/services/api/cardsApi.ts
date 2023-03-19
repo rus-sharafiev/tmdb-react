@@ -18,10 +18,7 @@ const mergeArgs = {
     merge: (currentCache: MovieCard[] | TvCard[] | PersonCard[], newItems: MovieCard[] & TvCard[] & PersonCard[]) => {
         currentCache.push(...newItems);
     },
-    forceRefetch({ currentArg, previousArg }: {
-        currentArg: number | undefined | { query: string, page: number },
-        previousArg: number | undefined | { query: string, page: number }
-    }) {
+    forceRefetch({ currentArg, previousArg }) {
         return currentArg !== previousArg;
     }
 }
@@ -58,17 +55,6 @@ export const cardsApi = createApi({
         getPopularPeople: builder.query<PersonCard[], number>({
             query: (page) => `/api/person/popular/${page}`, ...mergeArgs
         }),
-
-        // Search --------------------------------------------------------------------------
-        searchMovies: builder.query<MovieCard[], { query: string, page: number }>({
-            query: ({ query, page }) => `/api/search/movie/${query}/${page}`, ...mergeArgs
-        }),
-        searchTvs: builder.query<TvCard[], { query: string, page: number }>({
-            query: ({ query, page }) => `/api/search/tv/${query}/${page}`, ...mergeArgs
-        }),
-        searchPeople: builder.query<PersonCard[], { query: string, page: number }>({
-            query: ({ query, page }) => `/api/search/person/${query}/${page}`, ...mergeArgs
-        })
     }),
 })
 
@@ -79,8 +65,5 @@ export const {
     useGetPopularTvsQuery,
     useGetTopRatedTvsQuery,
     useGetAiringTodayTvsQuery,
-    useGetPopularPeopleQuery,
-    useSearchMoviesQuery,
-    useSearchTvsQuery,
-    useSearchPeopleQuery
+    useGetPopularPeopleQuery
 } = cardsApi
