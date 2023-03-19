@@ -57,9 +57,9 @@ const Tvs: React.FC = () => {
                 <Tab to='/tv/list/airing_today' name='В эфире сегодня' />
             </div>
             <div className={'cards'}>
-                {list === 'popular' && <TvCards cards={popular} />}
-                {list === 'top_rated' && <TvCards cards={topRated} />}
-                {list === 'airing_today' && <TvCards cards={airingToday} />}
+                {list === 'popular' && <TvCards cards={popular} qtt={20} />}
+                {list === 'top_rated' && <TvCards cards={topRated} qtt={20} />}
+                {list === 'airing_today' && <TvCards cards={airingToday} qtt={20} />}
                 <div className='cards-loader' ref={endOfPage}></div>
             </div>
         </main>

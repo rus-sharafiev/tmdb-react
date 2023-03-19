@@ -1,10 +1,12 @@
 import React from "react"
 import { Link } from "react-router-dom"
+import { useAppSelector } from "../hooks/store"
 import { MovieCard, PersonCard, TvCard } from "../types/cards"
 import Rating from "../ui/rating"
 import { MediaCardSkeleton } from "../ui/skeletons"
 
-export const MovieCards: React.FC<{ cards: any }> = ({ cards }) => {
+export const MovieCards: React.FC<{ cards: any, qtt?: number }> = ({ cards, qtt }) => {
+
     return (
         <>
             {cards.data?.map((movie: MovieCard) =>
@@ -17,12 +19,13 @@ export const MovieCards: React.FC<{ cards: any }> = ({ cards }) => {
                     </div>
                 </Link>
             )}
-            {cards.isFetching && [...Array(20)].map((e, i) => <MediaCardSkeleton key={`skeleton-${i}`} />)}
+            {cards.isFetching && qtt && [...Array(qtt)].map((e, i) => <MediaCardSkeleton key={`skeleton-${i}`} />)}
         </>
     )
 }
 
-export const TvCards: React.FC<{ cards: any }> = ({ cards }) => {
+export const TvCards: React.FC<{ cards: any, qtt?: number }> = ({ cards, qtt }) => {
+
     return (
         <>
             {cards.data?.map((tv: TvCard) =>
@@ -35,12 +38,13 @@ export const TvCards: React.FC<{ cards: any }> = ({ cards }) => {
                     </div>
                 </Link>
             )}
-            {cards.isFetching && [...Array(20)].map((e, i) => <MediaCardSkeleton key={`skeleton-${i}`} />)}
+            {cards.isFetching && qtt && [...Array(qtt)].map((e, i) => <MediaCardSkeleton key={`skeleton-${i}`} />)}
         </>
     )
 }
 
-export const PersonCards: React.FC<{ cards: any }> = ({ cards }) => {
+export const PersonCards: React.FC<{ cards: any, qtt?: number }> = ({ cards, qtt }) => {
+
     return (
         <>
             {cards.data?.map((person: PersonCard) =>
@@ -52,7 +56,7 @@ export const PersonCards: React.FC<{ cards: any }> = ({ cards }) => {
                     </div>
                 </Link>
             )}
-            {cards.isFetching && [...Array(20)].map((e, i) => <MediaCardSkeleton key={`skeleton-${i}`} />)}
+            {cards.isFetching && qtt && [...Array(qtt)].map((e, i) => <MediaCardSkeleton key={`skeleton-${i}`} />)}
         </>
     )
 }

@@ -57,9 +57,9 @@ const Movies: React.FC = () => {
                 <Tab to='/movie/list/upcoming' name='Ожидаемые' />
             </div>
             <div className={'cards'}>
-                {list === 'popular' && <MovieCards cards={popular} />}
-                {list === 'top_rated' && <MovieCards cards={topRated} />}
-                {list === 'upcoming' && <MovieCards cards={upcoming} />}
+                {list === 'popular' && <MovieCards cards={popular} qtt={20} />}
+                {list === 'top_rated' && <MovieCards cards={topRated} qtt={20} />}
+                {list === 'upcoming' && <MovieCards cards={upcoming} qtt={20} />}
                 <div className='cards-loader' ref={endOfPage}></div>
             </div>
         </main>
