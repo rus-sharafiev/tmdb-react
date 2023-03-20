@@ -33,7 +33,7 @@ const Tv: React.FC = () => {
     const [isVisible, setIsVisible] = useState(false)
 
     useEffect(() => {
-        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
+        window.scrollTo({ top: 0, behavior: 'smooth' })
         document.body.removeAttribute('style')
         setIsVisible(false)
     }, [id])
