@@ -71,7 +71,10 @@ const Credits: React.FC<{ id?: number | null, creator?: Creator[] }> = ({ id, cr
                         >
                             {credits.data.cast.map(actor =>
                                 <SwiperSlide key={'actor-' + actor.id}>
-                                    <Link to={`/person/${actor.id}`} className='card unselectable' >
+                                    <Link
+                                        to={`/person/${actor.id}`}
+                                        className={actor.no_poster ? 'card unselectable no-poster' : 'card unselectable'}
+                                    >
                                         <img src={actor.profile_path} alt='photo' />
                                         <div className='name'>
                                             <span>{actor.name}</span>
