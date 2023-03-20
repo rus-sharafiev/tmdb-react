@@ -33,7 +33,8 @@ export interface MovieCard {
     title: string,
     video: boolean,
     vote_average: number,
-    vote_count: number
+    vote_count: number,
+    no_poster?: boolean
 }
 
 // TV card
@@ -50,7 +51,8 @@ export interface TvCard {
     popularity: number,
     poster_path: string,
     vote_average: number,
-    vote_count: number
+    vote_count: number,
+    no_poster?: boolean
 }
 
 // Person card

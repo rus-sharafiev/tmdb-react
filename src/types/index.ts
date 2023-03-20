@@ -70,7 +70,8 @@ export interface Actor {
     cast_id: number,
     character: string,
     credit_id: string,
-    order: number
+    order: number,
+    no_poster?: boolean
 }
 
 export interface Creator {

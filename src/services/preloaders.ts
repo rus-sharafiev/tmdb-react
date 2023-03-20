@@ -7,7 +7,6 @@ import Tv from "../types/tv"
 import imageLoader, { imageSize } from "./imageLoader"
 import themeFromImageBitmap from "./themeFromImageBitmap"
 
-// Proxy and preload images
 export const preloadMedia = async (content: Movie | Tv) => {
     let resolvedData = await Promise.all([
         imageLoader(content.backdrop_path, imageSize.backdrop.w780) as Promise<string>,
@@ -61,6 +60,7 @@ export const preloadCollection = async (content: Collection) => {
 export const preloadCast = async (castArr: Actor[]) => {
     return await Promise.all(
         castArr.map(async (cast: Actor) => {
+            if (!cast.profile_path) cast = { ...cast, no_poster: true }
             cast.profile_path = await imageLoader(cast.profile_path, imageSize.profile.w185, cast.gender === 1 ? '/img/female.png' : '/img/male.png') as string
             return cast
         })
@@ -77,10 +77,11 @@ export const preloadSeasons = async (seasons: TvSeason[]): Promise<TvSeason[]> =
 export const preloadCards = async (content: MovieCards | TvCards | PersonCards, w342?: boolean): Promise<MovieCard[] | TvCard[] | PersonCard[]> => {
     return await Promise.all(
         content.results.map(async (item: MovieCard | TvCard | PersonCard) => {
-            if ((item as MovieCard | TvCard).poster_path)
-                (item as MovieCard | TvCard).poster_path = await imageLoader((item as MovieCard | TvCard).poster_path, w342 ? imageSize.poster.w342 : imageSize.poster.w185, '/img/no_image.png') as string
-            if ((item as PersonCard).profile_path)
-                (item as PersonCard).profile_path = await imageLoader((item as PersonCard).profile_path, imageSize.profile.w185, (item as PersonCard).gender === 1 ? '/img/female.png' : '/img/male.png') as string
+            if ('poster_path' in item && !item.poster_path) item = { ...item, no_poster: true }
+            if ('poster_path' in item)
+                item.poster_path = await imageLoader(item.poster_path, w342 ? imageSize.poster.w342 : imageSize.poster.w185) as string
+            if ('profile_path' in item)
+                item.profile_path = await imageLoader(item.profile_path, imageSize.profile.w185, item.gender === 1 ? '/img/female.png' : '/img/male.png') as string
             return item
         })) as MovieCard[] | TvCard[] | PersonCard[]
 }
