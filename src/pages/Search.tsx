@@ -55,12 +55,7 @@ const Search: React.FC = () => {
     }, [list, movies, tvs, people])
 
     return (
-        <main className='lists'>
-            <div className={'tabs ' + scrollDir}>
-                <Tab to={`/search/movie/${query}`} name='Фильмы' />
-                <Tab to={`/search/tv/${query}`} name='Сериалы' />
-                <Tab to={`/search/person/${query}`} name='Люди' />
-            </div>
+        <main className='search'>
             <div className={'cards'}>
                 {list === 'movie' && <MovieCards cards={movies} qtt={results.movie?.qtt} />}
                 {list === 'tv' && <TvCards cards={tvs} qtt={results.tv?.qtt} />}

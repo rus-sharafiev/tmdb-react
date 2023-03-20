@@ -1,4 +1,12 @@
 // Container
+.lists>.cards {
+    padding-top: 60px;
+}
+
+.search>.cards {
+    padding-top: 8px;
+}
+
 .cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
@@ -6,7 +14,6 @@
     justify-items: center;
     gap: 8px;
     opacity: 1;
-    padding-top: 48px;
     transition: opacity 0.3s ease-in;
     position: relative;
 
@@ -107,57 +114,4 @@
     -moz-animation: Animation 5s ease infinite;
     animation: Animation 5s ease infinite;
 
-}
-
-@-webkit-keyframes Animation {
-    0% {
-        background-position: 10% 0%
-    }
-
-    50% {
-        background-position: 91% 100%
-    }
-
-    100% {
-        background-position: 10% 0%
-    }
-}
-
-@-moz-keyframes Animation {
-    0% {
-        background-position: 10% 0%
-    }
-
-    50% {
-        background-position: 91% 100%
-    }
-
-    100% {
-        background-position: 10% 0%
-    }
-}
-
-@keyframes Animation {
-    0% {
-        background-position: 10% 0%
-    }
-
-    50% {
-        background-position: 91% 100%
-    }
-
-    100% {
-        background-position: 10% 0%
-    }
-}
-
-@keyframes loading-image {
-    0% {
-        background-position: -100px
-    }
-
-    40%,
-    100% {
-        background-position: 200px
-    }
 }

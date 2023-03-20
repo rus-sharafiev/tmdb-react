@@ -1,14 +1,16 @@
 import React from 'react'
-import { NavLink } from "react-router-dom"
+import { NavLink, useLocation } from "react-router-dom"
 
 const Nav: React.FC = () => {
+    let location = useLocation()
+
+    const search = location.pathname.split('/')[1] === 'search' ? true : false
+    const query = location.pathname.split('/')[3]
 
     const NavBtn: React.FC<{ to: string, icon: string, name: string }> = ({ to, icon, name }) => {
+
         return (
-            <NavLink
-                to={to}
-                className={({ isActive }) => isActive ? 'nav-active' : undefined}
-            >
+            <NavLink to={search ? `/search/${to}/${query}` : to} className={({ isActive }) => isActive ? 'nav-active' : undefined} >
                 <span className='material-symbols-rounded'>{icon}</span>
                 {name}
             </NavLink>
