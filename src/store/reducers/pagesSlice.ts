@@ -42,12 +42,12 @@ const pagesSlice = createSlice({
         setSearchPage: (state, action: PayloadAction<ListPagePayload>) => {
             state.search = { ...state.search, [action.payload.type]: action.payload.page }
         },
-        resetSearchPage: (state) => {
+        resetSearchPages: (state) => {
             state.search = initialState.search
         }
     }
 })
 
-export const { setMoviesPage, setTvsPage, setPeoplePage, setSearchPage, resetSearchPage } = pagesSlice.actions
+export const { setMoviesPage, setTvsPage, setPeoplePage, setSearchPage, resetSearchPages } = pagesSlice.actions
 
 export default pagesSlice.reducer

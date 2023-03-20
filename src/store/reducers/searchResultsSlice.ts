@@ -23,16 +23,16 @@ const searchResultsSlice = createSlice({
     name: 'searchResults',
     initialState,
     reducers: {
-        setMoviesResults: (state, action: PayloadAction<typeof initialState.movie>) => {
+        setMoviesSearchResults: (state, action: PayloadAction<typeof initialState.movie>) => {
             state.movie = action.payload
         },
-        setTvsResults: (state, action: PayloadAction<typeof initialState.tv>) => {
+        setTvsSearchResults: (state, action: PayloadAction<typeof initialState.tv>) => {
             state.tv = action.payload
         },
-        setPeopleResults: (state, action: PayloadAction<typeof initialState.person>) => {
+        setPeopleSearchResults: (state, action: PayloadAction<typeof initialState.person>) => {
             state.person = action.payload
         },
-        resetResults: (state) => {
+        resetSearchResults: (state) => {
             state.movie = initialState.movie,
                 state.person = initialState.person,
                 state.tv = initialState.tv
@@ -40,6 +40,6 @@ const searchResultsSlice = createSlice({
     }
 })
 
-export const { setMoviesResults, setTvsResults, setPeopleResults, resetResults } = searchResultsSlice.actions
+export const { setMoviesSearchResults, setTvsSearchResults, setPeopleSearchResults, resetSearchResults } = searchResultsSlice.actions
 
 export default searchResultsSlice.reducer

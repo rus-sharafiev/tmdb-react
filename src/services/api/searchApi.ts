@@ -2,7 +2,7 @@ import { BaseQueryApi, createApi } from '@reduxjs/toolkit/query/react'
 import api, { ApiError } from '..'
 import { preloadCards } from '../preloaders'
 import { MovieCard, MovieCards, PersonCard, PersonCards, TvCard, TvCards } from '../../types/cards'
-import { setMoviesResults, setPeopleResults, setTvsResults } from '../../store/reducers/searchResultsSlice'
+import { setMoviesSearchResults, setPeopleSearchResults, setTvsSearchResults } from '../../store/reducers/searchResultsSlice'
 
 const baseQueryWithPreload = async (url: string, baseQueryApi: BaseQueryApi) => {
     let result = await api.get(`https://api.rutmdb.ru${url}`) as MovieCards | TvCards | PersonCards | ApiError
@@ -11,19 +11,19 @@ const baseQueryWithPreload = async (url: string, baseQueryApi: BaseQueryApi) => 
     let type = url.split('/')[3]
 
     if (type === 'movie')
-        baseQueryApi.dispatch(setMoviesResults({
+        baseQueryApi.dispatch(setMoviesSearchResults({
             pages: result.total_pages,
             qtt: result.results.length
         }))
 
     if (type === 'tv')
-        baseQueryApi.dispatch(setTvsResults({
+        baseQueryApi.dispatch(setTvsSearchResults({
             pages: result.total_pages,
             qtt: result.results.length
         }))
 
     if (type === 'person')
-        baseQueryApi.dispatch(setPeopleResults({
+        baseQueryApi.dispatch(setPeopleSearchResults({
             pages: result.total_pages,
             qtt: result.results.length
         }))
@@ -47,19 +47,19 @@ const mergeArgs = {
 export const searchApi = createApi({
     reducerPath: 'searchApi',
     baseQuery: baseQueryWithPreload,
-    keepUnusedDataFor: 12 * 60 * 60,
+    keepUnusedDataFor: 10 * 60,
     endpoints: (builder) => ({
 
 
         // Search --------------------------------------------------------------------------
-        searchMovies: builder.query<MovieCard[], { query: string, page: number }>({
-            query: ({ query, page }) => `/api/search/movie/${query}/${page}`, ...mergeArgs
+        searchMovies: builder.query<MovieCard[], string>({
+            query: (query) => `/api/search/movie/${query}`, ...mergeArgs
         }),
-        searchTvs: builder.query<TvCard[], { query: string, page: number }>({
-            query: ({ query, page }) => `/api/search/tv/${query}/${page}`, ...mergeArgs
+        searchTvs: builder.query<TvCard[], string>({
+            query: (query) => `/api/search/tv/${query}`, ...mergeArgs
         }),
-        searchPeople: builder.query<PersonCard[], { query: string, page: number }>({
-            query: ({ query, page }) => `/api/search/person/${query}/${page}`, ...mergeArgs
+        searchPeople: builder.query<PersonCard[], string>({
+            query: (query) => `/api/search/person/${query}`, ...mergeArgs
         })
     }),
 })
