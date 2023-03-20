@@ -6,6 +6,7 @@ import { recommendationsSwiperBreakpoints } from "../ui/swiperBreakpoints"
 import { MovieCard, MovieCards, TvCard, TvCards } from "../types/cards"
 import Rating from "../ui/rating"
 import { useGetMovieRecommendationsQuery, useGetTvRecommendationsQuery } from "../services/api/recommendationsApi"
+import { CardImagePlaceholder } from "../ui/imagePlaceholders"
 
 const Recommendations: React.FC<{ id?: number, type?: 'movie' | 'tv', qtt?: number }> = ({ id, type, qtt }) => {
     const [isVisible, setIsVisible] = useState(false)
@@ -46,7 +47,11 @@ const Recommendations: React.FC<{ id?: number, type?: 'movie' | 'tv', qtt?: numb
                         {recommendations?.data?.map((recommendation: MovieCard | TvCard) =>
                             <SwiperSlide key={'part-' + recommendation.id}>
                                 <Link to={`/${type}/${recommendation.id}`} className='card' >
-                                    <img src={recommendation.poster_path} />
+                                    {recommendation.no_poster
+                                        ? <CardImagePlaceholder />
+                                        : <img src={recommendation.poster_path} />
+                                    }
+                                    {/* <img src={recommendation.poster_path} /> */}
                                     <Rating
                                         radius={18}
                                         rating={parseFloat(recommendation.vote_average ? recommendation.vote_average.toFixed(1) : '0')}
