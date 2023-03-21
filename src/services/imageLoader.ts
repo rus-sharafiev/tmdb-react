@@ -69,7 +69,7 @@ const imageLoader = (path: string | null, size: string, fallBack?: string, bitma
     let url = 'https://image.rutmdb.ru/t/p/' + size + path
 
     return new Promise((resolve, reject) => {
-        const worker = new Worker(bitmap ? "/image-worker-bitmap.js" : "/image-worker.js")
+        const worker = new Worker(bitmap ? "/workers/image-worker-bitmap.js" : "/workers/image-worker.js")
         worker.onmessage = async (event) => {
             const url = event.data.url
             let img = await loadImage(url)

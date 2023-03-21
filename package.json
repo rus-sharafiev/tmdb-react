@@ -9,9 +9,9 @@
     "dev": "concurrently --names 'esbuild,less' -c 'yellow,blue' \" esbuild src/index.tsx --outdir=build --bundle --watch \" \" less-watch-compiler styles build index.less \"",
     "build": "lessc styles/index.less build/index.css && esbuild index=src/index.tsx build/index.css --outdir=build --allow-overwrite --bundle --minify",
     "server": "esbuild server/server.ts --outfile=server/index.js --allow-overwrite --bundle --minify --platform=node",
-    "tworker": "esbuild src/workers/themeWorker.ts --outfile=build/theme-worker.js --allow-overwrite --bundle --minify",
-    "iworker": "esbuild src/workers/imageWorker.ts --outfile=build/image-worker.js --allow-overwrite --bundle --minify",
-    "iworkerb": "esbuild src/workers/imageWorkerBItmap.ts --outfile=build/image-worker-bitmap.js --allow-overwrite --bundle --minify",
+    "tworker": "esbuild src/workers/themeWorker.ts --outfile=build/workers/theme-worker.js --allow-overwrite --bundle --minify",
+    "iworker": "esbuild src/workers/imageWorker.ts --outfile=build/workers/image-worker.js --allow-overwrite --bundle --minify",
+    "iworkerb": "esbuild src/workers/imageWorkerBItmap.ts --outfile=build/workers/image-worker-bitmap.js --allow-overwrite --bundle --minify",
     "start": "node server/index.js"
   },
   "dependencies": {

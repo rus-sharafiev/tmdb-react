@@ -6,7 +6,7 @@ const themeFromImageBitmap = async (image: ImageBitmap): Promise<Theme> => {
         return new Promise((resolve, reject) => {
 
             if (window.Worker) {
-                const themeWorker = new Worker("/theme-worker.js");
+                const themeWorker = new Worker("/workers/theme-worker.js");
 
                 const imageBytes = new Promise<Uint8ClampedArray>((resolve, reject) => {
                     const canvas = document.createElement('canvas')

@@ -61,7 +61,7 @@ export const preloadCast = async (castArr: Actor[]) => {
     return await Promise.all(
         castArr.map(async (cast: Actor) => {
             if (!cast.profile_path) cast = { ...cast, no_poster: true }
-            cast.profile_path = await imageLoader(cast.profile_path, imageSize.profile.w185, cast.gender === 1 ? '/img/female.png' : '/img/male.png') as string
+            cast.profile_path = await imageLoader(cast.profile_path, imageSize.profile.w185, cast.gender === 1 ? '/images/female.png' : '/images/male.png') as string
             return cast
         })
     )
@@ -77,11 +77,14 @@ export const preloadSeasons = async (seasons: TvSeason[]): Promise<TvSeason[]> =
 export const preloadCards = async (content: MovieCards | TvCards | PersonCards, w342?: boolean): Promise<MovieCard[] | TvCard[] | PersonCard[]> => {
     return await Promise.all(
         content.results.map(async (item: MovieCard | TvCard | PersonCard) => {
+
             if ('poster_path' in item && !item.poster_path) item = { ...item, no_poster: true }
             if ('poster_path' in item)
                 item.poster_path = await imageLoader(item.poster_path, w342 ? imageSize.poster.w342 : imageSize.poster.w185) as string
+
             if ('profile_path' in item)
-                item.profile_path = await imageLoader(item.profile_path, imageSize.profile.w185, item.gender === 1 ? '/img/female.png' : '/img/male.png') as string
+                item.profile_path = await imageLoader(item.profile_path, imageSize.profile.w185, item.gender === 1 ? '/images/female.png' : '/images/male.png') as string
+
             return item
         })) as MovieCard[] | TvCard[] | PersonCard[]
 }
