@@ -7,6 +7,9 @@ const baseQueryWithPreload = async (url: string) => {
     let result = await api.get(`https://api.rutmdb.ru${url}`) as Credits | ApiError
     if ('error' in result) return result
 
+    if (result.cast.length >= 20)
+        result.cast = result.cast.slice(0, 20)
+
     result.cast = await preloadCast(result.cast)
     return { data: result }
 }
