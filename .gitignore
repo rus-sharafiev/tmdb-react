@@ -1,6 +1,6 @@
 .hintrc
 node_modules
-build
-server
-styles/mixins
-styles/colors.less
+/build
+/server
+/styles/mixins
+/styles/colors.less
