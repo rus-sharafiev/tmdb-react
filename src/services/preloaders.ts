@@ -40,8 +40,10 @@ export const preloadSeason = async (content: Season): Promise<Season> => {
     ])
     content.episodes = resolvedData[1]
     content.poster_path = resolvedData[0].img
-    let theme = await themeFromImageBitmap(resolvedData[0].bitmap)
-    content = { ...content, theme }
+    if (resolvedData[0].bitmap) {
+        let theme = await themeFromImageBitmap(resolvedData[0].bitmap)
+        content = { ...content, theme }
+    }
     return content
 }
 

@@ -6,6 +6,7 @@ import { useGetSeasonQuery } from "../services/api/seasonApi"
 import { SeasonSkeleton } from "../components/ui/skeletons"
 import { Episode } from "../types/season"
 import convertRuntime from "../services/convertRuntime"
+import { EpisodePlaceholder, SeasonImagePlaceholder } from "../components/ui/imagePlaceholders"
 
 const Season: React.FC = () => {
     const { tvId, seasonNumber } = useParams()
@@ -33,7 +34,10 @@ const Season: React.FC = () => {
             {season?.data &&
                 <main className={isVisible ? 'season' : 'season hidden'}>
                     <div className="color-overlay" />
-                    <img className='poster' src={season.data.poster_path} alt='poster' />
+                    {season.data.poster_path
+                        ?
+                        <img className='poster' src={season.data.poster_path} alt='poster' />
+                        : <SeasonImagePlaceholder />}
                     <div className="info">
                         <div className="top">
                             <div className="title">{season.data.name}</div>
@@ -48,7 +52,9 @@ const Season: React.FC = () => {
                         {season.data.episodes &&
                             season.data.episodes.map((episode: Episode) =>
                                 <div className='episode' key={`episode-${episode.id}`}>
-                                    <img src={episode.still_path} alt='poster' />
+                                    {episode.still_path
+                                        ? <img src={episode.still_path} alt='poster' />
+                                        : <EpisodePlaceholder />}
                                     <div className='name'><span>#{episode.episode_number}</span>{episode.name}</div>
                                     <div className='overview'>{episode.overview}</div>
                                     <div className='runtime'>{convertRuntime(episode.runtime)}</div>

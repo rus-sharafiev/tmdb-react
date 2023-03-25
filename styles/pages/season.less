@@ -36,6 +36,19 @@
         z-index: 1;
     }
 
+    .placeholder {
+
+        .backdrop {
+            fill: var(--md-sys-color-surface);
+        }
+
+        .overlay,
+        path {
+            fill: var(--md-sys-color-primary);
+            opacity: 0.08;
+        }
+    }
+
     .info {
         grid-area: inform;
         position: relative;
@@ -122,12 +135,27 @@
             gap: 16px;
             position: relative;
 
+            .placeholder,
             img {
                 grid-column: 1 / 2;
                 grid-row: 1 / 4;
 
                 border-radius: 24px;
                 box-shadow: 0px 1px 2px rgb(0 0 0 / 15%), 0px 2px 6px 2px rgb(0 0 0 / 10%);
+            }
+
+            .placeholder {
+                width: 300px;
+
+                .backdrop {
+                    fill: var(--md-sys-color-surface);
+                }
+
+                .overlay,
+                path {
+                    fill: var(--md-sys-color-primary);
+                    opacity: 0.08;
+                }
             }
 
             .name {
