@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { localDate } from "../services/dateConverter"
 import { useGetSeasonQuery } from "../services/api/seasonApi"
-import { SeasonSkeleton } from "../ui/skeletons"
+import { SeasonSkeleton } from "../components/ui/skeletons"
 import { Episode } from "../types/season"
 import convertRuntime from "../services/convertRuntime"
 

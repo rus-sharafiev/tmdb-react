@@ -4,7 +4,7 @@ import { Navigation } from "swiper"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { useGetMovieCreditsQuery, useGetTvCreditsQuery } from "../services/api/creditsApi"
 import { Actor, Creator } from "../types"
-import { actorsSwiperBreakpoints } from "../ui/swiperBreakpoints"
+import { actorsSwiperBreakpoints } from "./ui/swiperBreakpoints"
 
 const Credits: React.FC<{ id?: number | null, creator?: Creator[] }> = ({ id, creator }) => {
     const [isVisible, setIsVisible] = useState(false)

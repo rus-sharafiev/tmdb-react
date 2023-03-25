@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { Navigation } from "swiper"
 import { Swiper, SwiperSlide } from "swiper/react"
-import { recommendationsSwiperBreakpoints } from "../ui/swiperBreakpoints"
+import { recommendationsSwiperBreakpoints } from "./ui/swiperBreakpoints"
 import { MovieCard, MovieCards, TvCard, TvCards } from "../types/cards"
-import Rating from "../ui/rating"
+import Rating from "./ui/rating"
 import { useGetMovieRecommendationsQuery, useGetTvRecommendationsQuery } from "../services/api/recommendationsApi"
-import { CardImagePlaceholder } from "../ui/imagePlaceholders"
+import { CardImagePlaceholder } from "./ui/imagePlaceholders"
 
 const Recommendations: React.FC<{ id?: number, type?: 'movie' | 'tv', qtt?: number }> = ({ id, type, qtt }) => {
     const [isVisible, setIsVisible] = useState(false)

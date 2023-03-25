@@ -1,10 +1,9 @@
 import React from "react"
 import { Link } from "react-router-dom"
-import { useAppSelector } from "../hooks/store"
 import { MovieCard, PersonCard, TvCard } from "../types/cards"
-import { CardImagePlaceholder } from "../ui/imagePlaceholders"
-import Rating from "../ui/rating"
-import { MediaCardSkeleton } from "../ui/skeletons"
+import { CardImagePlaceholder } from "../components/ui/imagePlaceholders"
+import Rating from "../components/ui/rating"
+import { MediaCardSkeleton } from "../components/ui/skeletons"
 
 export const MovieCards: React.FC<{ cards: any, qtt?: number }> = ({ cards, qtt }) => {
 
