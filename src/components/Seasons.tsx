@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { localDate } from "../services/dateConverter"
 import { preloadSeasons } from "../services/preloaders"
 import { TvSeason } from "../types"
+import { SeasonCardImagePlaceholder } from "./ui/imagePlaceholders"
 
 const SeasonCard: React.FC<{ season: TvSeason | undefined, fallBackImage: string, tvId?: number }> = ({ season, fallBackImage, tvId }) => {
     if (!season) return null
@@ -10,11 +11,14 @@ const SeasonCard: React.FC<{ season: TvSeason | undefined, fallBackImage: string
     return (
         <Link to={`/tv/${tvId}/season/${season.season_number}`} className="season-card">
             <div className="season-number">{season.season_number !== 0 && <span>#</span>}{season.season_number !== 0 ? season.season_number : '#'}</div>
-            <img
-                src={season.poster_path !== '' ? season.poster_path : fallBackImage}
-                alt={season.name}
-                className={season.poster_path === '' ? 'no-poster' : undefined}
-            />
+            {fallBackImage
+                ?
+                <img
+                    src={season.poster_path !== '' ? season.poster_path : fallBackImage}
+                    alt={season.name}
+                    className={season.poster_path === '' ? 'no-poster' : undefined}
+                />
+                : <SeasonCardImagePlaceholder />}
             <div className="season-name">{season.name}</div>
             <div className="season-air-date">{localDate(season.air_date)}</div>
             <div className="season-episode-count">Серий {season.episode_count}</div>
