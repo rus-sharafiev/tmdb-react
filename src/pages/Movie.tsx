@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import Movie from "../types/movie"
-import Rating from "../ui/rating"
+import Rating from "../components/ui/rating"
 import Recommendations from "../components/Recommendations"
 import Collection from "../components/Collection"
 import Credits from "../components/Credits"
 import Videos from "../components/Videos"
-import { MovieSkeleton } from "../ui/skeletons"
+import { MovieSkeleton } from "../components/ui/skeletons"
 import { Content } from "../types"
 import { localDate } from "../services/dateConverter"
 import { useGetMovieQuery } from "../services/api/mediaApi"
 import { applyTheme } from "@material/material-color-utilities"
 import { useGetMovieContentQuery } from "../services/api/contentApi"
+import { PosterImagePlaceholder } from "../components/ui/imagePlaceholders"
 
 
 // Movie status
@@ -45,8 +46,10 @@ const Movie: React.FC = () => {
             applyTheme(movie.data.theme, { target: document.body, dark: false })
 
         setIsVisible(true)
+        console.log(movie)
 
         return () => document.body.removeAttribute('style')
+
 
     }, [movie])
 
@@ -61,11 +64,15 @@ const Movie: React.FC = () => {
                             className="backdrop"
                         />}
                     <div className="color-overlay" />
-                    <img
-                        src={movie.data.poster_path}
-                        alt='poster'
-                        className="poster"
-                    />
+                    {movie.data.poster_path
+                        ?
+                        <img
+                            src={movie.data.poster_path}
+                            alt='poster'
+                            className="poster"
+                        />
+                        : <PosterImagePlaceholder />
+                    }
                     <div className="info">
                         <div className="top">
                             <div className="title">{movie.data.title}</div>

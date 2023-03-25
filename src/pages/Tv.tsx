@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import Tv from "../types/tv"
-import Rating from "../ui/rating"
+import Rating from "../components/ui/rating"
 import Recommendations from "../components/Recommendations"
 import Credits from "../components/Credits"
 import Videos from "../components/Videos"
-import { MovieSkeleton } from "../ui/skeletons"
-import { Content } from "../types"
+import { MovieSkeleton } from "../components/ui/skeletons"
 import Seasons from "../components/Seasons"
 import { localDate } from "../services/dateConverter"
 import { useGetTvQuery } from "../services/api/mediaApi"
 import { applyTheme } from "@material/material-color-utilities"
 import { useGetTvContentQuery } from "../services/api/contentApi"
+import { PosterImagePlaceholder } from "../components/ui/imagePlaceholders"
 
 // Tv status
 const status = (status: string) => {
@@ -61,11 +61,15 @@ const Tv: React.FC = () => {
                             className="backdrop"
                         />}
                     <div className="color-overlay" />
-                    <img
-                        src={tv.data.poster_path}
-                        alt='poster'
-                        className="poster"
-                    />
+                    {tv.data.poster_path
+                        ?
+                        <img
+                            src={tv.data.poster_path}
+                            alt='poster'
+                            className="poster"
+                        />
+                        : <PosterImagePlaceholder />
+                    }
                     <div className="info">
                         <div className="top">
                             <div className="title">{tv.data.name}</div>
