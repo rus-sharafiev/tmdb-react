@@ -21,8 +21,10 @@ export const preloadMedia = async (content: Movie | Tv) => {
     content.backdrop_path = resolvedData[0]
     content.poster_path = resolvedData[1].img
     content.production_companies = resolvedData[2]
-    let theme = await themeFromImageBitmap(resolvedData[1].bitmap)
-    content = { ...content, theme }
+    if (resolvedData[1].bitmap) {
+        let theme = await themeFromImageBitmap(resolvedData[1].bitmap)
+        content = { ...content, theme }
+    }
     return content
 }
 
