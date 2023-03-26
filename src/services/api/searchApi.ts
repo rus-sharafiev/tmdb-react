@@ -5,7 +5,7 @@ import { MovieCard, MovieCards, PersonCard, PersonCards, TvCard, TvCards } from 
 import { setMoviesSearchResults, setPeopleSearchResults, setTvsSearchResults } from '../../store/reducers/searchResultsSlice'
 
 const baseQueryWithPreload = async (url: string, baseQueryApi: BaseQueryApi) => {
-    let result = await api.get(`https://api.rutmdb.ru${url}`) as MovieCards | TvCards | PersonCards | ApiError
+    let result = await api.get(url) as MovieCards | TvCards | PersonCards | ApiError
     if ('error' in result) return result
 
     let type = url.split('/')[3]

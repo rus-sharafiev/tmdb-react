@@ -4,7 +4,7 @@ import { Credits } from '../../types'
 import { preloadCast } from '../preloaders'
 
 const baseQueryWithPreload = async (url: string) => {
-    let result = await api.get(`https://api.rutmdb.ru${url}`) as Credits | ApiError
+    let result = await api.get(url) as Credits | ApiError
     if ('error' in result) return result
 
     if (result.cast.length >= 20)

@@ -4,7 +4,7 @@ import { preloadCards } from '../../services/preloaders'
 import { MovieCard, MovieCards, PersonCard, PersonCards, TvCard, TvCards } from '../../types/cards'
 
 const baseQueryWithPreload = async (url: string) => {
-    let result = await api.get(`https://api.rutmdb.ru${url}`) as MovieCards | TvCards | PersonCards | ApiError
+    let result = await api.get(url) as MovieCards | TvCards | PersonCards | ApiError
     if ('error' in result) return result
 
     let cards = await preloadCards(result, true)

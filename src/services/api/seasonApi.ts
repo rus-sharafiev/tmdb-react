@@ -4,7 +4,7 @@ import { preloadSeason } from '../../services/preloaders'
 import { Season } from '../../types/season'
 
 const baseQueryWithPreload = async (url: string) => {
-    let result = await api.get(`https://api.rutmdb.ru${url}`) as Season | ApiError
+    let result = await api.get(url) as Season | ApiError
     if ('error' in result) return result
 
     result = await preloadSeason(result)

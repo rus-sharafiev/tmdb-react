@@ -4,7 +4,7 @@ import { preloadCollection } from '../../services/preloaders'
 import { Collection } from '../../types/collection'
 
 const baseQueryWithPreload = async (url: string) => {
-    let result = await api.get(`https://api.rutmdb.ru${url}`) as Collection | ApiError
+    let result = await api.get(url) as Collection | ApiError
     if ('error' in result) return result
 
     result = await preloadCollection(result)

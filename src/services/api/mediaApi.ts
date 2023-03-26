@@ -5,7 +5,7 @@ import Tv from '../../types/tv'
 import { preloadMedia } from '../preloaders'
 
 const baseQueryWithPreload = async (url: string) => {
-    let result = await api.get(`https://api.rutmdb.ru${url}`) as Movie | Tv | ApiError
+    let result = await api.get(url) as Movie | Tv | ApiError
     if ('error' in result) return result
 
     result = await preloadMedia(result)

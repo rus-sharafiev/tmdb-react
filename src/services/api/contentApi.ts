@@ -5,7 +5,7 @@ import Movie from '../../types/movie'
 import Tv from '../../types/tv'
 
 const baseQueryWithTransform = async (url: string) => {
-    let result = await api.get(`https://api.rutmdb.ru${url}`) as Tv | Movie | ApiError
+    let result = await api.get(url) as Tv | Movie | ApiError
     if ('error' in result) return result
 
     let content: Content = { recommendations: result.recommendations.results.length }

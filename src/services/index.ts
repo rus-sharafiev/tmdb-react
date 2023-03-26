@@ -1,10 +1,10 @@
 const api = {
 
     async get(url: string): Promise<unknown> {
-        let response = await fetch(url)
+        let response = await fetch(`https://api.rutmdb.ru${url}`)
 
         if (response.status !== 200)
-            return this.error(response)
+            throw this.error(response)
 
         return response.json()
     },
