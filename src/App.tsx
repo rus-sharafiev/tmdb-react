@@ -12,9 +12,9 @@ const App: React.FC = () => {
         <>
             <Outlet />
             <Header />
-            <Logo />
             <Footer />
             <Nav />
+            <Logo />
         </>
     )
 }

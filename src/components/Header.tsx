@@ -1,6 +1,7 @@
 import React from "react"
 import useScrollDir from "../hooks/useScrollDir"
 import SearchBar from "./SearchBar"
+import Tabs from "./Tabs"
 
 const Header: React.FC = () => {
     const scrollDir = useScrollDir('up')
@@ -8,7 +9,8 @@ const Header: React.FC = () => {
     return (
         <header className={scrollDir}>
             <div className='overlay' />
-            < SearchBar />
+            <Tabs />
+            <SearchBar />
         </header>
     )
 }

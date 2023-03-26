@@ -41,9 +41,6 @@ const People: React.FC = () => {
 
     return (
         <main className='lists'>
-            <div className={'tabs ' + scrollDir}>
-                <Tab to='/person/list/popular' name='Популярные' />
-            </div>
             <div className={'cards'}>
                 {list === 'popular' && <PersonCards cards={popular} />}
                 <div className='cards-loader' ref={endOfPage}></div>

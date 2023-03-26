@@ -4,7 +4,6 @@ import { useAppSelector, useAppDispatch } from '../hooks/store'
 import { useGetPopularMoviesQuery, useGetTopRatedMoviesQuery, useGetUpcomingMoviesQuery } from '../services/api/cardsApi'
 import { setMoviesPage } from '../store/reducers/pagesSlice'
 import { MovieCards } from '../components/listCards'
-import Tab from '../components/Tab'
 import useScrollDir from '../hooks/useScrollDir'
 
 const Movies: React.FC = () => {
@@ -51,11 +50,6 @@ const Movies: React.FC = () => {
 
     return (
         <main className='lists'>
-            <div className={'tabs ' + scrollDir}>
-                <Tab to='/movie/list/popular' name='Популярные' />
-                <Tab to='/movie/list/top_rated' name='Лучшие' />
-                <Tab to='/movie/list/upcoming' name='Ожидаемые' />
-            </div>
             <div className={'cards'}>
                 {list === 'popular' && <MovieCards cards={popular} qtt={20} />}
                 {list === 'top_rated' && <MovieCards cards={topRated} qtt={20} />}

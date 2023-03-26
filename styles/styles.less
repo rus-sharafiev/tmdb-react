@@ -123,10 +123,6 @@ main {
     }
 }
 
-main.lists+header {
-    height: 120px;
-}
-
 /* Header -------------------------------------------------------------------------------------------------------------------------- */
 header {
     position: fixed;
@@ -134,9 +130,9 @@ header {
     right: 0;
     left: 0;
     display: grid;
-    grid: 72px / 1fr;
+    grid: 72px min-content / 1fr;
     align-items: center;
-    padding-left: 88px;
+    padding: 0 6px 0 88px;
     backdrop-filter: blur(5px);
     transition: top 0.2s linear;
     z-index: 10;
@@ -173,9 +169,8 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1;
-    transition: opacity 0.2s ease-in-out;
-    z-index: 13;
+    transition: opacity 0.2s ease-in-out, top 0.2s linear;
+    z-index: 12;
 
     svg {
         width: 65px;
@@ -187,7 +182,6 @@ header {
 
     @media (max-width: @size[tablet]) {
         height: 64px;
-        transition: top 0.2s linear;
 
         svg {
             width: 50px;
@@ -213,8 +207,8 @@ nav {
     .m3-navigation-rail();
     align-content: start;
     padding-top: 92px;
-    z-index: 12;
     transition: left 0.2s linear, box-shadow 0.2s ease-in-out;
+    z-index: 11;
 
     @media (max-width: @size[tablet]) {
         @state-color: var(--md-sys-color-primary);
@@ -222,60 +216,13 @@ nav {
         .surface-tint();
 
         position: fixed;
-        z-index: 12;
         left: -75px;
         background: var(--md-sys-color-surface);
+        z-index: 11;
 
         &:hover {
             left: 0;
             .elevation-level2();
-        }
-    }
-}
-
-/* Content ------------------------------------------------------------------------------------------------------------------------- */
-.tabs {
-    position: fixed;
-    top: 72px;
-    left: 88px;
-    right: 8px;
-    height: 48px;
-    display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    justify-items: center;
-    border-bottom: 1px solid var(--md-sys-color-surface-variant);
-    z-index: 12;
-    transition: top 0.2s linear;
-
-    &.up {
-        top: 72px;
-    }
-
-    &.down {
-        top: 0;
-    }
-
-    a {
-        color: var(--md-sys-color-on-surface-variant);
-        .title-small();
-        text-decoration: none;
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
-
-    a.tab-active {
-        color: var(--md-sys-color-primary);
-
-        &::before {
-            content: '';
-            position: absolute;
-            background: var(--md-sys-color-primary);
-            height: 3px;
-            border-radius: 3px 3px 0 0;
-            width: 100%;
-            bottom: 0;
         }
     }
 }

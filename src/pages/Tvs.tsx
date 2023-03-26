@@ -51,11 +51,6 @@ const Tvs: React.FC = () => {
 
     return (
         <main className='lists'>
-            <div className={'tabs ' + scrollDir}>
-                <Tab to='/tv/list/popular' name='Популярные' />
-                <Tab to='/tv/list/top_rated' name='Лучшие' />
-                <Tab to='/tv/list/airing_today' name='В эфире сегодня' />
-            </div>
             <div className={'cards'}>
                 {list === 'popular' && <TvCards cards={popular} qtt={20} />}
                 {list === 'top_rated' && <TvCards cards={topRated} qtt={20} />}
