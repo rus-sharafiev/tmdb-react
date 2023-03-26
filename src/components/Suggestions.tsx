@@ -1,10 +1,11 @@
 import { FormikProps, useFormikContext } from "formik"
 import React, { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import api from "../services"
 import { MultiSearchResult, MultiSearchResults } from "../types"
 
 const Suggestions: React.FC = () => {
-    const { values } = useFormikContext() as FormikProps<{ search: string }>
+    const { values, handleReset } = useFormikContext() as FormikProps<{ search: string }>
     const [suggestions, setSuggestions] = useState<MultiSearchResult[]>([])
     const [movies, setMovies] = useState<MultiSearchResult[]>([])
     const [tvs, setTvs] = useState<MultiSearchResult[]>([])
@@ -34,7 +35,14 @@ const Suggestions: React.FC = () => {
                     ? <>
                         <span>Фильмы</span>
                         {movies.map(suggestion =>
-                            <div key={`movie-suggestion-${suggestion.id}`}>{suggestion.title}</div>
+                            <div key={`movie-suggestion-${suggestion.id}`}>
+                                <Link
+                                    to={`/movie/${suggestion.id}`}
+                                    onClick={e => setTimeout(() => handleReset(e))}
+                                >
+                                    {suggestion.title}
+                                </Link>
+                            </div>
                         )}
                     </>
                     : null}
@@ -42,7 +50,14 @@ const Suggestions: React.FC = () => {
                     ? <>
                         <span>Сериалы</span>
                         {tvs.map(suggestion =>
-                            <div key={`tv-suggestion-${suggestion.id}`}>{suggestion.name}</div>
+                            <div key={`tv-suggestion-${suggestion.id}`}>
+                                <Link
+                                    to={`/tv/${suggestion.id}`}
+                                    onClick={e => setTimeout(() => handleReset(e))}
+                                >
+                                    {suggestion.name}
+                                </Link>
+                            </div>
                         )}
                     </>
                     : null}
@@ -50,7 +65,14 @@ const Suggestions: React.FC = () => {
                     ? <>
                         <span>Люди</span>
                         {people.map(suggestion =>
-                            <div key={`person-suggestion-${suggestion.id}`}>{suggestion.name}</div>
+                            <div key={`person-suggestion-${suggestion.id}`}>
+                                <Link
+                                    to={`/person/${suggestion.id}`}
+                                    onClick={e => setTimeout(() => handleReset(e))}
+                                >
+                                    {suggestion.name}
+                                </Link>
+                            </div>
                         )}
                     </>
                     : null}
