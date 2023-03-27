@@ -14,9 +14,9 @@ const Suggestions: React.FC<{ inputRef: React.RefObject<HTMLInputElement> }> = (
 
     useEffect(() => {
         if (document.activeElement === inputRef.current) {
-            setTimeout(() => setFocused(true), 100)
+            setTimeout(() => setFocused(true), 300)
         } else {
-            setTimeout(() => setFocused(false), 100)
+            setTimeout(() => setFocused(false), 300)
         }
     }, [document.activeElement])
 
