@@ -10,7 +10,7 @@ import themeFromImageBitmap from "./themeFromImageBitmap"
 export const preloadMedia = async (content: Movie | Tv) => {
     let resolvedData = await Promise.all([
         imageLoader(content.backdrop_path, imageSize.backdrop.w300) as Promise<string>,
-        imageLoader(content.poster_path, imageSize.poster.w780, '', true) as Promise<{ img: string, bitmap: ImageBitmap }>,
+        imageLoader(content.poster_path, imageSize.poster.w500, '', true) as Promise<{ img: string, bitmap: ImageBitmap }>,
         Promise.all(
             content.production_companies.map(async (company) => {
                 company.logo_path = await imageLoader(company.logo_path, imageSize.logo.w300) as string
