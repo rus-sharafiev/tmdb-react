@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { MovieCards, PersonCards, TvCards } from "../components/listCards"
-import Tab from "../components/Tab"
 import { useAppDispatch, useAppSelector } from "../hooks/store"
 import useScrollDir from "../hooks/useScrollDir"
 import { useSearchMoviesQuery, useSearchPeopleQuery, useSearchTvsQuery } from "../services/api/searchApi"

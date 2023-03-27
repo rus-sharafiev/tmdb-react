@@ -4,15 +4,24 @@ import { Link } from "react-router-dom"
 import api from "../services"
 import { MultiSearchResult, MultiSearchResults } from "../types"
 
-const Suggestions: React.FC = () => {
+const Suggestions: React.FC<{ inputRef: React.RefObject<HTMLInputElement> }> = ({ inputRef }) => {
     const { values, handleReset } = useFormikContext() as FormikProps<{ search: string }>
     const [suggestions, setSuggestions] = useState<MultiSearchResult[]>([])
     const [movies, setMovies] = useState<MultiSearchResult[]>([])
     const [tvs, setTvs] = useState<MultiSearchResult[]>([])
     const [people, setPeople] = useState<MultiSearchResult[]>([])
+    const [focused, setFocused] = useState(false)
 
     useEffect(() => {
-        values.search.length > 4
+        if (document.activeElement === inputRef.current) {
+            setTimeout(() => setFocused(true), 100)
+        } else {
+            setTimeout(() => setFocused(false), 100)
+        }
+    }, [document.activeElement])
+
+    useEffect(() => {
+        values.search.length > 3
             ?
             (api.get(`/api/search/multi/${values.search}/1`) as Promise<MultiSearchResults>)
                 .then(res => setSuggestions(res.results ?? []))
@@ -21,14 +30,13 @@ const Suggestions: React.FC = () => {
     }, [values.search])
 
     useEffect(() => {
-        console.log(suggestions)
         setMovies(suggestions.filter(suggestion => suggestion.media_type === 'movie'))
         setTvs(suggestions.filter(suggestion => suggestion.media_type === 'tv'))
         setPeople(suggestions.filter(suggestion => suggestion.media_type === 'person'))
     }, [suggestions])
 
     return (
-        suggestions.length > 0
+        suggestions.length > 0 && focused
             ?
             <div className='suggestions'>
                 {movies.length > 0

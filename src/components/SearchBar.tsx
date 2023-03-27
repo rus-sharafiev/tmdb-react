@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Field, Form, Formik, FormikHelpers, FormikProps, useFormikContext } from 'formik'
 import { useAppDispatch } from "../hooks/store"
@@ -9,9 +9,9 @@ import Suggestions from "./Suggestions"
 
 const ClearBtn: React.FC<{ inputRef: React.RefObject<HTMLInputElement> }> = ({ inputRef }) => {
     const { values, handleReset, setFieldValue } = useFormikContext() as FormikProps<{ search: string }>
-    const location = useLocation()
-    const isSearch = location.pathname.split('/')[1] === 'search'
-    const currentUriQuery = location.pathname.split('/')[3]
+    const { pathname } = useLocation()
+    const isSearch = pathname.split('/')[1] === 'search'
+    const currentUriQuery = pathname.split('/')[3]
 
     useEffect(() => {
         !isSearch && setFieldValue('search', '')
@@ -28,9 +28,10 @@ const SearchBar: React.FC = () => {
     const nav = useNavigate()
     const dispatch = useAppDispatch()
     const input = useRef<HTMLInputElement>(null)
-    const location = useLocation()
-    const category = location.pathname.split('/')[2]
-    const currentUriQuery = decodeURI(location.pathname.split('/')[3])
+    const [focused, setFocused] = useState(false)
+    const { pathname } = useLocation()
+    const category = pathname.split('/')[2]
+    const currentUriQuery = decodeURI(pathname.split('/')[3])
 
     const initialValues = { search: '' }
 
@@ -48,9 +49,9 @@ const SearchBar: React.FC = () => {
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
             <Form className="search-bar">
                 <button className='search'>search</button>
-                <Field name='search' placeholder='Поиск по фильмам, сериалам и людям' innerRef={input} />
+                <Field name='search' placeholder='Поиск по фильмам, сериалам и людям' innerRef={input} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} />
                 <ClearBtn inputRef={input} />
-                <Suggestions />
+                <Suggestions inputRef={input} />
             </Form>
         </Formik>
     )
