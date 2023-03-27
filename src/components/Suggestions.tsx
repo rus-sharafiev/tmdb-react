@@ -50,6 +50,8 @@ const Suggestions: React.FC<{ inputRef: React.RefObject<HTMLInputElement> }> = (
                                 >
                                     {suggestion.title}
                                 </Link>
+                                {suggestion.release_date && <div className="release">({new Date(suggestion.release_date).getFullYear()})</div>}
+                                <div className="orig">{suggestion.original_title}</div>
                             </div>
                         )}
                     </>
@@ -65,6 +67,8 @@ const Suggestions: React.FC<{ inputRef: React.RefObject<HTMLInputElement> }> = (
                                 >
                                     {suggestion.name}
                                 </Link>
+                                {suggestion.first_air_date && <div className="release">({new Date(suggestion.first_air_date).getFullYear()})</div>}
+                                <div className="orig">{suggestion.original_name}</div>
                             </div>
                         )}
                     </>
