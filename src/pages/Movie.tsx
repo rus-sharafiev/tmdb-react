@@ -110,7 +110,7 @@ const Movie: React.FC = () => {
                     <Credits id={movie.data.id} />
                     {!content?.isFetching && content?.data?.collections &&
                         <Collection id={movie.data.belongs_to_collection?.id} />}
-                    {!content?.isFetching && content?.data?.recommendations && content.data.recommendations > 0 &&
+                    {!content?.isFetching && typeof content?.data?.recommendations === 'number' && content.data.recommendations > 0 &&
                         <Recommendations id={movie.data.id} type='movie' qtt={content.data.recommendations} />}
                 </main>}
 
@@ -119,7 +119,7 @@ const Movie: React.FC = () => {
                     <MovieSkeleton />
                     <Credits />
                     {!content?.isFetching && content?.data?.collections && <Collection />}
-                    {!content?.isFetching && content?.data?.recommendations && content.data.recommendations > 0 &&
+                    {!content?.isFetching && typeof content?.data?.recommendations === 'number' && content.data.recommendations > 0 &&
                         <Recommendations qtt={content.data.recommendations} />}
                 </main>}
         </>

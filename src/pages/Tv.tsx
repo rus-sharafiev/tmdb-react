@@ -107,7 +107,7 @@ const Tv: React.FC = () => {
                     <Credits id={tv.data.id} creator={tv.data.created_by} />
                     {!content?.isFetching && content?.data?.seasons &&
                         <Seasons data={tv.data.seasons} qtt={content.data.seasons} fallBackImage={tv.data.poster_path} tvId={tv.data.id} />}
-                    {!content?.isFetching && content?.data?.recommendations && content.data.recommendations > 0 &&
+                    {!content?.isFetching && typeof content?.data?.recommendations === 'number' && content.data.recommendations > 0 &&
                         <Recommendations id={tv.data.id} type='tv' qtt={content.data.recommendations} />}
                 </main>}
 
@@ -117,7 +117,7 @@ const Tv: React.FC = () => {
                     <Credits creator={[]} />
                     {!content?.isFetching && content?.data?.seasons &&
                         <Seasons qtt={content.data.seasons} />}
-                    {!content?.isFetching && content?.data?.recommendations && content.data.recommendations > 0 &&
+                    {!content?.isFetching && typeof content?.data?.recommendations === 'number' && content.data.recommendations > 0 &&
                         <Recommendations qtt={content.data.recommendations} />}
                 </main>}
         </>
