@@ -46,7 +46,6 @@ const Movie: React.FC = () => {
             applyTheme(movie.data.theme, { target: document.body, dark: false })
 
         setIsVisible(true)
-        console.log(movie)
 
         return () => document.body.removeAttribute('style')
 
