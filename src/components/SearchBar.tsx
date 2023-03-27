@@ -36,7 +36,7 @@ const SearchBar: React.FC = () => {
     const initialValues = { search: '' }
 
     const handleSubmit = (values: typeof initialValues, { resetForm }: FormikHelpers<typeof initialValues>) => {
-        if (currentUriQuery === values.search) return
+        if (currentUriQuery === values.search || !values.search) return
         input.current?.blur()
         nav(`/search/${(category === 'movie' || category === 'tv' || category === 'person') ? category : 'movie'}/${values.search}`, { replace: true })
         dispatch(searchApi.util.resetApiState())
